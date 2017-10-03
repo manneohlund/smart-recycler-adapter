@@ -5,13 +5,16 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import smartadapter.SmartRecyclerAdapter;
+import smartadapter.listener.ViewEventListener;
 import smartadapter.viewholder.SmartViewHolder;
 import smartadapter.widget.ViewTypeResolver;
 
@@ -57,6 +60,12 @@ public class DemoActivity extends AppCompatActivity {
                         return MailViewHolder.class;
                     }
                 })
+                .setViewEventListener(new ViewEventListener() {
+                    @Override
+                    public void onViewEvent(View view, int actionId, int position) {
+                        Toast.makeText(DemoActivity.this, "Action: " + actionId, Toast.LENGTH_SHORT).show();
+                    }
+                })
                 .into(recyclerView);
     }
 
@@ -86,6 +95,12 @@ public class DemoActivity extends AppCompatActivity {
         public void bind(Mail mail) {
             super.bind(mail);
             ((TextView)itemView).setTextColor(Color.YELLOW);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    notifyOnItemEvent(view, 1);
+                }
+            });
         }
     }
 
