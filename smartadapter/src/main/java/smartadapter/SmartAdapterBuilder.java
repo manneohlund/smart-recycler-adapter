@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import smartadapter.listener.OnViewDetachedFromWindowListener;
 import smartadapter.listener.ViewEventListener;
 import smartadapter.viewholder.SmartViewHolder;
 import smartadapter.widget.ViewTypeResolver;
@@ -23,6 +24,7 @@ public class SmartAdapterBuilder {
     private RecyclerView.LayoutManager layoutManager;
     private ViewTypeResolver viewTypeResolver;
     private ViewEventListener viewEventListener;
+    private OnViewDetachedFromWindowListener onViewDetachedFromWindowListener;
     private HashMap<String, Class<? extends SmartViewHolder>> mapper = new HashMap<>();
     private List items = new ArrayList();
 
@@ -53,6 +55,11 @@ public class SmartAdapterBuilder {
 
     public SmartAdapterBuilder setViewEventListener(ViewEventListener viewEventListener) {
         this.viewEventListener = viewEventListener;
+        return this;
+    }
+
+    public SmartAdapterBuilder setOnViewDetachedFromWindowListener(OnViewDetachedFromWindowListener onViewDetachedFromWindowListener) {
+        this.onViewDetachedFromWindowListener = onViewDetachedFromWindowListener;
         return this;
     }
 

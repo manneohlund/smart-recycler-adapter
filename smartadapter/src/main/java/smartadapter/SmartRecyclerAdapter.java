@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import smartadapter.listener.OnViewDetachedFromWindowListener;
 import smartadapter.listener.ViewEventListener;
 import smartadapter.manager.Mapper;
 import smartadapter.viewholder.SmartViewHolder;
@@ -31,10 +32,19 @@ public class SmartRecyclerAdapter<C extends SmartViewHolder> extends RecyclerVie
     private final Mapper mapper;
     private ViewTypeResolver viewTypeResolver;
     private ViewEventListener viewEventListener;
+    private OnViewDetachedFromWindowListener onViewDetachedFromWindowListener;
 
     public SmartRecyclerAdapter(Object callerEnclosingClass, List items) {
         mapper = new Mapper(callerEnclosingClass);
         setItems(items);
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(C holder) {
+        super.onViewDetachedFromWindow(holder);
+        if (onViewDetachedFromWindowListener != null) {
+            onViewDetachedFromWindowListener.onViewDetachedFromWindow(holder);
+        }
     }
 
     @Override
@@ -153,6 +163,10 @@ public class SmartRecyclerAdapter<C extends SmartViewHolder> extends RecyclerVie
 
     public void setViewEventListener(ViewEventListener viewEventListener) {
         this.viewEventListener = viewEventListener;
+    }
+
+    public void setOnViewDetachedFromWindowListener(OnViewDetachedFromWindowListener onViewDetachedFromWindowListener) {
+        this.onViewDetachedFromWindowListener = onViewDetachedFromWindowListener;
     }
 
     /**
