@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.smartrecycleradapter.viewholder.MailViewHolder;
+import com.example.smartrecycleradapter.viewholder.WarningMailViewHolder;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,9 +76,9 @@ public class DemoActivity extends AppCompatActivity {
      * View holders
      */
 
-    public static class MailViewHolder extends SmartViewHolder<Mail> {
+    public static class MailViewHolderStatic extends SmartViewHolder<Mail> {
 
-        public MailViewHolder(ViewGroup parentView) {
+        public MailViewHolderStatic(ViewGroup parentView) {
             super(LayoutInflater.from(parentView.getContext()).inflate(android.R.layout.simple_list_item_1, parentView, false));
         }
 
@@ -85,9 +88,9 @@ public class DemoActivity extends AppCompatActivity {
         }
     }
 
-    public static class WarningMailViewHolder extends MailViewHolder {
+    public static class WarningMailViewHolderStatic extends MailViewHolderStatic {
 
-        public WarningMailViewHolder(ViewGroup parentView) {
+        public WarningMailViewHolderStatic(ViewGroup parentView) {
             super(parentView);
         }
 
@@ -104,7 +107,7 @@ public class DemoActivity extends AppCompatActivity {
         }
     }
 
-    public static class ErrorMailViewHolder extends MailViewHolder {
+    public static class ErrorMailViewHolder extends MailViewHolderStatic {
 
         public ErrorMailViewHolder(ViewGroup parentView) {
             super(parentView);

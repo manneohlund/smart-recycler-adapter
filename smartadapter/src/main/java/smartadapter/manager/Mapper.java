@@ -85,6 +85,7 @@ public class Mapper {
             viewHolder.setViewEventListener(viewEventListener);
             return viewHolder;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(String.format("'%s' must have a constructor which take 'ViewGroup parent' as param", viewTypeMapper.get(viewType).toString()));
         }
     }
