@@ -93,6 +93,7 @@ In your view holder, add event caller to view and pass the view and an action id
 
 If you want to bind one data type with different view holders depending on some attribute you can set a ViewTypeResolver.
 Note .map() call not needed in this case but you can combine if you want to.
+You can also set an OnViewDetachedFromWindowListener for immediate view holder detach handling.
 
 ```java
 SmartRecyclerAdapter
@@ -109,6 +110,14 @@ SmartRecyclerAdapter
                 return WarningMailViewHolder.class;
             }
             return MailViewHolder.class;
+        }
+    })
+    .setOnViewDetachedFromWindowListener(new OnViewDetachedFromWindowListener() {
+        @Override
+        public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+            if (holder instanceof ImageViewHolder) {
+                ImageCacheManager.getInstance().cancelAsyncTask(holder);
+            }
         }
     })
     .into(recyclerView);
