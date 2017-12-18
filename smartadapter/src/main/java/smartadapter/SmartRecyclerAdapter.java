@@ -25,7 +25,6 @@ import smartadapter.widget.ViewTypeResolver;
 
 public class SmartRecyclerAdapter<C extends SmartViewHolder> extends RecyclerView.Adapter<C> {
 
-
     private int itemCount = 0;
     private ArrayList items = new ArrayList();
 
@@ -98,7 +97,7 @@ public class SmartRecyclerAdapter<C extends SmartViewHolder> extends RecyclerVie
     public void setItems(List items) {
         this.items.clear();
         this.items.addAll(items);
-        notifyAdapterDataSetChanged();
+        smartNotifyDataSetChanged();
     }
 
     public void addItem(Object item) {
@@ -109,7 +108,7 @@ public class SmartRecyclerAdapter<C extends SmartViewHolder> extends RecyclerVie
         if (item != null) {
             this.items.add(item);
             if (notifyDataSetChanged) {
-                notifyAdapterDataSetChanged();
+                smartNotifyDataSetChanged();
             }
         }
     }
@@ -122,7 +121,7 @@ public class SmartRecyclerAdapter<C extends SmartViewHolder> extends RecyclerVie
         if (items != null) {
             this.items.addAll(items);
             if (notifyDataSetChanged) {
-                notifyAdapterDataSetChanged();
+                smartNotifyDataSetChanged();
             }
         }
     }
@@ -134,19 +133,65 @@ public class SmartRecyclerAdapter<C extends SmartViewHolder> extends RecyclerVie
     public void removeItem(int index, boolean notifyDataSetChanged) {
         this.items.remove(index);
         if (notifyDataSetChanged) {
-            notifyAdapterDataSetChanged();
+            smartNotifyItemRemoved(index);
         }
     }
 
     public void clear() {
         this.items.clear();
-        notifyAdapterDataSetChanged();
+        smartNotifyDataSetChanged();
     }
 
+    public Mapper getMapper() {
+        return mapper;
+    }
 
+    /**
+     * This method is now deprecated see SmartRecyclerAdapter.smartNotifyDataSetChanged
+     */
+    @Deprecated
     public void notifyAdapterDataSetChanged() {
-        itemCount = items.size();
+        updateItemCount();
         notifyDataSetChanged();
+    }
+
+    public void smartNotifyDataSetChanged() {
+        updateItemCount();
+        notifyDataSetChanged();
+    }
+
+    public void smartNotifyItemChanged(int position) {
+        updateItemCount();
+        notifyItemChanged(position);
+    }
+
+    public void smartNotifyItemRangeChanged(int positionStart, int itemCount) {
+        updateItemCount();
+        notifyItemRangeChanged(positionStart, itemCount);
+    }
+
+    public void smartNotifyItemInserted(int position) {
+        updateItemCount();
+        notifyItemInserted(position);
+    }
+
+    public void smartNotifyItemRangeInserted(int positionStart, int itemCount) {
+        updateItemCount();
+        notifyItemRangeInserted(positionStart, itemCount);
+    }
+
+    public void smartNotifyItemRemoved(int position) {
+        updateItemCount();
+        notifyItemRemoved(position);
+    }
+
+    public void smartNotifyItemRangeRemoved(int positionStart, int itemCount) {
+        updateItemCount();
+        notifyItemRangeRemoved(positionStart, itemCount);
+    }
+
+    public final void updateItemCount() {
+        itemCount = items.size();
     }
 
     public void map(Class<?> itemType, Class<? extends SmartViewHolder> viewHolderType) {
@@ -157,8 +202,16 @@ public class SmartRecyclerAdapter<C extends SmartViewHolder> extends RecyclerVie
         mapper.setDataTypeViewHolderMapper(dataTypeViewHolderMapper);
     }
 
+    public ViewTypeResolver getViewTypeResolver() {
+        return viewTypeResolver;
+    }
+
     public void setViewTypeResolver(ViewTypeResolver viewTypeResolver) {
         this.viewTypeResolver = viewTypeResolver;
+    }
+
+    public ViewEventListener getViewEventListener() {
+        return viewEventListener;
     }
 
     public void setViewEventListener(ViewEventListener viewEventListener) {
