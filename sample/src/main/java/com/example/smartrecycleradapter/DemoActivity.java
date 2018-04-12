@@ -34,16 +34,18 @@ public class DemoActivity extends AppCompatActivity {
 
     private void initSmartRecyclerAdapter() {
         List<Post> items = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
+        int c = 0;
+        for (int i = 0; i < 100; i++, c++) {
             if (i % 2 == 0) {
-                items.add(new Post("Hello", "World " + i));
+                items.add(new Post("Hello", "World " + c));
             } else {
-                items.add(new Post("Hello", "World " + i, true));
+                items.add(new Post("Hello", "World " + c, true));
             }
         }
-        for (int i = 0; i < 100; i++) {
-            items.add(new ErrorPost("Hello", "World " + i));
+        for (int i = 0; i < 100; i++, c++) {
+            items.add(new ErrorPost("Hello", "World " + c));
         }
+
         SmartRecyclerAdapter
                 .init(this)
                 .items(items)
