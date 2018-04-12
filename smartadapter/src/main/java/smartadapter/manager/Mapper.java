@@ -38,8 +38,6 @@ public class Mapper {
         Class<? extends SmartViewHolder> viewHolder = viewTypeResolver == null ? null : viewTypeResolver.getViewType(item, position);
         if (viewHolder == null) {
             viewHolder = dataTypeViewHolderMapper.get(item.getClass().getName());
-        } else {
-            dataTypeViewHolderMapper.put(item.getClass().getName(), viewHolder);
         }
 
         // If viewHolder was found, proceed with view id mapping
@@ -61,8 +59,9 @@ public class Mapper {
         throw new RuntimeException(String.format("Fatal error! Mapping of ViewHolder to item '%s' does not exist", item.getClass().getName()));
     }
 
-    public <C extends SmartViewHolder> C getViewHolder(ViewEventListener viewEventListener, ViewGroup parent, int viewType) {
+    public <C extends SmartViewHolder> C getViewHolder(HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, ViewEventListener>> viewEventListeners, ViewGroup parent, int viewType) {
         Constructor constructor;
+        C viewHolder;
         try {
             vhc = viewTypeMapper.get(viewType);
             if (!viewHolderConstructorMapper.containsKey(vhc)) {
@@ -75,21 +74,27 @@ public class Mapper {
             } else {
                 constructor = viewHolderConstructorMapper.get(vhc);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(String.format("'%s' must have a constructor which take 'ViewGroup parent' as param or " + e.getMessage(), viewTypeMapper.get(viewType).toString()));
+        }
 
-            //constructor = viewHolderConstructorMapper.get(viewHolderClass); // TODO: 31/05/17
-            C viewHolder = (C) ReflectionUtils.invokeConstructor(vhc, constructor,
+        try {
+            viewHolder = (C) ReflectionUtils.invokeConstructor(vhc, constructor,
                     ReflectionUtils.isNonStaticInnerClass(vhc) ?
                             new Object[]{caller, parent} :
                             new Object[]{parent}
             );
-            viewHolder.setViewEventListener(viewEventListener);
-            return viewHolder;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException(String.format("'%s' must have a constructor which take 'ViewGroup parent' as param", viewTypeMapper.get(viewType).toString()));
+            throw new RuntimeException(String.format("Error in '%s' constructor: " + e.getCause(), viewTypeMapper.get(viewType).toString()));
         }
-    }
 
+        // Set listeners
+        viewHolder.setViewEventListeners(viewEventListeners.get(viewHolder.getClass()));
+
+        return viewHolder;
+    }
 
     public void addMapping(Class<?> itemType, Class<? extends SmartViewHolder> viewHolderType) {
         dataTypeViewHolderMapper.put(itemType.getName(), viewHolderType);

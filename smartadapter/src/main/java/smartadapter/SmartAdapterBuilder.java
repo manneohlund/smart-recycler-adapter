@@ -23,9 +23,9 @@ public class SmartAdapterBuilder {
     private Object caller;
     private RecyclerView.LayoutManager layoutManager;
     private ViewTypeResolver viewTypeResolver;
-    private ViewEventListener viewEventListener;
-    private OnViewDetachedFromWindowListener onViewDetachedFromWindowListener;
     private HashMap<String, Class<? extends SmartViewHolder>> mapper = new HashMap<>();
+    private HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, ViewEventListener>> viewEventListenerMap = new HashMap<>();
+    private OnViewDetachedFromWindowListener onViewDetachedFromWindowListener;
     private List items = new ArrayList();
 
     SmartAdapterBuilder(Object caller, Context context) {
@@ -53,8 +53,30 @@ public class SmartAdapterBuilder {
         return this;
     }
 
-    public SmartAdapterBuilder setViewEventListener(ViewEventListener viewEventListener) {
-        this.viewEventListener = viewEventListener;
+    /**
+     * Will automatically add a viewEventListener to the viewHolderTypes view.
+     * @param viewHolderType
+     * @param viewEventListener
+     * @return SmartAdapterBuilder
+     */
+    public SmartAdapterBuilder addViewEventListener(Class<? extends SmartViewHolder> viewHolderType, ViewEventListener viewEventListener) {
+        return addViewEventListener(viewHolderType, R.id.undefined, viewEventListener);
+    }
+
+    /**
+     * Specify the target view and automatically add a viewEventListener to the viewHolderTypes view.
+     * @param viewHolderType
+     * @param viewId
+     * @param viewEventListener
+     * @return SmartAdapterBuilder
+     */
+    public SmartAdapterBuilder addViewEventListener(Class<? extends SmartViewHolder> viewHolderType, int viewId, ViewEventListener viewEventListener) {
+        HashMap<Integer, ViewEventListener> mapper;
+        if ((mapper = viewEventListenerMap.get(viewHolderType)) == null) {
+            mapper = new HashMap<>();
+        }
+        mapper.put(viewId, viewEventListener);
+        this.viewEventListenerMap.put(viewHolderType, mapper);
         return this;
     }
 
@@ -67,7 +89,8 @@ public class SmartAdapterBuilder {
         SmartRecyclerAdapter smartRecyclerAdapter = new SmartRecyclerAdapter(caller, items);
         smartRecyclerAdapter.setMapper(mapper);
         smartRecyclerAdapter.setViewTypeResolver(viewTypeResolver);
-        smartRecyclerAdapter.setViewEventListener(viewEventListener);
+        smartRecyclerAdapter.setViewEventListeners(viewEventListenerMap);
+        smartRecyclerAdapter.setOnViewDetachedFromWindowListener(onViewDetachedFromWindowListener);
         recyclerView.setAdapter(smartRecyclerAdapter);
         recyclerView.setLayoutManager(layoutManager);
         return smartRecyclerAdapter;

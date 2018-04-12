@@ -23,23 +23,23 @@ import smartadapter.manager.Mapper;
 import smartadapter.viewholder.SmartViewHolder;
 import smartadapter.widget.ViewTypeResolver;
 
-public class SmartRecyclerAdapter<C extends SmartViewHolder> extends RecyclerView.Adapter<C> {
+public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> {
 
     private int itemCount = 0;
     private ArrayList items = new ArrayList();
 
     private final Mapper mapper;
     private ViewTypeResolver viewTypeResolver;
-    private ViewEventListener viewEventListener;
+    private HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, ViewEventListener>> viewEventListenerMap;
     private OnViewDetachedFromWindowListener onViewDetachedFromWindowListener;
 
-    public SmartRecyclerAdapter(Object callerEnclosingClass, List items) {
+    SmartRecyclerAdapter(Object callerEnclosingClass, List items) {
         mapper = new Mapper(callerEnclosingClass);
         setItems(items);
     }
 
     @Override
-    public void onViewDetachedFromWindow(C holder) {
+    public void onViewDetachedFromWindow(SmartViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
         if (onViewDetachedFromWindowListener != null) {
             onViewDetachedFromWindowListener.onViewDetachedFromWindow(holder);
@@ -52,12 +52,12 @@ public class SmartRecyclerAdapter<C extends SmartViewHolder> extends RecyclerVie
     }
 
     @Override
-    public C onCreateViewHolder(ViewGroup parent, int viewType) {
-        return mapper.getViewHolder(viewEventListener, parent, viewType);
+    public SmartViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return mapper.getViewHolder(viewEventListenerMap, parent, viewType);
     }
 
     @Override
-    public void onBindViewHolder(C holder, int position) {
+    public void onBindViewHolder(SmartViewHolder holder, int position) {
         holder.bind(items.get(position));
     }
 
@@ -210,12 +210,16 @@ public class SmartRecyclerAdapter<C extends SmartViewHolder> extends RecyclerVie
         this.viewTypeResolver = viewTypeResolver;
     }
 
-    public ViewEventListener getViewEventListener() {
-        return viewEventListener;
+    public HashMap<Integer, ViewEventListener> getViewEventListenersForViewHolder(Class<? extends SmartViewHolder> viewHolderType) {
+        return getViewEventListeners().get(viewHolderType);
     }
 
-    public void setViewEventListener(ViewEventListener viewEventListener) {
-        this.viewEventListener = viewEventListener;
+    public void setViewEventListeners(HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, ViewEventListener>> viewEventListenerMap) {
+        this.viewEventListenerMap = viewEventListenerMap;
+    }
+
+    public HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, ViewEventListener>> getViewEventListeners() {
+        return this.viewEventListenerMap;
     }
 
     public void setOnViewDetachedFromWindowListener(OnViewDetachedFromWindowListener onViewDetachedFromWindowListener) {

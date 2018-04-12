@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VIEW IDS -->
+    <id name="undefined" />
+    <id name="item_view" />
+
+    <!-- ACTIONS -->
+    <id name="action_on_click" />
+    <id name="action_on_long_click" />
+</resources>
