@@ -37,16 +37,16 @@ public class DemoActivityTest {
     public void setUp() throws Exception {
         recyclerView = (RecyclerView) rule.getActivity().findViewById(R.id.recycler_view);
 
-        List<DemoActivity.Mail> items = new ArrayList<>();
+        List<DemoActivity.Post> items = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             if (i % 2 == 0) {
-                items.add(new DemoActivity.Mail("Hello", "World " + i));
+                items.add(new DemoActivity.Post("Hello", "World " + i));
             } else {
-                items.add(new DemoActivity.Mail("Hello", "World " + i, true));
+                items.add(new DemoActivity.Post("Hello", "World " + i, true));
             }
         }
         for (int i = 0; i < 100; i++) {
-            items.add(new DemoActivity.ErrorMail("Hello", "World " + i));
+            items.add(new DemoActivity.ErrorPost("Hello", "World " + i));
         }
     }
 
@@ -83,8 +83,8 @@ public class DemoActivityTest {
     @Test
     public void adapterGetItems() throws Exception {
         SmartRecyclerAdapter adapter = (SmartRecyclerAdapter) rule.getActivity().recyclerView.getAdapter();
-        assertTrue("ErrorMail count", adapter.getItems(DemoActivity.ErrorMail.class).size() == 100);
-        assertTrue("Mail count", adapter.getItems(DemoActivity.Mail.class).size() == 100);
+        assertTrue("ErrorMail count", adapter.getItems(DemoActivity.ErrorPost.class).size() == 100);
+        assertTrue("Mail count", adapter.getItems(DemoActivity.Post.class).size() == 100);
     }
 
     /**

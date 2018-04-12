@@ -5,21 +5,18 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.smartrecycleradapter.viewholder.MailViewHolder;
-import com.example.smartrecycleradapter.viewholder.WarningMailViewHolder;
+import com.example.smartrecycleradapter.viewholder.PostViewHolder;
+import com.example.smartrecycleradapter.viewholder.WarningPostViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import smartadapter.SmartRecyclerAdapter;
-import smartadapter.listener.ViewEventListener;
 import smartadapter.viewholder.SmartViewHolder;
-import smartadapter.widget.ViewTypeResolver;
 
 public class DemoActivity extends AppCompatActivity {
 
@@ -30,91 +27,91 @@ public class DemoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = findViewById(R.id.recycler_view);
 
         initSmartRecyclerAdapter();
     }
 
     private void initSmartRecyclerAdapter() {
-        List<Mail> items = new ArrayList<>();
+        List<Post> items = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             if (i % 2 == 0) {
-                items.add(new Mail("Hello", "World " + i));
+                items.add(new Post("Hello", "World " + i));
             } else {
-                items.add(new Mail("Hello", "World " + i, true));
+                items.add(new Post("Hello", "World " + i, true));
             }
         }
         for (int i = 0; i < 100; i++) {
-            items.add(new ErrorMail("Hello", "World " + i));
+            items.add(new ErrorPost("Hello", "World " + i));
         }
         SmartRecyclerAdapter
                 .init(this)
                 .items(items)
-                //.map(Mail.class, MailViewHolder.class)
-                //.map(ErrorMail.class, ErrorMailViewHolder.class)
-                .setViewTypeResolver(new ViewTypeResolver() {
-                    @Override
-                    public Class<? extends SmartViewHolder> getViewType(Object item, int position) {
-                        if (item instanceof ErrorMail) {
-                            return ErrorMailViewHolder.class;
-                        } else if (item instanceof Mail && ((Mail)item).isWarning) {
-                            return WarningMailViewHolder.class;
-                        }
-                        return MailViewHolder.class;
+                .map(Post.class, PostViewHolder.class)
+                .setViewTypeResolver((item, position) -> {
+                    if (item instanceof ErrorPost) {
+                        return ErrorPostViewHolder.class;
+                    } else if (item instanceof Post && ((Post)item).isWarning) {
+                        return WarningPostViewHolder.class;
                     }
+                    return null; // Add default view if needed, else app will crash
                 })
-                .setViewEventListener(new ViewEventListener() {
-                    @Override
-                    public void onViewEvent(View view, int actionId, int position) {
-                        Toast.makeText(DemoActivity.this, "Action: " + actionId, Toast.LENGTH_SHORT).show();
-                    }
-                })
+                .addViewEventListener(PostViewHolder.class, (view, actionId, position) ->
+                        Toast.makeText(DemoActivity.this, getActionName(actionId) + " @ index " + position, Toast.LENGTH_SHORT).show())
+                .addViewEventListener(PostViewHolder.class, R.id.more, (view, actionId, position) ->
+                        Toast.makeText(DemoActivity.this, "More: " + getActionName(actionId) + " @ index " + position, Toast.LENGTH_SHORT).show())
+                .addViewEventListener(ErrorPostViewHolder.class, (view, actionId, position) ->
+                        Toast.makeText(DemoActivity.this,  "Error: " + getActionName(actionId) + " @ index " + position, Toast.LENGTH_SHORT).show())
+                .addViewEventListener(WarningPostViewHolder.class, (view, actionId, position) ->
+                        Toast.makeText(DemoActivity.this, "Warning: " + getActionName(actionId) + " @ index " + position, Toast.LENGTH_SHORT).show())
                 .into(recyclerView);
+    }
+
+    public String getActionName(int actionId) {
+        switch (actionId) {
+            case R.id.action_on_click: return "Action Click";
+            case R.id.action_on_long_click: return "Action Long Click";
+            default: return "Unknown";
+        }
     }
 
     /**
      * View holders
      */
 
-    public static class MailViewHolderStatic extends SmartViewHolder<Mail> {
+    public static class PostViewHolderStatic extends SmartViewHolder<Post> {
 
-        public MailViewHolderStatic(ViewGroup parentView) {
-            super(LayoutInflater.from(parentView.getContext()).inflate(android.R.layout.simple_list_item_1, parentView, false));
+        public PostViewHolderStatic(ViewGroup parentView) {
+            super(LayoutInflater.from(parentView.getContext()).inflate(R.layout.simple_list_item, parentView, false));
         }
 
         @Override
-        public void bind(Mail mail) {
+        public void bind(Post mail) {
             ((TextView)itemView).setText(mail.toString());
         }
     }
 
-    public static class WarningMailViewHolderStatic extends MailViewHolderStatic {
+    public static class WarningMailViewHolderStatic extends PostViewHolderStatic {
 
         public WarningMailViewHolderStatic(ViewGroup parentView) {
             super(parentView);
         }
 
         @Override
-        public void bind(Mail mail) {
+        public void bind(Post mail) {
             super.bind(mail);
             ((TextView)itemView).setTextColor(Color.YELLOW);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    notifyOnItemEvent(view, 1);
-                }
-            });
         }
     }
 
-    public static class ErrorMailViewHolder extends MailViewHolderStatic {
+    public static class ErrorPostViewHolder extends PostViewHolderStatic {
 
-        public ErrorMailViewHolder(ViewGroup parentView) {
+        public ErrorPostViewHolder(ViewGroup parentView) {
             super(parentView);
         }
 
         @Override
-        public void bind(Mail mail) {
+        public void bind(Post mail) {
             super.bind(mail);
             ((TextView)itemView).setTextColor(Color.RED);
         }
@@ -124,15 +121,15 @@ public class DemoActivity extends AppCompatActivity {
      * Data types
      */
 
-    public static class Mail {
+    public static class Post {
         boolean isWarning = false;
         String title, summary;
 
-        public Mail(String title, String summary) {
+        public Post(String title, String summary) {
             this.title = title;
             this.summary = summary;
         }
-        public Mail(String title, String summary, boolean isWarning) {
+        public Post(String title, String summary, boolean isWarning) {
             this(title, summary);
             this.isWarning = isWarning;
         }
@@ -143,9 +140,9 @@ public class DemoActivity extends AppCompatActivity {
         }
     }
 
-    public static class ErrorMail extends Mail {
+    public static class ErrorPost extends Post {
 
-        public ErrorMail(String title, String summary) {
+        public ErrorPost(String title, String summary) {
             super(title, summary);
         }
     }
