@@ -146,15 +146,6 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
         return mapper;
     }
 
-    /**
-     * This method is now deprecated see SmartRecyclerAdapter.smartNotifyDataSetChanged
-     */
-    @Deprecated
-    public void notifyAdapterDataSetChanged() {
-        updateItemCount();
-        notifyDataSetChanged();
-    }
-
     public void smartNotifyDataSetChanged() {
         updateItemCount();
         notifyDataSetChanged();
