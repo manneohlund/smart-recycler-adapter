@@ -91,9 +91,17 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
     }
 
     public void setItems(List items) {
-        this.items.clear();
-        this.items.addAll(items);
-        smartNotifyDataSetChanged();
+        setItems(items, true);
+    }
+
+    public void setItems(List items, boolean notifyDataSetChanged) {
+        if (items != null) {
+            this.items.clear();
+            this.items.addAll(items);
+            if (notifyDataSetChanged) {
+                smartNotifyDataSetChanged();
+            }
+        }
     }
 
     public void addItem(Object item) {
