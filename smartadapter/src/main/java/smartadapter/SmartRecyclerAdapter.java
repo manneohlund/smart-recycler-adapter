@@ -5,11 +5,6 @@ package smartadapter;
  * Copyright © 2017 All rights reserved.
  */
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.ViewGroup;
@@ -222,14 +217,10 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
      * Builder of {@link SmartRecyclerAdapter} for easy implementation
      * @return SmartAdapterBuilder
      */
-    public static SmartAdapterBuilder init(@NonNull Activity caller) {
-        return new SmartAdapterBuilder(caller, caller);
+    public static SmartAdapterBuilder items(List items) {
+        return new SmartAdapterBuilder(items);
     }
-    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
-    public static SmartAdapterBuilder init(@NonNull Fragment caller) {
-        return new SmartAdapterBuilder(caller, caller.getActivity());
-    }
-    public static SmartAdapterBuilder init(@NonNull android.support.v4.app.Fragment caller) {
-        return new SmartAdapterBuilder(caller, ((android.support.v4.app.Fragment) caller).getActivity());
+    public static SmartAdapterBuilder empty() {
+        return new SmartAdapterBuilder(new ArrayList());
     }
 }

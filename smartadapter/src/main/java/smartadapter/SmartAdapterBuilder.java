@@ -5,7 +5,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,17 +21,15 @@ import smartadapter.widget.ViewTypeResolver;
 
 public class SmartAdapterBuilder {
 
-    private Object caller;
     private RecyclerView.LayoutManager layoutManager;
     private ViewTypeResolver viewTypeResolver;
     private HashMap<String, Class<? extends SmartViewHolder>> mapper = new HashMap<>();
     private HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, Pair<Integer, ViewEventListener>>> viewEventListenerMap = new HashMap<>();
     private OnViewDetachedFromWindowListener onViewDetachedFromWindowListener;
-    private List items = new ArrayList();
+    private List items;
 
-    SmartAdapterBuilder(Object caller, Context context) {
-        this.caller = caller;
-        layoutManager = new LinearLayoutManager(context);
+    SmartAdapterBuilder(List items) {
+        this.items = items;
     }
 
     public final SmartAdapterBuilder map(Class<?> itemType, Class<? extends SmartViewHolder> viewHolderType) {
@@ -40,14 +37,16 @@ public class SmartAdapterBuilder {
         return this;
     }
 
-    public final SmartAdapterBuilder items(List items) {
-        this.items = items;
-        return this;
-    }
-
     public final SmartAdapterBuilder setLayoutManager(RecyclerView.LayoutManager layoutManager) {
         this.layoutManager = layoutManager;
         return this;
+    }
+
+    private RecyclerView.LayoutManager getLayoutManager(Context context) {
+        if (layoutManager == null) {
+            layoutManager = new LinearLayoutManager(context);
+        }
+        return layoutManager;
     }
 
     public final SmartAdapterBuilder setViewTypeResolver(ViewTypeResolver viewTypeResolver) {
@@ -123,13 +122,13 @@ public class SmartAdapterBuilder {
     }
 
     public final SmartRecyclerAdapter into(RecyclerView recyclerView) {
-        SmartRecyclerAdapter smartRecyclerAdapter = new SmartRecyclerAdapter(caller, items);
+        SmartRecyclerAdapter smartRecyclerAdapter = new SmartRecyclerAdapter(recyclerView.getContext(), items);
         smartRecyclerAdapter.setMapper(mapper);
         smartRecyclerAdapter.setViewTypeResolver(viewTypeResolver);
         smartRecyclerAdapter.setViewEventListeners(viewEventListenerMap);
         smartRecyclerAdapter.setOnViewDetachedFromWindowListener(onViewDetachedFromWindowListener);
         recyclerView.setAdapter(smartRecyclerAdapter);
-        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(getLayoutManager(recyclerView.getContext()));
         return smartRecyclerAdapter;
     }
 }
