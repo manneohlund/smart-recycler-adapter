@@ -19,6 +19,7 @@ import smartadapter.SmartRecyclerAdapter;
 import smartadapter.viewholder.SmartViewHolder;
 
 import static smartadapter.datatype.ViewEvent.ON_CLICK;
+import static smartadapter.datatype.ViewEvent.ON_LONG_CLICK;
 
 public class DemoActivity extends AppCompatActivity {
 
@@ -49,7 +50,6 @@ public class DemoActivity extends AppCompatActivity {
         }
 
         SmartRecyclerAdapter
-                .init(this)
                 .items(items)
                 .map(Post.class, PostViewHolder.class)
                 .setViewTypeResolver((item, position) -> {
@@ -74,7 +74,7 @@ public class DemoActivity extends AppCompatActivity {
                 // Adds event listener to WarningPostViewHolder only, with onClickListener on item root view
                 .addViewEventListener(
                         WarningPostViewHolder.class, // Target view holder
-                        ON_CLICK, // Events
+                        ON_CLICK | ON_LONG_CLICK, // Events
                         (view, actionId, position) -> showToast(getActionName(actionId) + " " + position)) // Event action
 
                 .into(recyclerView);
