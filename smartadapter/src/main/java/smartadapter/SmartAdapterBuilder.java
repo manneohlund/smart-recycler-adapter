@@ -3,11 +3,13 @@ package smartadapter;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import smartadapter.datatype.ViewEvent;
 import smartadapter.listener.OnViewDetachedFromWindowListener;
 import smartadapter.listener.ViewEventListener;
 import smartadapter.viewholder.SmartViewHolder;
@@ -24,7 +26,7 @@ public class SmartAdapterBuilder {
     private RecyclerView.LayoutManager layoutManager;
     private ViewTypeResolver viewTypeResolver;
     private HashMap<String, Class<? extends SmartViewHolder>> mapper = new HashMap<>();
-    private HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, ViewEventListener>> viewEventListenerMap = new HashMap<>();
+    private HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, Pair<Integer, ViewEventListener>>> viewEventListenerMap = new HashMap<>();
     private OnViewDetachedFromWindowListener onViewDetachedFromWindowListener;
     private List items = new ArrayList();
 
@@ -33,59 +35,94 @@ public class SmartAdapterBuilder {
         layoutManager = new LinearLayoutManager(context);
     }
 
-    public SmartAdapterBuilder map(Class<?> itemType, Class<? extends SmartViewHolder> viewHolderType) {
+    public final SmartAdapterBuilder map(Class<?> itemType, Class<? extends SmartViewHolder> viewHolderType) {
         mapper.put(itemType.getName(), viewHolderType);
         return this;
     }
 
-    public SmartAdapterBuilder items(List items) {
+    public final SmartAdapterBuilder items(List items) {
         this.items = items;
         return this;
     }
 
-    public SmartAdapterBuilder setLayoutManager(RecyclerView.LayoutManager layoutManager) {
+    public final SmartAdapterBuilder setLayoutManager(RecyclerView.LayoutManager layoutManager) {
         this.layoutManager = layoutManager;
         return this;
     }
 
-    public SmartAdapterBuilder setViewTypeResolver(ViewTypeResolver viewTypeResolver) {
+    public final SmartAdapterBuilder setViewTypeResolver(ViewTypeResolver viewTypeResolver) {
         this.viewTypeResolver = viewTypeResolver;
         return this;
     }
 
     /**
-     * Will automatically add a viewEventListener to the viewHolderTypes view.
-     * @param viewHolderType
-     * @param viewEventListener
+     * Will add ViewEventListener to all ViewHolders and assign simple list item onClickListener event listener.
+     * @see ViewEvent
+     *
+     * @param viewEventListener global ViewEventListener
      * @return SmartAdapterBuilder
      */
-    public SmartAdapterBuilder addViewEventListener(Class<? extends SmartViewHolder> viewHolderType, ViewEventListener viewEventListener) {
-        return addViewEventListener(viewHolderType, R.id.undefined, viewEventListener);
+    public final SmartAdapterBuilder addViewEventListener(ViewEventListener viewEventListener) {
+        return addViewEventListener(SmartViewHolder.class, R.id.undefined, ViewEvent.ON_CLICK, viewEventListener);
+    }
+
+    /**
+     * Will add ViewEventListener to all ViewHolders and assign simple list item onClickListener and/or onLongClickListener event listener.
+     * @see ViewEvent
+     *
+     * @param viewEventListener global ViewEventListener
+     * @param viewEvents ViewEvent.ON_CLICK | ViewEvent.ON_LONG_CLICK
+     * @return SmartAdapterBuilder
+     */
+    public final SmartAdapterBuilder addViewEventListener(int viewEvents, ViewEventListener viewEventListener) {
+        return addViewEventListener(SmartViewHolder.class, R.id.undefined, viewEvents, viewEventListener);
+    }
+
+    /**
+     * Will automatically add a viewEventListener to the viewHolderTypes view.
+     *
+     * @param viewHolderType ViewHolder that extends SmartViewHolder
+     * @param viewEventListener target ViewEventListener
+     * @return SmartAdapterBuilder
+     */
+    public final SmartAdapterBuilder addViewEventListener(Class<? extends SmartViewHolder> viewHolderType, ViewEventListener viewEventListener) {
+        return addViewEventListener(viewHolderType, R.id.undefined, ViewEvent.ON_CLICK, viewEventListener);
+    }
+
+    /**
+     *
+     * @param viewHolderType ViewHolder that extends SmartViewHolder
+     * @param viewEvents ViewEvent.ON_CLICK | ViewEvent.ON_LONG_CLICK
+     * @param viewEventListener target ViewEventListener
+     * @return SmartAdapterBuilder
+     */
+    public final SmartAdapterBuilder addViewEventListener(Class<? extends SmartViewHolder> viewHolderType, int viewEvents, ViewEventListener viewEventListener) {
+        return addViewEventListener(viewHolderType, R.id.undefined, viewEvents, viewEventListener);
     }
 
     /**
      * Specify the target view and automatically add a viewEventListener to the viewHolderTypes view.
-     * @param viewHolderType
-     * @param viewId
-     * @param viewEventListener
+     * @param viewHolderType ViewHolder that extends SmartViewHolder
+     * @param viewId target view id for the ViewHolder type
+     * @param viewEventListener target ViewEventListener
      * @return SmartAdapterBuilder
      */
-    public SmartAdapterBuilder addViewEventListener(Class<? extends SmartViewHolder> viewHolderType, int viewId, ViewEventListener viewEventListener) {
-        HashMap<Integer, ViewEventListener> mapper;
+    public final SmartAdapterBuilder addViewEventListener(Class<? extends SmartViewHolder> viewHolderType, int viewId, int viewEvents, ViewEventListener viewEventListener) {
+        HashMap<Integer, Pair<Integer, ViewEventListener>> mapper;
         if ((mapper = viewEventListenerMap.get(viewHolderType)) == null) {
             mapper = new HashMap<>();
         }
-        mapper.put(viewId, viewEventListener);
+        mapper.put(viewId, new Pair<>(viewEvents, viewEventListener));
         this.viewEventListenerMap.put(viewHolderType, mapper);
         return this;
     }
 
-    public SmartAdapterBuilder setOnViewDetachedFromWindowListener(OnViewDetachedFromWindowListener onViewDetachedFromWindowListener) {
+    public final SmartAdapterBuilder setOnViewDetachedFromWindowListener(OnViewDetachedFromWindowListener onViewDetachedFromWindowListener) {
         this.onViewDetachedFromWindowListener = onViewDetachedFromWindowListener;
         return this;
     }
 
-    public SmartRecyclerAdapter into(RecyclerView recyclerView) {
+    public final SmartRecyclerAdapter into(RecyclerView recyclerView) {
         SmartRecyclerAdapter smartRecyclerAdapter = new SmartRecyclerAdapter(caller, items);
         smartRecyclerAdapter.setMapper(mapper);
         smartRecyclerAdapter.setViewTypeResolver(viewTypeResolver);

@@ -1,5 +1,6 @@
 package smartadapter.manager;
 
+import android.util.Pair;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
@@ -59,7 +60,10 @@ public class Mapper {
         throw new RuntimeException(String.format("Fatal error! Mapping of ViewHolder to item '%s' does not exist", item.getClass().getName()));
     }
 
-    public <C extends SmartViewHolder> C getViewHolder(HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, ViewEventListener>> viewEventListeners, ViewGroup parent, int viewType) {
+    public <C extends SmartViewHolder> C getViewHolder(
+            HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, Pair<Integer, ViewEventListener>>> viewEventListeners,
+            ViewGroup parent,
+            int viewType) {
         Constructor constructor;
         C viewHolder;
         try {
@@ -91,6 +95,10 @@ public class Mapper {
         }
 
         // Set listeners
+
+        // if viewEventListeners has general SmartViewHolder event listener
+        viewHolder.setViewEventListeners(viewEventListeners.get(SmartViewHolder.class));
+        // If viewEventListeners has viewHolder.getClass() event listener, will override smartListener
         viewHolder.setViewEventListeners(viewEventListeners.get(viewHolder.getClass()));
 
         return viewHolder;

@@ -6,60 +6,73 @@ package smartadapter.viewholder;
  */
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.View;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import smartadapter.R;
+import smartadapter.datatype.ViewEvent;
 import smartadapter.listener.ViewEventListener;
 
 public abstract class SmartViewHolder<T> extends RecyclerView.ViewHolder {
-    private ViewEventListener viewEventListener;
-    private HashMap<Integer, ViewEventListener> viewEventListeners;
+
+    /**
+     * HashMap(ViewHolder, Pair(ViewEvents, ViewEventListener))
+     */
+    private HashMap<Integer, Pair<Integer, ViewEventListener>> viewEventListeners = new HashMap<>();
 
     public SmartViewHolder(View view) {
         super(view);
     }
 
-    @Deprecated
-    public void setViewEventListener(ViewEventListener viewEventListener) {
-        this.viewEventListener = viewEventListener;
+    public HashMap<Integer, Pair<Integer, ViewEventListener>> getViewEventListeners() {
+        return viewEventListeners;
     }
 
-    public void setViewEventListeners(HashMap<Integer, ViewEventListener> viewEventListeners) {
+    public ViewEventListener getViewEventListener(int viewId) {
+        Pair<Integer, ViewEventListener> pair = viewEventListeners.get(viewId);
+        if (pair == null) {
+            return null;
+        }
+        return pair.second;
+    }
+
+    public void setViewEventListeners(HashMap<Integer, Pair<Integer, ViewEventListener>> viewEventListeners) {
         if (viewEventListeners == null) {
             return;
         }
 
-        for (Map.Entry<Integer, ViewEventListener> listenerEntry : viewEventListeners.entrySet()) {
+        for (Map.Entry<Integer, Pair<Integer, ViewEventListener>> listenerEntry : viewEventListeners.entrySet()) {
             View targetView = itemView;
-            if (listenerEntry.getKey() == R.id.undefined) {
-                targetView.setOnClickListener(v -> notifyOnItemEvent(v, R.id.action_on_click));
+            int eventViewId = listenerEntry.getKey();
+            if (eventViewId != R.id.undefined) {
+                targetView = itemView.findViewById(eventViewId);
+            }
 
+            int autoViewEvents = listenerEntry.getValue().first;
+
+            if (ViewEvent.isOnClickSet(autoViewEvents)) {
+                targetView.setOnClickListener(v -> smartNotifyOnItemEvent(v, eventViewId, R.id.action_on_click));
+            }
+            if (ViewEvent.isOnLongClickSet(autoViewEvents)) {
                 targetView.setOnLongClickListener(v -> {
-                    notifyOnItemEvent(v, R.id.action_on_long_click);
+                    smartNotifyOnItemEvent(v, eventViewId, R.id.action_on_long_click);
                     return true;
                 });
-            } else {
-                targetView = itemView.findViewById(listenerEntry.getKey());
-                targetView.setOnClickListener(v -> notifyOnItemEvent(v, R.id.undefined));
             }
-        }
 
-        this.viewEventListeners = viewEventListeners;
+            this.viewEventListeners.put(eventViewId, listenerEntry.getValue());
+        }
+    }
+
+    private void smartNotifyOnItemEvent(View view, int eventViewId, int action) {
+        viewEventListeners.get(eventViewId).second.onViewEvent(view, action, getAdapterPosition());
     }
 
     public void notifyOnItemEvent(View view, int action) {
-        if (viewEventListeners != null) {
-            for (Map.Entry<Integer, ViewEventListener> listener : viewEventListeners.entrySet()) {
-                if (listener.getKey() == R.id.undefined && action != R.id.undefined) {
-                    listener.getValue().onViewEvent(view, action, getAdapterPosition());
-                } else if (listener.getKey() == view.getId()) {
-                    listener.getValue().onViewEvent(view, R.id.action_on_click, getAdapterPosition());
-                }
-            }
-        }
+        viewEventListeners.get(view.getId()).second.onViewEvent(view, action, getAdapterPosition());
     }
 
     public abstract void bind(T item);
