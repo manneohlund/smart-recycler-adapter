@@ -15,7 +15,7 @@ allprojects {
 #### Step 2. Add the dependency  
 ```groovy
 dependencies {  
-  implementation 'com.github.manneohlund:smart-recycler-adapter:1.3.0'
+  implementation 'com.github.manneohlund:smart-recycler-adapter:1.4.0'
 }
 ```
 
@@ -24,7 +24,6 @@ dependencies {
 
 ```java
 SmartRecyclerAdapter
-  .init(this) // Must be Activity or Fragment reference
   .items(items)
   .map(Header.class, HeaderViewHolder.class)
   .map(Post.class, PostViewHolder.class)
@@ -61,7 +60,6 @@ More events are coming.
 
 ```java
 SmartRecyclerAdapter
-  .init(this) // Must be Activity or Fragment reference
   .items(items)
   .map(Post.class, PostViewHolder.class)
   // Adds event listener for PostViewHolder and also automatically adds row item onClickListener on root view
@@ -89,7 +87,6 @@ You can also set an OnViewDetachedFromWindowListener for immediate view holder d
   
 ```java
 SmartRecyclerAdapter
-  .init(this)
   .items(items)
   .map(Header.class, HeaderViewHolder.class)
   .map(Footer.class, FooterViewHolder.class)
