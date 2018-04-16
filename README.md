@@ -15,7 +15,8 @@ allprojects {
 #### Step 2. Add the dependency  
 ```groovy  
 dependencies {  
-	implementation 'com.github.manneohlund:smart-recycler-adapter:1.3.0'}  
+	implementation 'com.github.manneohlund:smart-recycler-adapter:1.3.0'
+}  
 ```  
   
 # Usage  
