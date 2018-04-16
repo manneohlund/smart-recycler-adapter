@@ -18,6 +18,8 @@ import java.util.List;
 import smartadapter.SmartRecyclerAdapter;
 import smartadapter.viewholder.SmartViewHolder;
 
+import static smartadapter.datatype.ViewEvent.ON_CLICK;
+
 public class DemoActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
@@ -58,15 +60,28 @@ public class DemoActivity extends AppCompatActivity {
                     }
                     return null; // Add default view if needed, else app will crash
                 })
-                .addViewEventListener(PostViewHolder.class, (view, actionId, position) ->
-                        Toast.makeText(DemoActivity.this, getActionName(actionId) + " @ index " + position, Toast.LENGTH_SHORT).show())
-                .addViewEventListener(PostViewHolder.class, R.id.more, (view, actionId, position) ->
-                        Toast.makeText(DemoActivity.this, "More: " + getActionName(actionId) + " @ index " + position, Toast.LENGTH_SHORT).show())
-                .addViewEventListener(ErrorPostViewHolder.class, (view, actionId, position) ->
-                        Toast.makeText(DemoActivity.this,  "Error: " + getActionName(actionId) + " @ index " + position, Toast.LENGTH_SHORT).show())
-                .addViewEventListener(WarningPostViewHolder.class, (view, actionId, position) ->
-                        Toast.makeText(DemoActivity.this, "Warning: " + getActionName(actionId) + " @ index " + position, Toast.LENGTH_SHORT).show())
+
+                // Adds event listener and also automatically adds row item onClickListener on all items root view
+                .addViewEventListener((view, actionId, position) -> showToast(getActionName(actionId) + " " + position))
+
+                // Adds event listener to PostViewHolder only, with onClickListener on item root view
+                .addViewEventListener(
+                        PostViewHolder.class, // Target view holder
+                        R.id.more, // Target view
+                        ON_CLICK, // Events for SmartRecyclerAdapter to add automatically
+                        (view, actionId, position) -> showToast("More " + getActionName(actionId) + " " + position)) // Event action
+
+                // Adds event listener to WarningPostViewHolder only, with onClickListener on item root view
+                .addViewEventListener(
+                        WarningPostViewHolder.class, // Target view holder
+                        ON_CLICK, // Events
+                        (view, actionId, position) -> showToast(getActionName(actionId) + " " + position)) // Event action
+
                 .into(recyclerView);
+    }
+
+    public void showToast(String message) {
+        Toast.makeText(DemoActivity.this, message, Toast.LENGTH_SHORT).show();
     }
 
     public String getActionName(int actionId) {
@@ -88,20 +103,20 @@ public class DemoActivity extends AppCompatActivity {
         }
 
         @Override
-        public void bind(Post mail) {
-            ((TextView)itemView).setText(mail.toString());
+        public void bind(Post post) {
+            ((TextView)itemView).setText(post.toString());
         }
     }
 
-    public static class WarningMailViewHolderStatic extends PostViewHolderStatic {
+    public static class WarningPostViewHolderStatic extends PostViewHolderStatic {
 
-        public WarningMailViewHolderStatic(ViewGroup parentView) {
+        public WarningPostViewHolderStatic(ViewGroup parentView) {
             super(parentView);
         }
 
         @Override
-        public void bind(Post mail) {
-            super.bind(mail);
+        public void bind(Post post) {
+            super.bind(post);
             ((TextView)itemView).setTextColor(Color.YELLOW);
         }
     }
@@ -113,8 +128,8 @@ public class DemoActivity extends AppCompatActivity {
         }
 
         @Override
-        public void bind(Post mail) {
-            super.bind(mail);
+        public void bind(Post post) {
+            super.bind(post);
             ((TextView)itemView).setTextColor(Color.RED);
         }
     }
