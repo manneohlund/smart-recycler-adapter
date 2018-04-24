@@ -1,4 +1,4 @@
-# smart-recycler-adapter  
+# smart-recycler-adapter [![Release](https://jitpack.io/v/manneohlund/smart-recycler-adapter.svg)](https://jitpack.io/#manneohlund/smart-recycler-adapter)
 Never code any boilerplate RecyclerAdapter again!  
 This library will make it easy and painless to map your data item with a target ViewHolder.  
 
