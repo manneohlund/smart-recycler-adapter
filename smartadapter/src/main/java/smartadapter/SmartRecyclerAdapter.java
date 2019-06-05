@@ -1,12 +1,11 @@
 package smartadapter;
 
-/**
+/*
  * Created by Manne Öhlund on 02/04/17.
- * Copyright © 2017 All rights reserved.
+ * Copyright © 2019 All rights reserved.
  */
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Pair;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
@@ -22,11 +21,11 @@ import smartadapter.widget.ViewTypeResolver;
 public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> {
 
     private int itemCount = 0;
-    private ArrayList items = new ArrayList();
+    private List items = new ArrayList();
 
     private final Mapper mapper;
     private ViewTypeResolver viewTypeResolver;
-    private HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, Pair<Integer, ViewEventListener>>> viewEventListeners;
+    private HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> viewEventListeners;
     private OnViewDetachedFromWindowListener onViewDetachedFromWindowListener;
 
     SmartRecyclerAdapter(Object callerEnclosingClass, List items) {
@@ -76,7 +75,7 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
         return items.get(index);
     }
 
-    public ArrayList getItems() {
+    public List getItems() {
         return items;
     }
 
@@ -205,15 +204,15 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
         this.viewTypeResolver = viewTypeResolver;
     }
 
-    public HashMap<Integer, Pair<Integer, ViewEventListener>> getViewEventListenersForViewHolder(Class<? extends SmartViewHolder> viewHolderType) {
+    public HashMap<Integer, HashMap<Integer, ViewEventListener>> getViewEventListenersForViewHolder(Class<? extends SmartViewHolder> viewHolderType) {
         return getViewEventListeners().get(viewHolderType);
     }
 
-    public void setViewEventListeners(HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, Pair<Integer, ViewEventListener>>> viewEventListeners) {
+    public void setViewEventListeners(HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> viewEventListeners) {
         this.viewEventListeners = viewEventListeners;
     }
 
-    public HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, Pair<Integer, ViewEventListener>>> getViewEventListeners() {
+    public HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> getViewEventListeners() {
         return this.viewEventListeners;
     }
 
@@ -228,6 +227,7 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
     public static SmartAdapterBuilder items(List items) {
         return new SmartAdapterBuilder(items);
     }
+
     public static SmartAdapterBuilder empty() {
         return new SmartAdapterBuilder(new ArrayList());
     }
