@@ -19,6 +19,14 @@
         android:textAppearance="?attr/textAppearanceListItem"
         android:textColor="?attr/textColorAlertDialogListItem" />
 
+    <Switch
+        android:id="@+id/switch_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="96dp"
+        android:text="Switch"
+        android:visibility="gone" />
+
     <Button
         android:id="@+id/more"
         style="@style/Widget.AppCompat.Button.Small"
