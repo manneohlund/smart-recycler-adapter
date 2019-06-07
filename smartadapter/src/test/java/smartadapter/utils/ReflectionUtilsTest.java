@@ -6,15 +6,15 @@ import android.view.ViewGroup;
 import org.junit.Assert;
 import org.junit.Test;
 
+/*
+ * Created by Manne Öhlund on 2019-06-03.
+ * Copyright (c) 2018 All rights reserved.
+ */
+
 import smartadapter.viewholder.SmartViewHolder;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by Manne Öhlund on 2019-06-03.
- * <p>
- * Copyright (c) 2018 All rights reserved.
- */
 public class ReflectionUtilsTest {
 
     @Test

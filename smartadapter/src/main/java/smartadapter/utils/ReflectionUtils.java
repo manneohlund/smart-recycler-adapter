@@ -1,12 +1,12 @@
 package smartadapter.utils;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Modifier;
-
-/**
+/*
  * Created by Manne Öhlund on 24/03/17.
  * Copyright © 2017 All rights reserved.
  */
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 
 public class ReflectionUtils {
 

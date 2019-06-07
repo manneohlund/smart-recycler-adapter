@@ -5,7 +5,6 @@ package com.example.smartrecycleradapter;
  * Copyright © 2019 All rights reserved.
  */
 
-
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
