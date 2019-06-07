@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -68,13 +69,13 @@ public class DemoActivity extends AppCompatActivity {
                 .addViewEventListener((view, actionId, position) ->
                         showToast(getActionName(actionId) + " " + position)) // Event action
 
-                // Adds event listener and also automatically adds row item onClickListener on all items root view
+                /** Adds event listener and also automatically adds row item {@link View.OnClickListener} on all items root view */
                 .addViewEventListener(
                         R.id.action_on_click,
                         (view, actionId, position) ->
                                 DemoActivity.this.showToast(DemoActivity.this.getActionName(actionId) + " " + position))
 
-                // Adds event listener and also automatically adds row item onLongClickListener on all items root view
+                /** Adds event listener and also automatically adds row item {@link View.OnLongClickListener} on all items root view */
                 .addViewEventListener(
                         R.id.action_on_long_click,
                         (view, actionId, position) ->
@@ -85,27 +86,27 @@ public class DemoActivity extends AppCompatActivity {
                         WarningPostViewHolder.class, // Target view holder
                         (view, actionId, position) -> showToast(getActionName(actionId) + " " + position)) // Event action
 
-                // Adds event listener to PostViewHolder only, with onClickListener on more view
+                /** Adds event listener to PostViewHolder only, with {@link View.OnClickListener} on more view */
                 .addViewEventListener(
                         PostViewHolder.class, // Target view holder
                         R.id.more, // Target view
                         R.id.action_on_click, // Events for SmartRecyclerAdapter to add automatically
                         (view, actionId, position) -> showToast("More " + getActionName(actionId) + " " + position)) // Event action
 
-                // Adds event listener to PostViewHolder only, with onLongClickListener on more view
+                /** Adds event listener to PostViewHolder only, with {@link View.OnLongClickListener} on more view */
                 .addViewEventListener(
                         PostViewHolder.class, // Target view holder
                         R.id.more, // Target view
                         R.id.action_on_long_click, // Events for SmartRecyclerAdapter to add automatically
                         (view, actionId, position) -> showToast("More " + getActionName(actionId) + " " + position)) // Event action
 
-                // Adds event listener to ErrorPostViewHolder only, with onLongClickListener on item root view
+                /** Adds event listener to ErrorPostViewHolder only, with {@link View.OnLongClickListener} on item root view */
                 .addViewEventListener(
                         ErrorPostViewHolder.class, // Target view holder
                         R.id.action_on_long_click, // Event
                         (view, actionId, position) -> showToast(getActionName(actionId) + " " + position)) // Event action
 
-                // Adds event listener to WarningPostViewHolder only, with onLongClickListener on item root view
+                /** Adds event listener to WarningPostViewHolder only, with {@link View.OnLongClickListener} on item root view */
                 .addViewEventListener(
                         WarningPostViewHolder.class, // Target view holder
                         R.id.action_on_long_click, // Event
