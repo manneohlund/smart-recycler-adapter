@@ -74,11 +74,13 @@ public class DemoActivity extends AppCompatActivity {
                         (view, actionId, position) ->
                                 DemoActivity.this.showToast(DemoActivity.this.getActionName(actionId) + " " + position))
 
+                // Adds event listener and also automatically adds row item onLongClickListener on all items root view
                 .addViewEventListener(
                         R.id.action_on_long_click,
                         (view, actionId, position) ->
                                 showToast(getActionName(actionId) + " " + position))
 
+                // Adds event listener to WarningPostViewHolder only
                 .addViewEventListener(
                         WarningPostViewHolder.class, // Target view holder
                         (view, actionId, position) -> showToast(getActionName(actionId) + " " + position)) // Event action
@@ -118,15 +120,15 @@ public class DemoActivity extends AppCompatActivity {
 
     public String getActionName(int actionId) {
         switch (actionId) {
-            case R.id.action_on_check_change: return "Action Check Change";
             case R.id.action_on_click: return "Action Click";
             case R.id.action_on_long_click: return "Action Long Click";
+            case R.id.action_on_check_change: return "Action Check Change";
             default: return "Unknown";
         }
     }
 
     /**
-     * View holders
+     * Static view holders
      */
 
     public static class PostViewHolderStatic extends SmartViewHolder<Post> {
@@ -168,7 +170,7 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     /**
-     * Data types
+     * Static data types
      */
 
     public static class Post {
