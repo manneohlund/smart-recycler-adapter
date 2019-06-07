@@ -18,6 +18,11 @@ buildscript {
 }
 
 allprojects {
+    // Smart Adapter global version code and name
+    ext {
+        VERSION_CODE = 4
+        VERSION_NAME = '1.5.0'
+    }
     repositories {
         jcenter()
         maven {
