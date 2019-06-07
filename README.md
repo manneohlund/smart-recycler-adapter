@@ -18,7 +18,7 @@ allprojects {
 #### Step 2. Add the dependency  
 ```groovy
 dependencies {  
-  implementation 'com.github.manneohlund:smart-recycler-adapter:1.4.0'
+  implementation 'com.github.manneohlund:smart-recycler-adapter:1.5.0'
 }
 ```
 
@@ -58,17 +58,17 @@ public static class PostViewHolder extends SmartViewHolder<Post> {
 ### View event listener  
   
 You can easily assign events to views and add an `ViewEventListener` to the SmartRecyclerAdapter for easy handling.<br/>
-You can also pipe ViewEvent.ON_CLICK | ViewEvent.ON_LONG_CLICK.<br/>
+See `R.id.action_on_click` and `R.id.action_on_long_click`.<br/>
 More events are coming.
 
 ```java
 SmartRecyclerAdapter
   .items(items)
   .map(Post.class, PostViewHolder.class)
-  // Adds event listener for PostViewHolder and also automatically adds row item onClickListener on root view
+  // Adds event listener for PostViewHolder
   .addViewEventListener(PostViewHolder.class, (view, actionId, position) -> itemClick())
-  // Adds ON_CLICK event listener for PostViewHolder view with id R.id.more_button 
-  .addViewEventListener(PostViewHolder.class, R.id.more_button, ViewEvent.ON_CLICK, (view, actionId, position) -> openMore())
+  // Adds event listener for PostViewHolder and adds View.OnClickListener with action R.id.action_on_click on view with id R.id.more_button
+  .addViewEventListener(PostViewHolder.class, R.id.more_button, R.id.action_on_click, (view, actionId, position) -> openMore())
   .into(recyclerView);
 ```
  
@@ -78,7 +78,7 @@ In your view holder, add event caller to view and pass the view and an action id
 @Override
 public void bind(Post post) {
   // Set other event listeners 
-  sendButton.setOnClickListener(view -> notifyOnItemEvent(view, ACTION_SEND));
+  sendButton.setOnClickListener(view -> notifyOnItemEvent(view, R.id.action_send));
 }
 ```
   
@@ -101,13 +101,10 @@ SmartRecyclerAdapter
       return WarningPostViewHolder.class; 
     } return null; // Add default view if needed, else SmartRecyclerAdapter will look at the base `.map` mapping
   })
-  .setOnViewDetachedFromWindowListener(new OnViewDetachedFromWindowListener() { 
-    @Override 
-    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
-      if (holder instanceof ImageViewHolder) {
-        ImageCacheManager.getInstance().cancelAsyncTask(holder); 
-        }
-      }
+  .setOnViewDetachedFromWindowListener(holder -> {
+    if (holder instanceof ImageViewHolder) {
+      ImageCacheManager.getInstance().cancelAsyncTask(holder);
+    }
   })
   .into(recyclerView);
 ```
