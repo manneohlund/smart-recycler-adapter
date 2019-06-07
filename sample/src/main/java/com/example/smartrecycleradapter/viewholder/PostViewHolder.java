@@ -1,5 +1,10 @@
 package com.example.smartrecycleradapter.viewholder;
 
+/*
+ * Created by Manne Öhlund on 04/10/17.
+ * Copyright © 2017. All rights reserved.
+ */
+
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -8,11 +13,6 @@ import com.example.smartrecycleradapter.DemoActivity;
 import com.example.smartrecycleradapter.R;
 
 import smartadapter.viewholder.SmartViewHolder;
-
-/**
- * Created by Manne Öhlund on 04/10/17.
- * Copyright © 2017. All rights reserved.
- */
 
 public class PostViewHolder extends SmartViewHolder<DemoActivity.Post> {
 

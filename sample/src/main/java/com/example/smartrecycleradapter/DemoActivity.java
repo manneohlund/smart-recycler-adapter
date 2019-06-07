@@ -1,10 +1,16 @@
 package com.example.smartrecycleradapter;
 
+/*
+ * Created by Manne Öhlund on 29/05/17.
+ * Copyright © 2019 All rights reserved.
+ */
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,9 +23,6 @@ import java.util.List;
 
 import smartadapter.SmartRecyclerAdapter;
 import smartadapter.viewholder.SmartViewHolder;
-
-import static smartadapter.datatype.ViewEvent.ON_CLICK;
-import static smartadapter.datatype.ViewEvent.ON_LONG_CLICK;
 
 public class DemoActivity extends AppCompatActivity {
 
@@ -38,14 +41,14 @@ public class DemoActivity extends AppCompatActivity {
     private void initSmartRecyclerAdapter() {
         List<Post> items = new ArrayList<>();
         int c = 0;
-        for (int i = 0; i < 100; i++, c++) {
+        for (int i = 0; i < 50; i++, c++) {
             if (i % 2 == 0) {
                 items.add(new Post("Hello", "World " + c));
             } else {
                 items.add(new Post("Hello", "World " + c, true));
             }
         }
-        for (int i = 0; i < 100; i++, c++) {
+        for (int i = 0; i < 50; i++, c++) {
             items.add(new ErrorPost("Hello", "World " + c));
         }
 
@@ -61,20 +64,51 @@ public class DemoActivity extends AppCompatActivity {
                     return null; // Add default view if needed, else app will crash
                 })
 
-                // Adds event listener and also automatically adds row item onClickListener on all items root view
-                .addViewEventListener((view, actionId, position) -> showToast(getActionName(actionId) + " " + position))
+                // You need to define your own view event listeners like onClickListener
+                .addViewEventListener((view, actionId, position) ->
+                        showToast(getActionName(actionId) + " " + position)) // Event action
 
-                // Adds event listener to PostViewHolder only, with onClickListener on item root view
+                /** Adds event listener and also automatically adds row item {@link View.OnClickListener} on all items root view */
+                .addViewEventListener(
+                        R.id.action_on_click,
+                        (view, actionId, position) ->
+                                DemoActivity.this.showToast(DemoActivity.this.getActionName(actionId) + " " + position))
+
+                /** Adds event listener and also automatically adds row item {@link View.OnLongClickListener} on all items root view */
+                .addViewEventListener(
+                        R.id.action_on_long_click,
+                        (view, actionId, position) ->
+                                showToast(getActionName(actionId) + " " + position))
+
+                // Adds event listener to WarningPostViewHolder only
+                .addViewEventListener(
+                        WarningPostViewHolder.class, // Target view holder
+                        (view, actionId, position) -> showToast(getActionName(actionId) + " " + position)) // Event action
+
+                /** Adds event listener to PostViewHolder only, with {@link View.OnClickListener} on more view */
                 .addViewEventListener(
                         PostViewHolder.class, // Target view holder
                         R.id.more, // Target view
-                        ON_CLICK, // Events for SmartRecyclerAdapter to add automatically
+                        R.id.action_on_click, // Events for SmartRecyclerAdapter to add automatically
                         (view, actionId, position) -> showToast("More " + getActionName(actionId) + " " + position)) // Event action
 
-                // Adds event listener to WarningPostViewHolder only, with onClickListener on item root view
+                /** Adds event listener to PostViewHolder only, with {@link View.OnLongClickListener} on more view */
+                .addViewEventListener(
+                        PostViewHolder.class, // Target view holder
+                        R.id.more, // Target view
+                        R.id.action_on_long_click, // Events for SmartRecyclerAdapter to add automatically
+                        (view, actionId, position) -> showToast("More " + getActionName(actionId) + " " + position)) // Event action
+
+                /** Adds event listener to ErrorPostViewHolder only, with {@link View.OnLongClickListener} on item root view */
+                .addViewEventListener(
+                        ErrorPostViewHolder.class, // Target view holder
+                        R.id.action_on_long_click, // Event
+                        (view, actionId, position) -> showToast(getActionName(actionId) + " " + position)) // Event action
+
+                /** Adds event listener to WarningPostViewHolder only, with {@link View.OnLongClickListener} on item root view */
                 .addViewEventListener(
                         WarningPostViewHolder.class, // Target view holder
-                        ON_CLICK | ON_LONG_CLICK, // Events
+                        R.id.action_on_long_click, // Event
                         (view, actionId, position) -> showToast(getActionName(actionId) + " " + position)) // Event action
 
                 .into(recyclerView);
@@ -88,12 +122,13 @@ public class DemoActivity extends AppCompatActivity {
         switch (actionId) {
             case R.id.action_on_click: return "Action Click";
             case R.id.action_on_long_click: return "Action Long Click";
+            case R.id.action_on_check_change: return "Action Check Change";
             default: return "Unknown";
         }
     }
 
     /**
-     * View holders
+     * Static view holders
      */
 
     public static class PostViewHolderStatic extends SmartViewHolder<Post> {
@@ -135,7 +170,7 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     /**
-     * Data types
+     * Static data types
      */
 
     public static class Post {
