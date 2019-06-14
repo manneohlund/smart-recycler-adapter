@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion TARGET_SDK_VERSION
     defaultConfig {
         applicationId "com.example.smartrecycleradapter"
-        minSdkVersion 14
-        targetSdkVersion 26
+        minSdkVersion MIN_SDK_VERSION
+        targetSdkVersion TARGET_SDK_VERSION
         versionCode VERSION_CODE
         versionName VERSION_NAME
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -41,8 +41,8 @@ dependencies {
     implementation 'com.android.support:support-annotations:28.0.0'
     testImplementation 'junit:junit:4.12'
 
-    implementation 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:recyclerview-v7:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:2.0.0-beta1'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation project(':smartadapter')
 }
