@@ -5,6 +5,7 @@ package smartadapter;
  * Copyright © 2019 All rights reserved.
  */
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
@@ -34,7 +35,7 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
     }
 
     @Override
-    public void onViewDetachedFromWindow(SmartViewHolder holder) {
+    public void onViewDetachedFromWindow(@NonNull SmartViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
         if (onViewDetachedFromWindowListener != null) {
             onViewDetachedFromWindowListener.onViewDetachedFromWindow(holder);
@@ -46,13 +47,14 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
         return mapper.getItemViewType(viewTypeResolver, items.get(position), position);
     }
 
+    @NonNull
     @Override
-    public SmartViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return mapper.getViewHolder(viewEventListeners, parent, viewType);
+    public SmartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return mapper.createViewHolder(viewEventListeners, parent, viewType);
     }
 
     @Override
-    public void onBindViewHolder(SmartViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SmartViewHolder holder, int position) {
         holder.bind(items.get(position));
     }
 
