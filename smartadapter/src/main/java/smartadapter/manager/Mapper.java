@@ -14,6 +14,7 @@ import java.util.HashMap;
 import smartadapter.listener.ViewEventListener;
 import smartadapter.utils.ReflectionUtils;
 import smartadapter.viewholder.SmartViewHolder;
+import smartadapter.viewholder.ViewEventHolder;
 import smartadapter.widget.ViewTypeResolver;
 
 /**
@@ -75,7 +76,7 @@ public class Mapper {
      * @param <VH> Subtype of SmartViewHolder
      * @return Target view holder
      */
-    public <VH extends SmartViewHolder> VH getViewHolder(
+    public <VH extends SmartViewHolder> VH createViewHolder(
             HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> viewEventListeners,
             ViewGroup parent,
             int viewType) {
@@ -110,12 +111,15 @@ public class Mapper {
             throw new RuntimeException(String.format("Error in '%s' constructor: " + e.getCause(), viewTypeMapper.get(viewType).toString()));
         }
 
-        // Set listeners
-
-        // if viewEventListeners has general SmartViewHolder event listener
-        viewHolder.setViewEventListeners(viewEventListeners.get(SmartViewHolder.class));
-        // If viewEventListeners has viewHolder.getClass() event listener, will override smartListener
-        viewHolder.setViewEventListeners(viewEventListeners.get(viewHolder.getClass()));
+        /*
+         * Set view event listeners.
+         * First check if viewEventListeners has general SmartViewHolder event listener.
+         * Then if viewEventListeners has viewHolder.getClass() event listener, will override smartListener.
+         */
+        if (viewHolder instanceof ViewEventHolder) {
+            ((ViewEventHolder)viewHolder).setViewEventListeners(viewEventListeners.get(SmartViewHolder.class));
+            ((ViewEventHolder)viewHolder).setViewEventListeners(viewEventListeners.get(viewHolder.getClass()));
+        }
 
         return viewHolder;
     }
