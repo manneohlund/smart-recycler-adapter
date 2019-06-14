@@ -12,9 +12,9 @@ import android.widget.TextView;
 import com.example.smartrecycleradapter.DemoActivity;
 import com.example.smartrecycleradapter.R;
 
-import smartadapter.viewholder.SmartViewHolder;
+import smartadapter.viewholder.SmartAutoEventViewHolder;
 
-public class PostViewHolder extends SmartViewHolder<DemoActivity.Post> {
+public class PostViewHolder extends SmartAutoEventViewHolder<DemoActivity.Post> {
 
     TextView title;
 

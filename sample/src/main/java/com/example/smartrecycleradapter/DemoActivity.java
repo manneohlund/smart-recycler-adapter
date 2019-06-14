@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import smartadapter.SmartRecyclerAdapter;
-import smartadapter.viewholder.SmartViewHolder;
+import smartadapter.viewholder.SmartEventViewHolder;
 
 public class DemoActivity extends AppCompatActivity {
 
@@ -102,7 +102,7 @@ public class DemoActivity extends AppCompatActivity {
                 /** Adds event listener to ErrorPostViewHolder only, with {@link View.OnLongClickListener} on item root view */
                 .addViewEventListener(
                         ErrorPostViewHolder.class, // Target view holder
-                        R.id.action_on_long_click, // Event
+                        //R.id.action_on_long_click, // Event
                         (view, actionId, position) -> showToast(getActionName(actionId) + " " + position)) // Event action
 
                 /** Adds event listener to WarningPostViewHolder only, with {@link View.OnLongClickListener} on item root view */
@@ -131,7 +131,7 @@ public class DemoActivity extends AppCompatActivity {
      * Static view holders
      */
 
-    public static class PostViewHolderStatic extends SmartViewHolder<Post> {
+    public static class PostViewHolderStatic extends SmartEventViewHolder<Post> {
 
         public PostViewHolderStatic(ViewGroup parentView) {
             super(LayoutInflater.from(parentView.getContext()).inflate(R.layout.simple_list_item, parentView, false));
@@ -160,6 +160,10 @@ public class DemoActivity extends AppCompatActivity {
 
         public ErrorPostViewHolder(ViewGroup parentView) {
             super(parentView);
+            itemView.setOnLongClickListener(v -> {
+                notifyOnViewEvent(v, R.id.action_on_long_click);
+                return true;
+            });
         }
 
         @Override

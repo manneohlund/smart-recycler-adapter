@@ -8,7 +8,6 @@ package com.example.smartrecycleradapter.viewholder;
 import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import com.example.smartrecycleradapter.DemoActivity;
@@ -24,7 +23,7 @@ public class WarningPostViewHolder extends PostViewHolder {
         itemView.findViewById(R.id.switch_button).setVisibility(View.VISIBLE);
         Switch switchButton = itemView.findViewById(R.id.switch_button);
         switchButton.setOnCheckedChangeListener((buttonView, isChecked) ->
-                notifyOnItemEvent(buttonView, R.id.action_on_check_change));
+                notifyOnViewEvent(buttonView, R.id.action_on_check_change));
     }
 
     @Override
