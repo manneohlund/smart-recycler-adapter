@@ -198,6 +198,10 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
         mapper.setDataTypeViewHolderMapper(dataTypeViewHolderMapper);
     }
 
+    protected void setSmartAdapterBuilderMapper(HashMap<Class<? extends SmartViewHolder>, SmartAdapterBuilder> smartAdapterBuilderMapper) {
+        mapper.setSmartAdapterBuilderMapper(smartAdapterBuilderMapper);
+    }
+
     public ViewTypeResolver getViewTypeResolver() {
         return viewTypeResolver;
     }

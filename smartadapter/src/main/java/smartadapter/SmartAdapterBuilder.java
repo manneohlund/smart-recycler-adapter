@@ -24,7 +24,8 @@ public class SmartAdapterBuilder {
 
     private RecyclerView.LayoutManager layoutManager;
     private ViewTypeResolver viewTypeResolver;
-    private HashMap<String, Class<? extends SmartViewHolder>> mapper = new HashMap<>();
+    private HashMap<String, Class<? extends SmartViewHolder>> viewHolderMapper = new HashMap<>();
+    private HashMap<Class<? extends SmartViewHolder>, SmartAdapterBuilder> smartAdapterBuilderMapper = new HashMap<>();
     private HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> viewEventListenerMap = new HashMap<>();
     private OnViewDetachedFromWindowListener onViewDetachedFromWindowListener;
     private List items;
@@ -34,7 +35,12 @@ public class SmartAdapterBuilder {
     }
 
     public final SmartAdapterBuilder map(Class<?> itemType, Class<? extends SmartViewHolder> viewHolderType) {
-        mapper.put(itemType.getName(), viewHolderType);
+        viewHolderMapper.put(itemType.getName(), viewHolderType);
+        return this;
+    }
+
+    public final SmartAdapterBuilder map(Class<? extends SmartViewHolder> viewHolderType, SmartAdapterBuilder smartAdapterBuilder) {
+        smartAdapterBuilderMapper.put(viewHolderType, smartAdapterBuilder);
         return this;
     }
 
@@ -152,7 +158,8 @@ public class SmartAdapterBuilder {
 
     public final SmartRecyclerAdapter into(RecyclerView recyclerView) {
         SmartRecyclerAdapter smartRecyclerAdapter = new SmartRecyclerAdapter(recyclerView.getContext(), items);
-        smartRecyclerAdapter.setMapper(mapper);
+        smartRecyclerAdapter.setMapper(viewHolderMapper);
+        smartRecyclerAdapter.setSmartAdapterBuilderMapper(smartAdapterBuilderMapper);
         smartRecyclerAdapter.setViewTypeResolver(viewTypeResolver);
         smartRecyclerAdapter.setViewEventListeners(viewEventListenerMap);
         smartRecyclerAdapter.setOnViewDetachedFromWindowListener(onViewDetachedFromWindowListener);

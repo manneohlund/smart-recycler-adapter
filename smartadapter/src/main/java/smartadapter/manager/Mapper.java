@@ -11,8 +11,10 @@ import android.view.ViewGroup;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 
+import smartadapter.SmartAdapterBuilder;
 import smartadapter.listener.ViewEventListener;
 import smartadapter.utils.ReflectionUtils;
+import smartadapter.viewholder.SmartAdapterHolder;
 import smartadapter.viewholder.SmartViewHolder;
 import smartadapter.viewholder.ViewEventHolder;
 import smartadapter.widget.ViewTypeResolver;
@@ -28,6 +30,7 @@ public class Mapper {
     private final SparseArray<Class<? extends SmartViewHolder>> viewTypeMapper = new SparseArray<>();
     private final HashMap<Class, Constructor> viewHolderConstructorMapper = new HashMap<>();
     private HashMap<String, Class<? extends SmartViewHolder>> dataTypeViewHolderMapper = new HashMap<>();
+    private HashMap<Class<? extends SmartViewHolder>, SmartAdapterBuilder> smartAdapterBuilderMapper = new HashMap<>();
 
     public Mapper(Object callerEnclosingClass) {
         this.caller = callerEnclosingClass;
@@ -121,6 +124,10 @@ public class Mapper {
             ((ViewEventHolder)viewHolder).setViewEventListeners(viewEventListeners.get(viewHolder.getClass()));
         }
 
+        if (viewHolder instanceof SmartAdapterHolder && smartAdapterBuilderMapper.containsKey(viewHolder.getClass())) {
+            ((SmartAdapterHolder)viewHolder).setSmartAdapterBuilder(smartAdapterBuilderMapper.get(viewHolder.getClass()));
+        }
+
         return viewHolder;
     }
 
@@ -130,5 +137,9 @@ public class Mapper {
 
     public void setDataTypeViewHolderMapper(HashMap<String, Class<? extends SmartViewHolder>> dataTypeViewHolderMapper) {
         this.dataTypeViewHolderMapper = dataTypeViewHolderMapper;
+    }
+
+    public void setSmartAdapterBuilderMapper(HashMap<Class<? extends SmartViewHolder>, SmartAdapterBuilder> smartAdapterBuilderMapper) {
+        this.smartAdapterBuilderMapper = smartAdapterBuilderMapper;
     }
 }
