@@ -23,6 +23,10 @@ public abstract class SmartAutoEventViewHolder<T> extends SmartEventViewHolder<T
     public void setViewEventListeners(HashMap<Integer, HashMap<Integer, ViewEventListener>> viewEventListeners) {
         super.setViewEventListeners(viewEventListeners);
 
+        if (viewEventListeners == null) {
+            return;
+        }
+
         for (Map.Entry<Integer, HashMap<Integer, ViewEventListener>> listenerEntry : viewEventListeners.entrySet()) {
             View targetView = itemView;
             int eventViewId = listenerEntry.getKey();
