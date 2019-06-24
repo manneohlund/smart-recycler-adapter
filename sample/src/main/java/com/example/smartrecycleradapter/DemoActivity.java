@@ -144,9 +144,7 @@ public class DemoActivity extends AppCompatActivity {
                         PosterViewHolder.class,
                         R.id.action_on_click,
                         (view, actionId, position) -> {
-                            ((SmartRecyclerAdapter)recyclerView.getAdapter()).removeItem(0, false);
-                            ((SmartRecyclerAdapter)recyclerView.getAdapter()).getItems().add(0, new MoviePosterViewModel(getRandomPoster()));
-                            ((SmartRecyclerAdapter)recyclerView.getAdapter()).smartNotifyDataSetChanged();
+                            ((SmartRecyclerAdapter)recyclerView.getAdapter()).replaceItem(0, new MoviePosterViewModel(getRandomPoster()), true);
                         })
 
                 .addViewEventListener(

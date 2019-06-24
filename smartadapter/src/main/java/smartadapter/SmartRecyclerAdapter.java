@@ -119,6 +119,23 @@ public interface SmartRecyclerAdapter {
     boolean removeItem(int index, boolean notifyDataSetChanged);
 
     /**
+     * Replaces item at index.
+     * @see #replaceItem(int, Object, boolean)
+     *
+     * @param index item index
+     * @return true if item was replaced
+     */
+    boolean replaceItem(int index, Object item);
+
+    /**
+     * Replaces item at index.
+     * @param index item index
+     * @param notifyDataSetChanged updates recycler view with the new data
+     * @return true if item was replaced
+     */
+    boolean replaceItem(int index, Object item, boolean notifyDataSetChanged);
+
+    /**
      * Clears all the data and calls {@link #smartNotifyDataSetChanged()}
      */
     void clear();

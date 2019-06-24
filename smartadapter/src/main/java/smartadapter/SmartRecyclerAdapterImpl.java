@@ -159,6 +159,23 @@ public class SmartRecyclerAdapterImpl extends RecyclerView.Adapter<SmartViewHold
     }
 
     @Override
+    public boolean replaceItem(int index, Object item) {
+        return replaceItem(index, item, false);
+    }
+
+    @Override
+    public boolean replaceItem(int index, Object item, boolean notifyDataSetChanged) {
+        if (item != null) {
+            this.items.set(index, item);
+            if (notifyDataSetChanged) {
+                smartNotifyItemChanged(index);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void clear() {
         this.items.clear();
         smartNotifyDataSetChanged();
