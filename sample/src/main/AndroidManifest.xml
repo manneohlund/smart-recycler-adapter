@@ -10,10 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".MovieCategoryDetailsActivity"
+            android:label="@string/title_activity_movie_category_details"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".DemoActivity"
             android:label="SmartRecyclerAdapters">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
