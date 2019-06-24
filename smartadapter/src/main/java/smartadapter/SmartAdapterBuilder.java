@@ -157,7 +157,7 @@ public class SmartAdapterBuilder {
     }
 
     public final SmartRecyclerAdapter into(RecyclerView recyclerView) {
-        SmartRecyclerAdapter smartRecyclerAdapter = new SmartRecyclerAdapter(recyclerView.getContext(), items);
+        SmartRecyclerAdapterImpl smartRecyclerAdapter = new SmartRecyclerAdapterImpl(recyclerView.getContext(), items);
         smartRecyclerAdapter.setMapper(viewHolderMapper);
         smartRecyclerAdapter.setSmartAdapterBuilderMapper(smartAdapterBuilderMapper);
         smartRecyclerAdapter.setViewTypeResolver(viewTypeResolver);
