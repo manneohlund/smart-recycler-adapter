@@ -89,6 +89,21 @@ public interface SmartRecyclerAdapter {
     void addItem(Object item, boolean notifyDataSetChanged);
 
     /**
+     * Adds item to the list of data at target index.
+     * @param index target index
+     * @param item any type of item
+     */
+    void addItem(int index, Object item);
+
+    /**
+     * Adds item to the list of data at target index and notifies the RecyclerView to update.
+     * @param index target index
+     * @param item any type of item
+     * @param notifyDataSetChanged indicates if RecyclerView should update.
+     */
+    void addItem(int index, Object item, boolean notifyDataSetChanged);
+
+    /**
      * Adds a list of items to the SmartRecyclerAdapter list of data.
      * @param items list of items to add
      */
