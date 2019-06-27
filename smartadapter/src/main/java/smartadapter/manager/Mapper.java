@@ -10,8 +10,10 @@ import android.view.ViewGroup;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
+import java.util.Map;
 
 import smartadapter.SmartAdapterBuilder;
+import smartadapter.listener.NestedViewEventListener;
 import smartadapter.listener.ViewEventListener;
 import smartadapter.utils.ReflectionUtils;
 import smartadapter.viewholder.SmartAdapterHolder;
@@ -126,6 +128,20 @@ public class Mapper {
 
         if (viewHolder instanceof SmartAdapterHolder && smartAdapterBuilderMapper.containsKey(viewHolder.getClass())) {
             ((SmartAdapterHolder)viewHolder).setSmartAdapterBuilder(smartAdapterBuilderMapper.get(viewHolder.getClass()));
+        }
+
+        if (viewHolder instanceof SmartAdapterHolder && ((SmartAdapterHolder) viewHolder).getSmartRecyclerAdapter().getViewEventListeners() != null) {
+            for (Map.Entry<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> topLevelViewEventListenerMap : ((SmartAdapterHolder) viewHolder).getSmartRecyclerAdapter().getViewEventListeners().entrySet()) {
+                for (Map.Entry<Integer, HashMap<Integer, ViewEventListener>> actionViewEventListenerMap : topLevelViewEventListenerMap.getValue().entrySet()) {
+                    for (Map.Entry<Integer, ViewEventListener> viewEventListenerMap : actionViewEventListenerMap.getValue().entrySet()) {
+                        if (viewEventListenerMap.getValue() instanceof NestedViewEventListener) {
+                            ((NestedViewEventListener) viewEventListenerMap.getValue()).setSmartRecyclerAdapter(
+                                    ((SmartAdapterHolder) viewHolder).getSmartRecyclerAdapter()
+                            );
+                        }
+                    }
+                }
+            }
         }
 
         return viewHolder;

@@ -8,7 +8,9 @@ package smartadapter.viewholder;
 import android.support.annotation.NonNull;
 
 import smartadapter.SmartAdapterBuilder;
+import smartadapter.SmartRecyclerAdapter;
 
 public interface SmartAdapterHolder {
+    @NonNull SmartRecyclerAdapter getSmartRecyclerAdapter();
     void setSmartAdapterBuilder(@NonNull SmartAdapterBuilder smartAdapterBuilder);
 }
