@@ -13,18 +13,18 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.example.smartrecycleradapter.R
-import com.example.smartrecycleradapter.models.MovieBannerViewModel
+import com.example.smartrecycleradapter.models.MovieBannerModel
 import com.example.smartrecycleradapter.utils.displayWidth
 import smartadapter.viewholder.SmartAutoEventViewHolder
 
-class BannerViewHolder(parentView: ViewGroup) : SmartAutoEventViewHolder<MovieBannerViewModel>(
+class BannerViewHolder(parentView: ViewGroup) : SmartAutoEventViewHolder<MovieBannerModel>(
         LayoutInflater.from(parentView.context)
                 .inflate(R.layout.banner_item, parentView, false)) {
 
     private val titleTextView: TextView = itemView.findViewById(R.id.title)
     private val imageView: ImageView = itemView.findViewById(R.id.imageView)
 
-    override fun bind(movie: MovieBannerViewModel) {
+    override fun bind(movie: MovieBannerModel) {
         titleTextView.text = movie.title
         when (movie.title) {
             "" -> titleTextView.visibility = GONE

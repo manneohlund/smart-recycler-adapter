@@ -9,15 +9,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.smartrecycleradapter.R
+import com.example.smartrecycleradapter.models.CopyrightModel
 import smartadapter.viewholder.SmartAutoEventViewHolder
 
-class CopyrightViewHolder(parentView: ViewGroup) : SmartAutoEventViewHolder<String>(
+class CopyrightViewHolder(parentView: ViewGroup) : SmartAutoEventViewHolder<CopyrightModel>(
         LayoutInflater.from(parentView.context)
                 .inflate(R.layout.copyright, parentView, false)) {
 
     private val summary: TextView = itemView as TextView
 
-    override fun bind(text: String) {
-        summary.text = text
+    override fun bind(copyrightModel: CopyrightModel) {
+        summary.text = copyrightModel.toString()
     }
 }
