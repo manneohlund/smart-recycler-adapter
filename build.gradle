@@ -22,8 +22,8 @@ buildscript {
 allprojects {
     // Smart Adapter global version code and name
     ext {
-        VERSION_CODE = 4
-        VERSION_NAME = '1.5.0'
+        VERSION_CODE = 5
+        VERSION_NAME = '2.0.0'
         TARGET_SDK_VERSION = 28
         MIN_SDK_VERSION = 14
     }
