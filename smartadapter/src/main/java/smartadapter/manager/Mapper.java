@@ -10,10 +10,8 @@ import android.view.ViewGroup;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
-import java.util.Map;
 
-import smartadapter.SmartAdapterBuilder;
-import smartadapter.listener.NestedViewEventListener;
+import smartadapter.SmartRecyclerAdapter;
 import smartadapter.listener.ViewEventListener;
 import smartadapter.utils.ReflectionUtils;
 import smartadapter.viewholder.SmartAdapterHolder;
@@ -32,7 +30,7 @@ public class Mapper {
     private final SparseArray<Class<? extends SmartViewHolder>> viewTypeMapper = new SparseArray<>();
     private final HashMap<Class, Constructor> viewHolderConstructorMapper = new HashMap<>();
     private HashMap<String, Class<? extends SmartViewHolder>> dataTypeViewHolderMapper = new HashMap<>();
-    private HashMap<Class<? extends SmartViewHolder>, SmartAdapterBuilder> smartAdapterBuilderMapper = new HashMap<>();
+    private HashMap<Class<? extends SmartViewHolder>, SmartRecyclerAdapter> smartRecyclerAdapterMapper = new HashMap<>();
 
     public Mapper(Object callerEnclosingClass) {
         this.caller = callerEnclosingClass;
@@ -126,22 +124,8 @@ public class Mapper {
             ((ViewEventHolder)viewHolder).setViewEventListeners(viewEventListeners.get(viewHolder.getClass()));
         }
 
-        if (viewHolder instanceof SmartAdapterHolder && smartAdapterBuilderMapper.containsKey(viewHolder.getClass())) {
-            ((SmartAdapterHolder)viewHolder).setSmartAdapterBuilder(smartAdapterBuilderMapper.get(viewHolder.getClass()));
-        }
-
-        if (viewHolder instanceof SmartAdapterHolder && ((SmartAdapterHolder) viewHolder).getSmartRecyclerAdapter().getViewEventListeners() != null) {
-            for (Map.Entry<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> topLevelViewEventListenerMap : ((SmartAdapterHolder) viewHolder).getSmartRecyclerAdapter().getViewEventListeners().entrySet()) {
-                for (Map.Entry<Integer, HashMap<Integer, ViewEventListener>> actionViewEventListenerMap : topLevelViewEventListenerMap.getValue().entrySet()) {
-                    for (Map.Entry<Integer, ViewEventListener> viewEventListenerMap : actionViewEventListenerMap.getValue().entrySet()) {
-                        if (viewEventListenerMap.getValue() instanceof NestedViewEventListener) {
-                            ((NestedViewEventListener) viewEventListenerMap.getValue()).setSmartRecyclerAdapter(
-                                    ((SmartAdapterHolder) viewHolder).getSmartRecyclerAdapter()
-                            );
-                        }
-                    }
-                }
-            }
+        if (viewHolder instanceof SmartAdapterHolder && smartRecyclerAdapterMapper.containsKey(viewHolder.getClass())) {
+            ((SmartAdapterHolder)viewHolder).setSmartRecyclerAdapter(smartRecyclerAdapterMapper.get(viewHolder.getClass()));
         }
 
         return viewHolder;
@@ -155,7 +139,7 @@ public class Mapper {
         this.dataTypeViewHolderMapper = dataTypeViewHolderMapper;
     }
 
-    public void setSmartAdapterBuilderMapper(HashMap<Class<? extends SmartViewHolder>, SmartAdapterBuilder> smartAdapterBuilderMapper) {
-        this.smartAdapterBuilderMapper = smartAdapterBuilderMapper;
+    public void setSmartRecyclerAdapterMapper(HashMap<Class<? extends SmartViewHolder>, SmartRecyclerAdapter> smartRecyclerAdapterMapper) {
+        this.smartRecyclerAdapterMapper = smartRecyclerAdapterMapper;
     }
 }
