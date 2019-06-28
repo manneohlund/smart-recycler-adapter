@@ -14,10 +14,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.example.smartrecycleradapter.R
 import com.example.smartrecycleradapter.extension.GridAutoLayoutManager
-import com.example.smartrecycleradapter.models.ComingSoonMoviesModel
-import com.example.smartrecycleradapter.models.MyWatchListModel
 import com.example.smartrecycleradapter.models.NestedRecyclerViewModel
-import smartadapter.SmartAdapterBuilder
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.viewholder.SmartAdapterHolder
 import smartadapter.viewholder.SmartAutoEventViewHolder
@@ -35,9 +32,10 @@ open class NestedRecyclerViewHolder(parentView: ViewGroup) : SmartAutoEventViewH
         return smartRecyclerAdapter;
     }
 
-    override fun setSmartAdapterBuilder(smartAdapterBuilder: SmartAdapterBuilder) {
-        smartAdapterBuilder.setLayoutManager(LinearLayoutManager(recyclerView.context, HORIZONTAL, false))
-        smartRecyclerAdapter = smartAdapterBuilder.into(recyclerView)
+    override fun setSmartRecyclerAdapter(smartRecyclerAdapter: SmartRecyclerAdapter) {
+        recyclerView.layoutManager = LinearLayoutManager(recyclerView.context, HORIZONTAL, false)
+        recyclerView.adapter = smartRecyclerAdapter as RecyclerView.Adapter<*>
+        this.smartRecyclerAdapter = smartRecyclerAdapter
     }
 
     override fun bind(item: NestedRecyclerViewModel) {
@@ -45,27 +43,9 @@ open class NestedRecyclerViewHolder(parentView: ViewGroup) : SmartAutoEventViewH
     }
 }
 
-class ComingSoonMoviesViewHolder(parentView: ViewGroup) : NestedRecyclerViewHolder(parentView) {
-    override fun bind(item: NestedRecyclerViewModel) {
-        super.bind(item)
-        (recyclerView.adapter as? SmartRecyclerAdapter).let { smartAdapter ->
-            (item as? ComingSoonMoviesModel)?.adapterItems.let {
-                smartAdapter?.setItems(it)
-            }
-        }
-    }
-}
+class ComingSoonMoviesViewHolder(parentView: ViewGroup) : NestedRecyclerViewHolder(parentView);
 
-class MyWatchListViewHolder(parentView: ViewGroup) : NestedRecyclerViewHolder(parentView) {
-    override fun bind(item: NestedRecyclerViewModel) {
-        super.bind(item)
-        (recyclerView.adapter as? SmartRecyclerAdapter).let { smartAdapter ->
-            (item as? MyWatchListModel)?.adapterItems.let {
-                smartAdapter?.setItems(it)
-            }
-        }
-    }
-}
+class MyWatchListViewHolder(parentView: ViewGroup) : NestedRecyclerViewHolder(parentView);
 
 class ActionMoviesViewHolder(parentView: ViewGroup) : NestedRecyclerViewHolder(parentView)
 
@@ -89,8 +69,9 @@ class RecentlyPlayedMoviesViewHolder(parentView: ViewGroup) : NestedRecyclerView
         return smartRecyclerAdapter;
     }
 
-    override fun setSmartAdapterBuilder(smartAdapterBuilder: SmartAdapterBuilder) {
-        smartAdapterBuilder.setLayoutManager(GridAutoLayoutManager(recyclerView.context, 60))
-        smartRecyclerAdapter = smartAdapterBuilder.into(recyclerView)
+    override fun setSmartRecyclerAdapter(smartRecyclerAdapter: SmartRecyclerAdapter) {
+        recyclerView.layoutManager = GridAutoLayoutManager(recyclerView.context, 60)
+        recyclerView.adapter = smartRecyclerAdapter as RecyclerView.Adapter<*>
+        this.smartRecyclerAdapter = smartRecyclerAdapter
     }
 }

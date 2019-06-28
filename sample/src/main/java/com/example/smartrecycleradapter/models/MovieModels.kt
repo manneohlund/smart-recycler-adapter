@@ -6,9 +6,9 @@ package com.example.smartrecycleradapter.models
  * Copyright (c) All rights reserved.
  */
 
-class ComingSoonMoviesModel(title: String, val adapterItems: List<Any>) : NestedRecyclerViewModel(title)
+class ComingSoonMoviesModel(title: String) : NestedRecyclerViewModel(title)
 
-class MyWatchListModel(title: String, val adapterItems: List<Any>) : NestedRecyclerViewModel(title)
+class MyWatchListModel(title: String) : NestedRecyclerViewModel(title)
 
 class ActionMoviesModel(title: String) : NestedRecyclerViewModel(title)
 

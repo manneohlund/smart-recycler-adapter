@@ -44,12 +44,18 @@ import java.util.List;
 import java.util.Locale;
 
 import smartadapter.SmartRecyclerAdapter;
-import smartadapter.listener.NestedViewEventListener;
 
 public class DemoActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     SmartRecyclerAdapter mainSmartMovieAdapter;
+    SmartRecyclerAdapter comingSoonSmartMovieAdapter;
+    SmartRecyclerAdapter myWatchListSmartMovieAdapter;
+    SmartRecyclerAdapter actionMoviesSmartMovieAdapter;
+    SmartRecyclerAdapter adventuresMoviesSmartMovieAdapter;
+    SmartRecyclerAdapter animatedMoviesSmartMovieAdapter;
+    SmartRecyclerAdapter sciFiMoviesSmartMovieAdapter;
+    SmartRecyclerAdapter recentlyPlayedMoviesSmartMovieAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,7 @@ public class DemoActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recycler_view);
 
+        initNestedSmartRecyclerAdapters();
         initSmartRecyclerAdapter();
     }
 
@@ -65,8 +72,8 @@ public class DemoActivity extends AppCompatActivity {
         List<Object> items = new ArrayList<>();
 
         items.add(new MoviePosterModel(MovieDataItems.INSTANCE.getRandomPoster()));
-        items.add(new ComingSoonMoviesModel("Coming soon", MovieDataItems.INSTANCE.getComingSoonItems()));
-        items.add(new MyWatchListModel("My watch list", MovieDataItems.INSTANCE.getMyWatchListItems()));
+        items.add(new ComingSoonMoviesModel("Coming soon"));
+        items.add(new MyWatchListModel("My watch list"));
         items.add(new MovieBannerModel("Recommended", MovieDataItems.INSTANCE.getRandomBanner()));
         items.add(new ActionMoviesModel("Action"));
         items.add(new AdventureMoviesModel("Adventure"));
@@ -168,117 +175,101 @@ public class DemoActivity extends AppCompatActivity {
                         (view, actionId, position) -> startMovieCategoryDetailsActivity(MovieType.SCI_FI))
 
                 // Map nested SmartRecyclerAdapter
-                .map(ComingSoonMoviesViewHolder.class,
-                        SmartRecyclerAdapter.empty()
-                                .map(MovieModel.class, LargeThumbViewHolder.class)
-                                .addViewEventListener(
-                                        LargeThumbViewHolder.class,
-                                        R.id.action_on_click,
-                                        new NestedViewEventListener() {
-                                            @Override
-                                            public void onViewEvent(SmartRecyclerAdapter smartRecyclerAdapter, View view, int actionId, int position) {
-                                                showToast("Coming soon \n%s \n%s index: %d", getMovieTitle(smartRecyclerAdapter, position), getActionName(actionId), position);
-                                            }
-                                        }))
+                .map(ComingSoonMoviesViewHolder.class, comingSoonSmartMovieAdapter)
+                .map(MyWatchListViewHolder.class, myWatchListSmartMovieAdapter)
+                .map(ActionMoviesViewHolder.class, actionMoviesSmartMovieAdapter)
+                .map(AdventureMoviesViewHolder.class, adventuresMoviesSmartMovieAdapter)
+                .map(AnimatedMoviesViewHolder.class, animatedMoviesSmartMovieAdapter)
+                .map(SciFiMoviesViewHolder.class, sciFiMoviesSmartMovieAdapter)
+                .map(RecentlyPlayedMoviesViewHolder.class, recentlyPlayedMoviesSmartMovieAdapter)
 
-                .map(MyWatchListViewHolder.class,
-                        SmartRecyclerAdapter.empty()
-                                .map(MovieModel.class, ThumbViewHolder.class)
-                                .addViewEventListener(
-                                        ThumbViewHolder.class,
-                                        R.id.action_on_long_click,
-                                        new NestedViewEventListener() {
-                                            @Override
-                                            public void onViewEvent(SmartRecyclerAdapter smartRecyclerAdapter, View view, int actionId, int position) {
-                                                showToast("Remove " + getActionName(actionId) + " item: " + position);
-                                                smartRecyclerAdapter.removeItem(position);
-                                            }
-                                        })
-                                .addViewEventListener(
-                                        ThumbViewHolder.class,
-                                        R.id.action_on_click,
-                                        new NestedViewEventListener() {
-                                            @Override
-                                            public void onViewEvent(SmartRecyclerAdapter smartRecyclerAdapter, View view, int actionId, int position) {
-                                                showToast("My watch list \n%s \n%s index: %d", getMovieTitle(smartRecyclerAdapter, position), getActionName(actionId), position);
-                                            }
-                                        }))
-
-                .map(ActionMoviesViewHolder.class,
-                        SmartRecyclerAdapter.items(MovieDataItems.INSTANCE.getNestedActionItems())
-                                .map(MovieModel.class, ThumbViewHolder.class)
-                                .addViewEventListener(
-                                        ThumbViewHolder.class,
-                                        R.id.action_on_click,
-                                        new NestedViewEventListener() {
-                                            @Override
-                                            public void onViewEvent(SmartRecyclerAdapter smartRecyclerAdapter, View view, int actionId, int position) {
-                                                showToast("Action \n%s \n%s index: %d", getMovieTitle(smartRecyclerAdapter, position), getActionName(actionId), position);
-                                            }
-                                        }))
-
-                .map(AdventureMoviesViewHolder.class,
-                        SmartRecyclerAdapter.items(MovieDataItems.INSTANCE.getNestedAdventureItems())
-                                .map(MovieModel.class, ThumbViewHolder.class)
-                                .addViewEventListener(
-                                        ThumbViewHolder.class,
-                                        R.id.action_on_click,
-                                        new NestedViewEventListener() {
-                                            @Override
-                                            public void onViewEvent(SmartRecyclerAdapter smartRecyclerAdapter, View view, int actionId, int position) {
-                                                showToast("Adventure \n%s \n%s index: %d", getMovieTitle(smartRecyclerAdapter, position), getActionName(actionId), position);
-                                            }
-                                        }))
-
-                .map(AnimatedMoviesViewHolder.class,
-                        SmartRecyclerAdapter.items(MovieDataItems.INSTANCE.getNestedAnimatedItems())
-                                .map(MovieModel.class, ThumbViewHolder.class)
-                                .addViewEventListener(
-                                        ThumbViewHolder.class,
-                                        R.id.action_on_click,
-                                        new NestedViewEventListener() {
-                                            @Override
-                                            public void onViewEvent(SmartRecyclerAdapter smartRecyclerAdapter, View view, int actionId, int position) {
-                                                showToast("Animated \n%s \n%s index: %d", getMovieTitle(smartRecyclerAdapter, position), getActionName(actionId), position);
-                                            }
-                                        }))
-
-                .map(SciFiMoviesViewHolder.class,
-                        SmartRecyclerAdapter.items(MovieDataItems.INSTANCE.getNestedSciFiItems())
-                                .map(MovieModel.class, ThumbViewHolder.class)
-                                .addViewEventListener(
-                                        ThumbViewHolder.class,
-                                        R.id.action_on_click,
-                                        new NestedViewEventListener() {
-                                            @Override
-                                            public void onViewEvent(SmartRecyclerAdapter smartRecyclerAdapter, View view, int actionId, int position) {
-                                                showToast("Sci-Fi \n%s \n%s index: %d", getMovieTitle(smartRecyclerAdapter, position), getActionName(actionId), position);
-                                            }
-                                        }))
-
-                .map(RecentlyPlayedMoviesViewHolder.class,
-                        SmartRecyclerAdapter.items(MovieDataItems.INSTANCE.getNestedRecentViewedItems())
-                                .map(MovieModel.class, SmallThumbViewHolder.class)
-                                .addViewEventListener(
-                                        SmallThumbViewHolder.class,
-                                        R.id.action_on_long_click,
-                                        new NestedViewEventListener() {
-                                            @Override
-                                            public void onViewEvent(SmartRecyclerAdapter smartRecyclerAdapter, View view, int actionId, int position) {
-                                                showToast("Remove " + getActionName(actionId) + " item: " + position);
-                                                smartRecyclerAdapter.removeItem(position);
-                                            }
-                                        })
-                                .addViewEventListener(
-                                        SmallThumbViewHolder.class,
-                                        R.id.action_on_click,
-                                        new NestedViewEventListener() {
-                                            @Override
-                                            public void onViewEvent(SmartRecyclerAdapter smartRecyclerAdapter, View view, int actionId, int position) {
-                                                showToast("Recently played \n%s \n%s index: %d", getMovieTitle(smartRecyclerAdapter, position), getActionName(actionId), position);
-                                            }
-                                        }))
                 .into(recyclerView);
+    }
+
+    private void initNestedSmartRecyclerAdapters() {
+        comingSoonSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.INSTANCE.getComingSoonItems())
+                .map(MovieModel.class, LargeThumbViewHolder.class)
+                .addViewEventListener(
+                        LargeThumbViewHolder.class,
+                        R.id.action_on_click,
+                        (view, actionId, position) ->
+                            showToast("Coming soon \n%s \n%s index: %d", getMovieTitle(comingSoonSmartMovieAdapter, position), getActionName(actionId), position))
+                .addViewEventListener(
+                        LargeThumbViewHolder.class,
+                        R.id.action_on_long_click,
+                        (view, actionId, position) -> {
+                            showToast("Add to My watch list");
+                            myWatchListSmartMovieAdapter.addItem(1, comingSoonSmartMovieAdapter.getItem(position));
+                        })
+                .create();
+
+        myWatchListSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.INSTANCE.getMyWatchListItems())
+                .map(MovieModel.class, ThumbViewHolder.class)
+                .addViewEventListener(
+                        ThumbViewHolder.class,
+                        R.id.action_on_long_click,
+                        (view, actionId, position) -> {
+                            showToast("Remove " + getActionName(actionId) + " item: " + position);
+                            myWatchListSmartMovieAdapter.removeItem(position);
+                        })
+                .addViewEventListener(
+                        ThumbViewHolder.class,
+                        R.id.action_on_click,
+                        (view, actionId, position) ->
+                            showToast("My watch list \n%s \n%s index: %d", getMovieTitle(myWatchListSmartMovieAdapter, position), getActionName(actionId), position))
+                .create();
+
+        actionMoviesSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.INSTANCE.getNestedActionItems())
+                .map(MovieModel.class, ThumbViewHolder.class)
+                .addViewEventListener(
+                        ThumbViewHolder.class,
+                        R.id.action_on_click,
+                        (view, actionId, position) ->
+                            showToast("Action \n%s \n%s index: %d", getMovieTitle(actionMoviesSmartMovieAdapter, position), getActionName(actionId), position))
+                .create();
+
+        adventuresMoviesSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.INSTANCE.getNestedAdventureItems())
+                .map(MovieModel.class, ThumbViewHolder.class)
+                .addViewEventListener(
+                        ThumbViewHolder.class,
+                        R.id.action_on_click,
+                        (view, actionId, position) ->
+                            showToast("Adventure \n%s \n%s index: %d", getMovieTitle(adventuresMoviesSmartMovieAdapter, position), getActionName(actionId), position))
+                .create();
+
+        animatedMoviesSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.INSTANCE.getNestedAnimatedItems())
+                .map(MovieModel.class, ThumbViewHolder.class)
+                .addViewEventListener(
+                        ThumbViewHolder.class,
+                        R.id.action_on_click,
+                        (view, actionId, position) ->
+                            showToast("Animated \n%s \n%s index: %d", getMovieTitle(animatedMoviesSmartMovieAdapter, position), getActionName(actionId), position))
+                .create();
+
+        sciFiMoviesSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.INSTANCE.getNestedSciFiItems())
+                .map(MovieModel.class, ThumbViewHolder.class)
+                .addViewEventListener(
+                        ThumbViewHolder.class,
+                        R.id.action_on_click,
+                        (view, actionId, position) ->
+                            showToast("Sci-Fi \n%s \n%s index: %d", getMovieTitle(sciFiMoviesSmartMovieAdapter, position), getActionName(actionId), position))
+                .create();
+
+        recentlyPlayedMoviesSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.INSTANCE.getNestedRecentViewedItems())
+                .map(MovieModel.class, SmallThumbViewHolder.class)
+                .addViewEventListener(
+                        SmallThumbViewHolder.class,
+                        R.id.action_on_long_click,
+                        (view, actionId, position) -> {
+                            showToast("Remove " + getActionName(actionId) + " item: " + position);
+                            recentlyPlayedMoviesSmartMovieAdapter.removeItem(position);
+                        })
+                .addViewEventListener(
+                        SmallThumbViewHolder.class,
+                        R.id.action_on_click,
+                        (view, actionId, position) ->
+                            showToast("Recently played \n%s \n%s index: %d", getMovieTitle(recentlyPlayedMoviesSmartMovieAdapter, position), getActionName(actionId), position))
+                .create();
     }
 
     private void startMovieCategoryDetailsActivity(MovieType movieType) {
