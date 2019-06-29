@@ -22,6 +22,65 @@ dependencies {
 }
 ```
 
+# New complex SmartRecyclerAdapter v2.0.0
+
+New in `SmartRecyclerAdapter` v2.0.0 is support for nested recycler adapter.
+Now you can easily build complex nested adapters without hustle and have full control of the adapter in your view controlling `Fragment` or `Activity`. 
+Use the new `create()` method instead of the `into(recyclerView)` to create just the `SmartRecyclerAdapter` then set the adapter to the recycler view in your `ViewHolder`.
+Just implement the `SmartAdapterHolder` interface in your `ViewHolder` and `SmartRecyclerAdapter` will handle the mapping.
+
+### 1. Create your nested SmartRecyclerAdapter
+
+```java
+SmartRecyclerAdapter myWatchListSmartMovieAdapter = SmartRecyclerAdapter
+  .items(myWatchListItems)
+  .map(MovieModel.class, ThumbViewHolder.class)
+  .addViewEventListener(
+    ThumbViewHolder.class,
+    R.id.action_on_click,
+    (view, actionId, position) -> playMovie())
+  .create();
+````
+
+### 2. Map myWatchListSmartMovieAdapter with MyWatchListViewHolder
+
+```java
+SmartRecyclerAdapter
+  .items(items)
+  .map(MoviePosterModel.class, PosterViewHolder.class)
+  .map(MyWatchListModel.class, MyWatchListViewHolder.class)
+  .map(MyWatchListViewHolder.class, myWatchListSmartMovieAdapter)
+  .into(recyclerView);
+```
+
+### 3. Map myWatchListSmartMovieAdapter to MyWatchListViewHolder
+
+```java
+class MyWatchListViewHolder
+        extends SmartAutoEventViewHolder<MyWatchListModel>
+        implements SmartAdapterHolder {
+    
+    // Constructor here
+    
+    @NonNull
+    @Override
+    public SmartRecyclerAdapter getSmartRecyclerAdapter() {
+        return this.smartRecyclerAdapter;
+    }
+    
+    @Override
+    public void setSmartRecyclerAdapter(SmartRecyclerAdapter smartRecyclerAdapter) {
+        recyclerView.setLayoutManager(LinearLayoutManager(recyclerView.context, HORIZONTAL, false);
+        recyclerView.adapter = (RecyclerView.Adapter) smartRecyclerAdapter;
+        this.smartRecyclerAdapter = smartRecyclerAdapter;
+    }
+
+    public void bind(MyWatchListModel myWatchListModel) {
+        // bind model data to views
+    }
+}
+```
+
 # Basic
 ### Basic adapter creation
 
@@ -130,39 +189,37 @@ SmartRecyclerAdapter
   .into(recyclerView);
 ```
 
-# Complex SmartRecyclerAdapter
-
-New in `SmartRecyclerAdapter` v2.0.0 is support for nested recycler adapter.
-Now you can easily build complex nested adapters without hustle and have full control in your view controlling `Fragment` or `Activity`.
+### More SmartRecyclerAdapter features
 
 ```java
-SmartRecyclerAdapter myWatchListSmartMovieAdapter = SmartRecyclerAdapter
-  .items(myWatchListItems)
-  .map(MovieModel.class, ThumbViewHolder.class)
-  .addViewEventListener(
-    ThumbViewHolder.class,
-    R.id.action_on_click,
-    (view, actionId, position) -> playMovie())
-  .create();
+SmartRecyclerAdapter adapter = SmartRecyclerAdapter
+        .items(items)
+        .map(MovieModel.class, MovieViewHolder.class)
+        .into(recyclerView);
 
-SmartRecyclerAdapter
-  .items(items)
-  .map(MoviePosterModel.class, PosterViewHolder.class)
-  .map(MyWatchListModel.class, MyWatchListViewHolder.class)
-  .map(MyWatchListViewHolder.class, myWatchListSmartMovieAdapter)
-  .into(recyclerView);
-```
+// We can add more data
+adapter.addItems(items);
 
-### SmartRecyclerAdapter methods  
-  
-```java
-SmartRecyclerAdapter adapter = SmartRecyclerAdapter.init(this).items(items).map(Post.class, MainViewHolder.class).into(recyclerView);  
+// Add data at index with animation
+adapter.addItem(0, item);
 
-// We can add more items
-adapter.addItems(newItems);
+// Add data at index without animation
+adapter.addItem(0, item, false);
 
-// We can get items by type
-adapter.getItems(Post.class);
+// Remove item at index with animation
+adapter.removeItem(0);
+
+// Remove item at index without animation
+adapter.removeItem(0, false);
+
+// Replace item at index with animation
+adapter.replaceItem(0, item);
+
+// Replace item at index without animation
+adapter.replaceItem(0, item, false);
+
+// Get items by type
+adapter.getItems(MovieModel.class);
 
 // Delete all items in the list
 adapter.clear();
