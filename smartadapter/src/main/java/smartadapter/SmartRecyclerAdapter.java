@@ -64,6 +64,7 @@ public interface SmartRecyclerAdapter {
 
     /**
      * Sets the data item list for the SmartRecyclerAdapter.
+     * Calls {@link #setItems(List, boolean)} with default notifyDataSetChanged to true.
      * @param items list of data items
      */
     void setItems(List items);
@@ -77,6 +78,7 @@ public interface SmartRecyclerAdapter {
 
     /**
      * Adds item to the list of data.
+     * Calls {@link #addItem(Object, boolean)} with default notifyDataSetChanged to true.
      * @param item any type of item
      */
     void addItem(Object item);
@@ -90,6 +92,7 @@ public interface SmartRecyclerAdapter {
 
     /**
      * Adds item to the list of data at target index.
+     * Calls {@link #addItem(int, Object, boolean)} with default notifyDataSetChanged to true.
      * @param index target index
      * @param item any type of item
      */
@@ -105,6 +108,7 @@ public interface SmartRecyclerAdapter {
 
     /**
      * Adds a list of items to the SmartRecyclerAdapter list of data.
+     * Calls {@link #addItems(List, boolean)} with default notifyDataSetChanged to true.
      * @param items list of items to add
      */
     void addItems(List items);
@@ -205,7 +209,7 @@ public interface SmartRecyclerAdapter {
     void smartNotifyItemRangeRemoved(int positionStart, int itemCount);
 
     /**
-     * Updated the SmartAdapterItem count.
+     * Updated the SmartRecyclerAdapter item count.
      */
     void updateItemCount();
 
