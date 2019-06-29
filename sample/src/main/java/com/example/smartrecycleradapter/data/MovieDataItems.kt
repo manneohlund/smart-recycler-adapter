@@ -9,6 +9,7 @@ import com.example.smartrecycleradapter.R
 import com.example.smartrecycleradapter.models.MovieModel
 import java.util.*
 import java.util.Arrays.asList
+import kotlin.collections.ArrayList
 
 object MovieDataItems {
 
@@ -114,7 +115,15 @@ object MovieDataItems {
     )
 
     // Recent viewed items
-    var nestedRecentViewedItems: List<Any> = comingSoonItems
+    var nestedRecentViewedItems = ArrayList<Any>()
+    init {
+        nestedRecentViewedItems.addAll(comingSoonItems)
+        nestedRecentViewedItems.add(MovieModel("Dumb and dumber 2", R.mipmap.dumb_and_dumber_two_thumb))
+        nestedRecentViewedItems.add(MovieModel("Her", R.mipmap.her_thumb))
+        nestedRecentViewedItems.add(MovieModel("Imitation game", R.mipmap.imitation_game_thumb))
+        nestedRecentViewedItems.add(MovieModel("Interview", R.mipmap.interview_thumb))
+        nestedRecentViewedItems.add(MovieModel("As above so below", R.mipmap.as_above_so_below_thumb))
+    }
 
     private val POSTER_ITEMS = intArrayOf(
             R.mipmap.poster_guardians_of_the_galaxy_vol_two,
