@@ -26,16 +26,10 @@ open class NestedRecyclerViewHolder(parentView: ViewGroup) : SmartAutoEventViewH
 
     private val title: TextView = itemView.findViewById(R.id.title)
     protected val recyclerView: RecyclerView = itemView.findViewById(R.id.recycler_view)
-    private lateinit var smartRecyclerAdapter: SmartRecyclerAdapter;
-
-    override fun getSmartRecyclerAdapter(): SmartRecyclerAdapter {
-        return smartRecyclerAdapter;
-    }
 
     override fun setSmartRecyclerAdapter(smartRecyclerAdapter: SmartRecyclerAdapter) {
         recyclerView.layoutManager = LinearLayoutManager(recyclerView.context, HORIZONTAL, false)
         recyclerView.adapter = smartRecyclerAdapter as RecyclerView.Adapter<*>
-        this.smartRecyclerAdapter = smartRecyclerAdapter
     }
 
     override fun bind(item: NestedRecyclerViewModel) {
@@ -63,15 +57,8 @@ class RecentlyPlayedMoviesViewHolder(parentView: ViewGroup) : NestedRecyclerView
         more.visibility = GONE
     }
 
-    private lateinit var smartRecyclerAdapter: SmartRecyclerAdapter;
-
-    override fun getSmartRecyclerAdapter(): SmartRecyclerAdapter {
-        return smartRecyclerAdapter;
-    }
-
     override fun setSmartRecyclerAdapter(smartRecyclerAdapter: SmartRecyclerAdapter) {
         recyclerView.layoutManager = GridAutoLayoutManager(recyclerView.context, 60)
         recyclerView.adapter = smartRecyclerAdapter as RecyclerView.Adapter<*>
-        this.smartRecyclerAdapter = smartRecyclerAdapter
     }
 }

@@ -97,9 +97,9 @@ public class DemoActivity extends AppCompatActivity {
                 .map(RecentlyPlayedMoviesModel.class, RecentlyPlayedMoviesViewHolder.class)
                 .map(CopyrightModel.class, CopyrightViewHolder.class)
 
-                // You need to define your own view event listeners like onClickListener
+                // You need to define your own view event listeners like onClickListener on a view
                 .addViewEventListener((view, actionId, position) ->
-                        showToast(getActionName(actionId) + " " + position)) // Event action
+                        showToast(getActionName(actionId) + " " + position))
 
                 /** Adds event listener and also automatically adds row item {@link View.OnClickListener} on all items root view */
                 .addViewEventListener(

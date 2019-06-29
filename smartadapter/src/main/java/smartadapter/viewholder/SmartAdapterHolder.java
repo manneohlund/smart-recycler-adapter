@@ -10,6 +10,5 @@ import android.support.annotation.NonNull;
 import smartadapter.SmartRecyclerAdapter;
 
 public interface SmartAdapterHolder {
-    @NonNull SmartRecyclerAdapter getSmartRecyclerAdapter();
     void setSmartRecyclerAdapter(@NonNull SmartRecyclerAdapter smartRecyclerAdapter);
 }
