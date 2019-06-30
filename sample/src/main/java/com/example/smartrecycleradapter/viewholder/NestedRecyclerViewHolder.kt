@@ -25,7 +25,7 @@ open class NestedRecyclerViewHolder(parentView: ViewGroup) : SmartAutoEventViewH
         SmartAdapterHolder {
 
     private val title: TextView = itemView.findViewById(R.id.title)
-    protected val recyclerView: RecyclerView = itemView.findViewById(R.id.recycler_view)
+    protected val recyclerView: RecyclerView = itemView.findViewById(R.id.nested_recycler_view)
 
     override fun setSmartRecyclerAdapter(smartRecyclerAdapter: SmartRecyclerAdapter) {
         recyclerView.layoutManager = LinearLayoutManager(recyclerView.context, HORIZONTAL, false)
