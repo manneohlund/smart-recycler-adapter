@@ -31,7 +31,8 @@ public class SmartRecyclerAdapterImpl extends RecyclerView.Adapter<SmartViewHold
 
     SmartRecyclerAdapterImpl(Object callerEnclosingClass, List items) {
         mapper = new Mapper(callerEnclosingClass);
-        setItems(items);
+        setItems(items, false);
+        updateItemCount();
     }
 
     @Override
@@ -103,8 +104,7 @@ public class SmartRecyclerAdapterImpl extends RecyclerView.Adapter<SmartViewHold
     @Override
     public void setItems(List items, boolean notifyDataSetChanged) {
         if (items != null) {
-            this.items.clear();
-            this.items.addAll(items);
+            this.items = items;
             if (notifyDataSetChanged) {
                 smartNotifyDataSetChanged();
             }
