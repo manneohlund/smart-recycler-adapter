@@ -1,141 +1,101 @@
 package com.example.smartrecycleradapter;
 
-import android.support.test.rule.ActivityTestRule;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.view.ViewGroup;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import smartadapter.SmartRecyclerAdapter;
-import smartadapter.utils.ReflectionUtils;
-import smartadapter.viewholder.SmartViewHolder;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-/**
+/*
  * Created by Manne Öhlund on 31/05/17.
  * Copyright © 2017 All rights reserved.
  */
+
+import android.support.test.espresso.ViewAssertion;
+import android.support.test.rule.ActivityTestRule;
+import android.support.v7.widget.RecyclerView;
+
+import com.example.smartrecycleradapter.models.ActionMoviesModel;
+import com.example.smartrecycleradapter.models.AdventureMoviesModel;
+import com.example.smartrecycleradapter.models.AnimatedMoviesModel;
+import com.example.smartrecycleradapter.models.ComingSoonMoviesModel;
+import com.example.smartrecycleradapter.models.CopyrightModel;
+import com.example.smartrecycleradapter.models.MovieBannerModel;
+import com.example.smartrecycleradapter.models.MoviePosterModel;
+import com.example.smartrecycleradapter.models.MyWatchListModel;
+import com.example.smartrecycleradapter.models.RecentlyPlayedMoviesModel;
+import com.example.smartrecycleradapter.models.SciFiMoviesModel;
+import com.example.smartrecycleradapter.viewholder.ActionMoviesViewHolder;
+import com.example.smartrecycleradapter.viewholder.AdventureMoviesViewHolder;
+import com.example.smartrecycleradapter.viewholder.AnimatedMoviesViewHolder;
+import com.example.smartrecycleradapter.viewholder.BannerViewHolder;
+import com.example.smartrecycleradapter.viewholder.ComingSoonMoviesViewHolder;
+import com.example.smartrecycleradapter.viewholder.CopyrightViewHolder;
+import com.example.smartrecycleradapter.viewholder.MyWatchListViewHolder;
+import com.example.smartrecycleradapter.viewholder.PosterViewHolder;
+import com.example.smartrecycleradapter.viewholder.RecentlyPlayedMoviesViewHolder;
+import com.example.smartrecycleradapter.viewholder.SciFiMoviesViewHolder;
+
+import org.junit.Rule;
+import org.junit.Test;
+
+import smartadapter.SmartRecyclerAdapter;
+
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 public class DemoActivityTest {
 
     @Rule
     public ActivityTestRule<DemoActivity> rule  = new ActivityTestRule<>(DemoActivity.class);
 
-    RecyclerView recyclerView;
-
-    List items = new ArrayList();
-
-    @Before
-    public void setUp() throws Exception {
-        recyclerView = (RecyclerView) rule.getActivity().findViewById(R.id.recycler_view);
-
-        List<DemoActivity.Post> items = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            if (i % 2 == 0) {
-                items.add(new DemoActivity.Post("Hello", "World " + i));
-            } else {
-                items.add(new DemoActivity.Post("Hello", "World " + i, true));
-            }
-        }
-        for (int i = 0; i < 100; i++) {
-            items.add(new DemoActivity.ErrorPost("Hello", "World " + i));
-        }
-    }
-
     @Test
-    public void reflectionTest_staticInnerClassInvocation() throws Exception {
-        assertNotNull(ReflectionUtils.getConstructor(StaticInnerClassViewHolder.class, new Class[]{ ViewGroup.class }));
-    }
-
-    @Test
-    public void reflectionTest_innerClassInvocation() throws Exception {
-        assertNotNull(ReflectionUtils.getConstructor(InnerClassViewHolder.class, new Class[]{ DemoActivityTest.class, ViewGroup.class }));
-    }
-
-    @Test
-    public void reflectionErrorTest_staticInnerClassInvocation_wrongParameters() throws Exception {
-        try {
-            ReflectionUtils.getConstructor(StaticInnerClassViewHolder.class, new Class[]{ DemoActivityTest.class, ViewGroup.class });
-            Assert.fail("Expected Runtime exception");
-        } catch (Exception e) {
-            // Success
-        }
-    }
-
-    @Test
-    public void reflectionErrorTest_staticInnerClassInvocation_wrongClassConstructor() throws Exception {
-        try {
-            ReflectionUtils.getConstructor(StaticInnerClassViewHolder_ERROR.class, new Class[]{ ViewGroup.class });
-            Assert.fail("Expected Runtime exception");
-        } catch (Exception e) {
-            // Success
-        }
-    }
-
-    @Test
-    public void adapterGetItems() throws Exception {
+    public void testSmartRecyclerAdapter_getItems() {
         SmartRecyclerAdapter adapter = (SmartRecyclerAdapter) rule.getActivity().recyclerView.getAdapter();
-        assertTrue("ErrorMail count", adapter.getItems(DemoActivity.ErrorPost.class).size() == 100);
-        assertTrue("Mail count", adapter.getItems(DemoActivity.Post.class).size() == 100);
+        assertNotNull("Check SmartRecyclerAdapter is not null", adapter);
+        assertEquals("MoviePosterModel count", 1, adapter.getItems(MoviePosterModel.class).size());
+        assertEquals("MovieBannerModel count", 3, adapter.getItems(MovieBannerModel.class).size());
+        assertEquals("ComingSoonMoviesModel count", 1, adapter.getItems(ComingSoonMoviesModel.class).size());
+        assertEquals("MyWatchListModel count", 1, adapter.getItems(MyWatchListModel.class).size());
+        assertEquals("ActionMoviesModel count", 1, adapter.getItems(ActionMoviesModel.class).size());
+        assertEquals("AdventureMoviesModel count", 1, adapter.getItems(AdventureMoviesModel.class).size());
+        assertEquals("AnimatedMoviesModel count", 1, adapter.getItems(AnimatedMoviesModel.class).size());
+        assertEquals("SciFiMoviesModel count", 1, adapter.getItems(SciFiMoviesModel.class).size());
+        assertEquals("RecentlyPlayedMoviesModel count", 1, adapter.getItems(RecentlyPlayedMoviesModel.class).size());
+        assertEquals("CopyrightModel count", 1, adapter.getItems(CopyrightModel.class).size());
     }
 
-    /**
-     * Test View holders
-     */
-
-    static class StaticInnerClassViewHolder extends SmartViewHolder {
-
-        public StaticInnerClassViewHolder(ViewGroup view) {
-            super(view);
-        }
-
-        @Override
-        public void bind(Object item) {
-
-        }
+    @Test
+    public void testSmartRecyclerAdapter_matchesViewHolderAtPosition() {
+        onView(withId(R.id.recycler_view))
+                .check(matchesViewHolderAtPosition(0, PosterViewHolder.class))
+                .perform(scrollToPosition(1))
+                .check(matchesViewHolderAtPosition(1, ComingSoonMoviesViewHolder.class))
+                .perform(scrollToPosition(2))
+                .check(matchesViewHolderAtPosition(2, MyWatchListViewHolder.class))
+                .perform(scrollToPosition(3))
+                .check(matchesViewHolderAtPosition(3, BannerViewHolder.class))
+                .perform(scrollToPosition(4))
+                .check(matchesViewHolderAtPosition(4, ActionMoviesViewHolder.class))
+                .perform(scrollToPosition(5))
+                .check(matchesViewHolderAtPosition(5, AdventureMoviesViewHolder.class))
+                .perform(scrollToPosition(6))
+                .check(matchesViewHolderAtPosition(6, BannerViewHolder.class))
+                .perform(scrollToPosition(7))
+                .check(matchesViewHolderAtPosition(7, AnimatedMoviesViewHolder.class))
+                .perform(scrollToPosition(8))
+                .check(matchesViewHolderAtPosition(8, SciFiMoviesViewHolder.class))
+                .perform(scrollToPosition(9))
+                .check(matchesViewHolderAtPosition(9, BannerViewHolder.class))
+                .perform(scrollToPosition(10))
+                .check(matchesViewHolderAtPosition(10, RecentlyPlayedMoviesViewHolder.class))
+                .perform(scrollToPosition(11))
+                .check(matchesViewHolderAtPosition(11, CopyrightViewHolder.class));
     }
 
-    static class StaticInnerClassViewHolder_ERROR extends SmartViewHolder {
-
-        public StaticInnerClassViewHolder_ERROR(View view) {
-            super(view);
-        }
-
-        @Override
-        public void bind(Object item) {
-
-        }
-    }
-
-    class InnerClassViewHolder extends SmartViewHolder {
-
-        public InnerClassViewHolder(ViewGroup view) {
-            super(view);
-        }
-
-        @Override
-        public void bind(Object item) {
-
-        }
-    }
-
-    class InnerClassViewHolder_ERROR extends SmartViewHolder {
-
-        public InnerClassViewHolder_ERROR(View view) {
-            super(view);
-        }
-
-        @Override
-        public void bind(Object item) {
-
-        }
+    private static ViewAssertion matchesViewHolderAtPosition(int position, Class<?> target) {
+        return (view, noViewFoundException) -> {
+            RecyclerView recyclerView = (RecyclerView) view;
+            Class<? extends RecyclerView.ViewHolder> source = recyclerView.findViewHolderForAdapterPosition(position).getClass();
+            assertTrue(String.format("Is <%s> assignable from <%s>", source, target), source.isAssignableFrom(target));
+        };
     }
 }

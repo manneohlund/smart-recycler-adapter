@@ -1,12 +1,12 @@
 package smartadapter;
 
 /*
- * Created by Manne Öhlund on 02/04/17.
- * Copyright © 2019 All rights reserved.
+ * Created by Manne Öhlund on 2019-06-25.
+ * Copyright (c) All rights reserved.
  */
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,217 +18,276 @@ import smartadapter.manager.Mapper;
 import smartadapter.viewholder.SmartViewHolder;
 import smartadapter.widget.ViewTypeResolver;
 
-public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> {
+public interface SmartRecyclerAdapter {
 
-    private int itemCount = 0;
-    private List items = new ArrayList();
+    /**
+     * Overrides {@link RecyclerView.Adapter#onViewDetachedFromWindow(RecyclerView.ViewHolder)}.
+     * @see RecyclerView.Adapter#onViewDetachedFromWindow(RecyclerView.ViewHolder)
+     */
+    void onViewDetachedFromWindow(@NonNull SmartViewHolder holder);
 
-    private final Mapper mapper;
-    private ViewTypeResolver viewTypeResolver;
-    private HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> viewEventListeners;
-    private OnViewDetachedFromWindowListener onViewDetachedFromWindowListener;
+    /**
+     * Overrides {@link RecyclerView.Adapter#getItemCount()}.
+     * @see RecyclerView.Adapter#getItemCount()
+     * @return data item count
+     */
+    int getItemCount();
 
-    SmartRecyclerAdapter(Object callerEnclosingClass, List items) {
-        mapper = new Mapper(callerEnclosingClass);
-        setItems(items);
-    }
+    /**
+     * Get item count for target class type.
+     * @param type target class type
+     * @param <T> type of class
+     * @return item count
+     */
+    <T> int getItemCount(Class<T> type);
 
-    @Override
-    public void onViewDetachedFromWindow(SmartViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-        if (onViewDetachedFromWindowListener != null) {
-            onViewDetachedFromWindowListener.onViewDetachedFromWindow(holder);
-        }
-    }
+    /**
+     * Get item at index.
+     * @param index adapter index
+     * @return Data object for that index.
+     */
+    Object getItem(int index);
 
-    @Override
-    public int getItemViewType(int position) {
-        return mapper.getItemViewType(viewTypeResolver, items.get(position), position);
-    }
+    /**
+     * Get list of all data items.
+     * @return list of all data items
+     */
+    List getItems();
 
-    @Override
-    public SmartViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return mapper.getViewHolder(viewEventListeners, parent, viewType);
-    }
+    /**
+     * Get list of all data items for target class type.
+     * @param type target class type
+     * @param <T> type of class
+     * @return list of all data items for target class type
+     */
+    <T> ArrayList<T> getItems(Class<T> type);
 
-    @Override
-    public void onBindViewHolder(SmartViewHolder holder, int position) {
-        holder.bind(items.get(position));
-    }
+    /**
+     * Sets the data item list for the SmartRecyclerAdapter.
+     * Calls {@link #setItems(List, boolean)} with default notifyDataSetChanged to true.
+     * @param items list of data items
+     */
+    void setItems(List items);
 
-    @Override
-    public int getItemCount() {
-        return itemCount;
-    }
+    /**
+     * Sets the data item list for the SmartRecyclerAdapter and notifies the RecyclerView to update.
+     * @param items list of data items
+     * @param notifyDataSetChanged indicates if RecyclerView should update.
+     */
+    void setItems(List items, boolean notifyDataSetChanged);
 
-    public <T> int getItemCount(Class<T> type) {
-        int count = 0;
-        for (Object item : items) {
-            if (item.getClass().equals(type)) {
-                count++;
-            }
-        }
-        return count;
-    }
+    /**
+     * Adds item to the list of data.
+     * Calls {@link #addItem(Object, boolean)} with default notifyDataSetChanged to true.
+     * @param item any type of item
+     */
+    void addItem(Object item);
 
-    public Object getItem(int index) {
-        return items.get(index);
-    }
+    /**
+     * Adds item to the list of data and notifies the RecyclerView to update.
+     * @param item any type of item
+     * @param notifyDataSetChanged indicates if RecyclerView should update.
+     */
+    void addItem(Object item, boolean notifyDataSetChanged);
 
-    public List getItems() {
-        return items;
-    }
+    /**
+     * Adds item to the list of data at target index.
+     * Calls {@link #addItem(int, Object, boolean)} with default notifyDataSetChanged to true.
+     * @param index target index
+     * @param item any type of item
+     */
+    void addItem(int index, Object item);
 
-    public <T> ArrayList<T> getItems(Class<T> type) {
-        ArrayList<T> itemOfType = new ArrayList<>();
-        for (Object item : items) {
-            if (item.getClass().equals(type)) {
-                itemOfType.add((T) item);
-            }
-        }
-        return itemOfType;
-    }
+    /**
+     * Adds item to the list of data at target index and notifies the RecyclerView to update.
+     * @param index target index
+     * @param item any type of item
+     * @param notifyDataSetChanged indicates if RecyclerView should update.
+     */
+    void addItem(int index, Object item, boolean notifyDataSetChanged);
 
-    public void setItems(List items) {
-        setItems(items, true);
-    }
+    /**
+     * Adds a list of items to the SmartRecyclerAdapter list of data.
+     * Calls {@link #addItems(List, boolean)} with default notifyDataSetChanged to true.
+     * @param items list of items to add
+     */
+    void addItems(List items);
 
-    public void setItems(List items, boolean notifyDataSetChanged) {
-        if (items != null) {
-            this.items.clear();
-            this.items.addAll(items);
-            if (notifyDataSetChanged) {
-                smartNotifyDataSetChanged();
-            }
-        }
-    }
+    /**
+     * Adds a list of items to the SmartRecyclerAdapter list of data and notifies the RecyclerView to update.
+     * @param items list of items to add
+     * @param notifyDataSetChanged indicates if RecyclerView should update.
+     */
+    void addItems(List items, boolean notifyDataSetChanged);
 
-    public void addItem(Object item) {
-        this.addItem(item, true);
-    }
+    /**
+     * Adds a list of items from index to the SmartRecyclerAdapter list of data.
+     * Calls {@link #addItems(List, boolean)} with default notifyDataSetChanged to true.
+     * @param index target index
+     * @param items list of items to add
+     */
+    void addItems(int index, List items);
 
-    public void addItem(Object item, boolean notifyDataSetChanged) {
-        if (item != null) {
-            this.items.add(item);
-            if (notifyDataSetChanged) {
-                smartNotifyDataSetChanged();
-            }
-        }
-    }
+    /**
+     * Adds a list of items from index to the SmartRecyclerAdapter list of data and notifies the RecyclerView to update.
+     * @param index target index
+     * @param items list of items to add
+     * @param notifyDataSetChanged indicates if RecyclerView should update.
+     */
+    void addItems(int index, List items, boolean notifyDataSetChanged);
 
-    public void addItems(List items) {
-        this.addItems(items, true);
-    }
+    /**
+     * Removes item at index.
+     * @see #removeItem(int, boolean)
+     *
+     * @param index item index
+     * @return true if item was removed
+     */
+    boolean removeItem(int index);
 
-    public void addItems(List items, boolean notifyDataSetChanged) {
-        if (items != null) {
-            this.items.addAll(items);
-            if (notifyDataSetChanged) {
-                smartNotifyDataSetChanged();
-            }
-        }
-    }
+    /**
+     * Removes item at index.
+     * @param index item index
+     * @param notifyDataSetChanged updates recycler view with the new data
+     * @return true if item was removed
+     */
+    boolean removeItem(int index, boolean notifyDataSetChanged);
 
-    public void removeItem(int index) {
-        this.removeItem(index, true);
-    }
+    /**
+     * Replaces item at index.
+     * @see #replaceItem(int, Object, boolean)
+     *
+     * @param index item index
+     * @return true if item was replaced
+     */
+    boolean replaceItem(int index, Object item);
 
-    public void removeItem(int index, boolean notifyDataSetChanged) {
-        this.items.remove(index);
-        if (notifyDataSetChanged) {
-            smartNotifyItemRemoved(index);
-        }
-    }
+    /**
+     * Replaces item at index.
+     * @param index item index
+     * @param notifyDataSetChanged updates recycler view with the new data
+     * @return true if item was replaced
+     */
+    boolean replaceItem(int index, Object item, boolean notifyDataSetChanged);
 
-    public void clear() {
-        this.items.clear();
-        smartNotifyDataSetChanged();
-    }
+    /**
+     * Clears all the data and calls {@link #smartNotifyDataSetChanged()}
+     */
+    void clear();
 
-    public void smartNotifyDataSetChanged() {
-        updateItemCount();
-        notifyDataSetChanged();
-    }
+    /**
+     * Calls {@link #updateItemCount()} and {@link RecyclerView.Adapter#notifyDataSetChanged()}
+     */
+    void smartNotifyDataSetChanged();
 
-    public void smartNotifyItemChanged(int position) {
-        updateItemCount();
-        notifyItemChanged(position);
-    }
+    /**
+     * Notifies the recycler adapter that item at position has changed.
+     * Calls {@link #updateItemCount()} and {@link RecyclerView.Adapter#notifyItemChanged(int)}
+     * @param position adapter position.
+     */
+    void smartNotifyItemChanged(int position);
 
-    public void smartNotifyItemRangeChanged(int positionStart, int itemCount) {
-        updateItemCount();
-        notifyItemRangeChanged(positionStart, itemCount);
-    }
+    /**
+     * Notifies the recycler adapter that item range at position has changed.
+     * Calls {@link #updateItemCount()} and {@link RecyclerView.Adapter#notifyItemRangeChanged(int, int)}
+     * @param positionStart from position
+     * @param itemCount item count from positionStart
+     */
+    void smartNotifyItemRangeChanged(int positionStart, int itemCount);
 
-    public void smartNotifyItemInserted(int position) {
-        updateItemCount();
-        notifyItemInserted(position);
-    }
+    /**
+     * Notifies the recycler adapter that item at position has been inserted.
+     * Calls {@link #updateItemCount()} and {@link RecyclerView.Adapter#notifyItemInserted(int)}
+     * @param position item inserted at this position
+     */
+    void smartNotifyItemInserted(int position);
 
-    public void smartNotifyItemRangeInserted(int positionStart, int itemCount) {
-        updateItemCount();
-        notifyItemRangeInserted(positionStart, itemCount);
-    }
+    /**
+     * Notifies the recycler adapter that item range from position has changed.
+     * Calls {@link #updateItemCount()} and {@link RecyclerView.Adapter#notifyItemRangeInserted(int, int)}
+     * @param positionStart from position
+     * @param itemCount item count from positionStart
+     */
+    void smartNotifyItemRangeInserted(int positionStart, int itemCount);
 
-    public void smartNotifyItemRemoved(int position) {
-        updateItemCount();
-        notifyItemRemoved(position);
-    }
+    /**
+     * Notifies the recycler adapter that item at position has been removed.
+     * @param position item removed at this position
+     */
+    void smartNotifyItemRemoved(int position);
 
-    public void smartNotifyItemRangeRemoved(int positionStart, int itemCount) {
-        updateItemCount();
-        notifyItemRangeRemoved(positionStart, itemCount);
-    }
+    /**
+     * Notifies the recycler adapter that item range from position has been removed.
+     * Calls {@link #updateItemCount()} and {@link RecyclerView.Adapter#notifyItemRangeRemoved(int, int)}
+     * @param positionStart from position
+     * @param itemCount item count from positionStart
+     */
+    void smartNotifyItemRangeRemoved(int positionStart, int itemCount);
 
-    public final void updateItemCount() {
-        itemCount = items.size();
-    }
+    /**
+     * Updated the SmartRecyclerAdapter item count.
+     */
+    void updateItemCount();
 
-    public void map(Class<?> itemType, Class<? extends SmartViewHolder> viewHolderType) {
-        mapper.addMapping(itemType, viewHolderType);
-    }
+    /**
+     * Maps data item type with SmartViewHolder extension.
+     * @param itemType data item type
+     * @param viewHolderType view holder type
+     */
+    void map(Class<?> itemType, Class<? extends SmartViewHolder> viewHolderType);
 
-    public Mapper getMapper() {
-        return mapper;
-    }
+    /**
+     * Returns the data item view holder mapper.
+     * @return Mapper
+     */
+    Mapper getMapper();
 
-    protected void setMapper(HashMap<String, Class<? extends SmartViewHolder>> dataTypeViewHolderMapper) {
-        mapper.setDataTypeViewHolderMapper(dataTypeViewHolderMapper);
-    }
+    /**
+     * Returns {@link ViewTypeResolver}.
+     * @return viewTypeResolver
+     */
+    ViewTypeResolver getViewTypeResolver();
 
-    public ViewTypeResolver getViewTypeResolver() {
-        return viewTypeResolver;
-    }
+    /**
+     * Sets {@link ViewTypeResolver}.
+     * @param viewTypeResolver the ViewTypeResolver
+     */
+    void setViewTypeResolver(ViewTypeResolver viewTypeResolver);
 
-    public void setViewTypeResolver(ViewTypeResolver viewTypeResolver) {
-        this.viewTypeResolver = viewTypeResolver;
-    }
+    /**
+     * Get all ViewEventListeners.
+     * @return map of ViewEventListeners
+     */
+    HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> getViewEventListeners();
 
-    public HashMap<Integer, HashMap<Integer, ViewEventListener>> getViewEventListenersForViewHolder(Class<? extends SmartViewHolder> viewHolderType) {
-        return getViewEventListeners().get(viewHolderType);
-    }
+    /**
+     * Get ViewEventListeners for target ViewHolder.
+     * @param viewHolderType SmartViewHolder type
+     * @return map of ViewEventListeners
+     */
+    HashMap<Integer, HashMap<Integer, ViewEventListener>> getViewEventListenersForViewHolder(Class<? extends SmartViewHolder> viewHolderType);
 
-    public void setViewEventListeners(HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> viewEventListeners) {
-        this.viewEventListeners = viewEventListeners;
-    }
+    /**
+     * Sets map of {@link ViewTypeResolver}.
+     * @param viewEventListeners map of ViewEventListeners
+     */
+    void setViewEventListeners(HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> viewEventListeners);
 
-    public HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> getViewEventListeners() {
-        return this.viewEventListeners;
-    }
-
-    public void setOnViewDetachedFromWindowListener(OnViewDetachedFromWindowListener onViewDetachedFromWindowListener) {
-        this.onViewDetachedFromWindowListener = onViewDetachedFromWindowListener;
-    }
+    /**
+     * Sets OnViewDetachedFromWindowListener for view holder detach listening.
+     * @param onViewDetachedFromWindowListener the OnViewDetachedFromWindowListener
+     */
+    void setOnViewDetachedFromWindowListener(OnViewDetachedFromWindowListener onViewDetachedFromWindowListener);
 
     /**
      * Builder of {@link SmartRecyclerAdapter} for easy implementation
      * @return SmartAdapterBuilder
      */
-    public static SmartAdapterBuilder items(List items) {
+    static SmartAdapterBuilder items(List items) {
         return new SmartAdapterBuilder(items);
     }
 
-    public static SmartAdapterBuilder empty() {
+    static SmartAdapterBuilder empty() {
         return new SmartAdapterBuilder(new ArrayList());
     }
 }
