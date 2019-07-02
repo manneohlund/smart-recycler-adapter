@@ -3,7 +3,11 @@
 [![Release](https://jitpack.io/v/manneohlund/smart-recycler-adapter.svg)](https://jitpack.io/#manneohlund/smart-recycler-adapter)
 
 Never code any boilerplate RecyclerAdapter again!  
-This library will make it easy and painless to map your data item with a target ViewHolder.  
+This library will make it easy and painless to map your data item with a target ViewHolder.
+
+<p align="center">
+  <img width="240" height="499" src="https://user-images.githubusercontent.com/11292383/60390746-cc723f00-9add-11e9-8695-65315836a6f8.gif">
+</p>
 
 # Gradle  
 #### Step 1. Add the JitPack repository to your build file  
@@ -18,7 +22,7 @@ allprojects {
 #### Step 2. Add the dependency  
 ```groovy
 dependencies {  
-  implementation 'com.github.manneohlund:smart-recycler-adapter:2.0.0'
+  implementation 'com.github.manneohlund:smart-recycler-adapter:2.0.1'
 }
 ```
 
