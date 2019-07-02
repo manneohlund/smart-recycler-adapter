@@ -62,17 +62,10 @@ class MyWatchListViewHolder
     
     // Constructor here
     
-    @NonNull
-    @Override
-    public SmartRecyclerAdapter getSmartRecyclerAdapter() {
-        return this.smartRecyclerAdapter;
-    }
-    
     @Override
     public void setSmartRecyclerAdapter(SmartRecyclerAdapter smartRecyclerAdapter) {
         recyclerView.setLayoutManager(LinearLayoutManager(recyclerView.context, HORIZONTAL, false);
         recyclerView.adapter = (RecyclerView.Adapter) smartRecyclerAdapter;
-        this.smartRecyclerAdapter = smartRecyclerAdapter;
     }
 
     public void bind(MyWatchListModel myWatchListModel) {
