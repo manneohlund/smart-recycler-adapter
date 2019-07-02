@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.smartrecycleradapter.R
 import com.example.smartrecycleradapter.models.MovieBannerModel
 import com.example.smartrecycleradapter.utils.displayWidth
@@ -24,16 +25,22 @@ class BannerViewHolder(parentView: ViewGroup) : SmartAutoEventViewHolder<MovieBa
     private val titleTextView: TextView = itemView.findViewById(R.id.title)
     private val imageView: ImageView = itemView.findViewById(R.id.imageView)
 
+    private val requestOption = RequestOptions()
+            .error(R.drawable.ic_broken_image_black_48dp)
+            .centerInside()
+
     override fun bind(movie: MovieBannerModel) {
         titleTextView.text = movie.title
         when (movie.title) {
             "" -> titleTextView.visibility = GONE
             else -> titleTextView.visibility = VISIBLE
         }
+
         Glide.with(imageView)
                 .load(movie.iconUrl)
+                .apply(requestOption)
                 .override(imageView.context.displayWidth, imageView.context.displayWidth)
-                .centerInside()
+                .fitCenter()
                 .into(imageView)
     }
 }

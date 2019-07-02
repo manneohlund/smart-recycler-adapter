@@ -9,9 +9,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.smartrecycleradapter.R
 import com.example.smartrecycleradapter.models.MovieModel
 import smartadapter.viewholder.SmartAutoEventViewHolder
+
+private val requestOption = RequestOptions()
+        .error(R.drawable.ic_broken_image_black_48dp)
+        .centerInside()
 
 class SmallThumbViewHolder(parentView: ViewGroup) : SmartAutoEventViewHolder<MovieModel>(
         LayoutInflater.from(parentView.context)
@@ -22,6 +27,7 @@ class SmallThumbViewHolder(parentView: ViewGroup) : SmartAutoEventViewHolder<Mov
     override fun bind(movie: MovieModel) {
         Glide.with(itemView.context)
                 .load(movie.iconUrl)
+                .apply(requestOption)
                 .into(imageView)
     }
 }
@@ -35,6 +41,7 @@ class ThumbViewHolder(parentView: ViewGroup) : SmartAutoEventViewHolder<MovieMod
     override fun bind(movie: MovieModel) {
         Glide.with(itemView.context)
                 .load(movie.iconUrl)
+                .apply(requestOption)
                 .into(imageView)
     }
 }
@@ -48,6 +55,7 @@ class LargeThumbViewHolder(parentView: ViewGroup) : SmartAutoEventViewHolder<Mov
     override fun bind(movie: MovieModel) {
         Glide.with(itemView.context)
                 .load(movie.iconUrl)
+                .apply(requestOption)
                 .into(imageView)
     }
 }
