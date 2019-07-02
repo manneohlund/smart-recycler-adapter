@@ -31,7 +31,7 @@ class BannerViewHolder(parentView: ViewGroup) : SmartAutoEventViewHolder<MovieBa
             else -> titleTextView.visibility = VISIBLE
         }
         Glide.with(imageView)
-                .load(movie.icon)
+                .load(movie.iconUrl)
                 .override(imageView.context.displayWidth, imageView.context.displayWidth)
                 .centerInside()
                 .into(imageView)

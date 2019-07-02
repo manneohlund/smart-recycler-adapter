@@ -21,7 +21,7 @@ class SmallThumbViewHolder(parentView: ViewGroup) : SmartAutoEventViewHolder<Mov
 
     override fun bind(movie: MovieModel) {
         Glide.with(itemView.context)
-                .load(movie.icon)
+                .load(movie.iconUrl)
                 .into(imageView)
     }
 }
@@ -34,7 +34,7 @@ class ThumbViewHolder(parentView: ViewGroup) : SmartAutoEventViewHolder<MovieMod
 
     override fun bind(movie: MovieModel) {
         Glide.with(itemView.context)
-                .load(movie.icon)
+                .load(movie.iconUrl)
                 .into(imageView)
     }
 }
@@ -47,7 +47,7 @@ class LargeThumbViewHolder(parentView: ViewGroup) : SmartAutoEventViewHolder<Mov
 
     override fun bind(movie: MovieModel) {
         Glide.with(itemView.context)
-                .load(movie.icon)
+                .load(movie.iconUrl)
                 .into(imageView)
     }
 }

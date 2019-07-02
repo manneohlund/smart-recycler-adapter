@@ -23,7 +23,7 @@ class PosterViewHolder(parentView: ViewGroup) : SmartAutoEventViewHolder<MovieMo
 
     override fun bind(movie: MovieModel) {
         Glide.with(imageView)
-                .load(movie.icon)
+                .load(movie.iconUrl)
                 .override(imageView.context.displayWidth, imageView.context.displayHeight)
                 .centerInside()
                 .into(imageView)
