@@ -1,5 +1,9 @@
 package com.example.smartrecycleradapter.models
 
+import com.example.smartrecycleradapter.data.MovieDataItems.BANNER_BASE_URL
+import com.example.smartrecycleradapter.data.MovieDataItems.POSTER_BASE_URL
+import com.example.smartrecycleradapter.data.MovieDataItems.THUMBS_BASE_URL
+
 
 /*
  * Created by Manne Öhlund on 2019-06-22.
@@ -28,11 +32,20 @@ open class NestedRecyclerViewModel(var title: String) {
 }
 
 
-class MoviePosterModel(icon: Int) : MovieModel("", icon)
+class MoviePosterModel(icon: String) : MovieModel("", icon) {
+    override val iconUrl: String
+        get() = "$POSTER_BASE_URL$icon.jpg"
+}
 
-class MovieBannerModel(title: String, icon: Int) : MovieModel(title, icon)
+class MovieBannerModel(title: String, icon: String) : MovieModel(title, icon) {
+    override val iconUrl: String
+        get() = "$BANNER_BASE_URL$icon.jpg"
+}
 
-open class MovieModel(val title: String, val icon: Int)
+open class MovieModel(val title: String, internal val icon: String) {
+    open val iconUrl: String
+        get() = "$THUMBS_BASE_URL$icon.jpg"
+}
 
 
 class CopyrightModel(private var summary: String) {
