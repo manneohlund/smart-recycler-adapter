@@ -41,7 +41,7 @@ object MovieDataItems {
     )
 
     // My watchlist
-    val myWatchListItems: List<Any> = asList(
+    val myWatchListItems: List<Any> = mutableListOf(
             MovieModel("Joker", "joker"),
             MovieModel("Terminator dark fate", "terminator_dark_fate"),
             MovieModel("John Wick 3", "john_wick_3"),
