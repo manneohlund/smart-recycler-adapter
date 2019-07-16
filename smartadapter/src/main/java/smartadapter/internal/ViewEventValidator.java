@@ -1,4 +1,4 @@
-package smartadapter.utils;
+package smartadapter.internal;
 
 /*
  * Created by Manne Öhlund on 2019-06-11.

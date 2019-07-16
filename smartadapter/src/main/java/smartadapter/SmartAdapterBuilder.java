@@ -18,7 +18,7 @@ import smartadapter.viewholder.SmartAutoEventViewHolder;
 import smartadapter.viewholder.SmartViewHolder;
 import smartadapter.widget.ViewTypeResolver;
 
-import static smartadapter.utils.ViewEventValidator.isViewEventIdValid;
+import static smartadapter.internal.ViewEventValidator.isViewEventIdValid;
 
 public class SmartAdapterBuilder {
 

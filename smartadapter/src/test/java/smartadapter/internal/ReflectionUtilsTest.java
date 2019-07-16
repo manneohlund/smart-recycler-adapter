@@ -1,4 +1,4 @@
-package smartadapter.utils;
+package smartadapter.internal;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -6,14 +6,14 @@ import android.view.ViewGroup;
 import org.junit.Assert;
 import org.junit.Test;
 
+import smartadapter.viewholder.SmartViewHolder;
+
+import static org.junit.Assert.assertNotNull;
+
 /*
  * Created by Manne Öhlund on 2019-06-03.
  * Copyright (c) 2018 All rights reserved.
  */
-
-import smartadapter.viewholder.SmartViewHolder;
-
-import static org.junit.Assert.*;
 
 public class ReflectionUtilsTest {
 

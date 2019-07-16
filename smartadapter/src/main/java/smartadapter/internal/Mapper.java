@@ -1,4 +1,4 @@
-package smartadapter.manager;
+package smartadapter.internal;
 
 /*
  * Created by Manne Öhlund on 30/05/17.
@@ -13,7 +13,6 @@ import java.util.HashMap;
 
 import smartadapter.SmartRecyclerAdapter;
 import smartadapter.listener.ViewEventListener;
-import smartadapter.utils.ReflectionUtils;
 import smartadapter.viewholder.SmartAdapterHolder;
 import smartadapter.viewholder.SmartViewHolder;
 import smartadapter.viewholder.ViewEventHolder;
