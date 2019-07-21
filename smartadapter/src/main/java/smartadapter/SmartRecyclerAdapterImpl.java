@@ -55,6 +55,7 @@ public class SmartRecyclerAdapterImpl extends RecyclerView.Adapter<SmartViewHold
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onBindViewHolder(@NonNull SmartViewHolder holder, int position) {
         holder.bind(items.get(position));
     }

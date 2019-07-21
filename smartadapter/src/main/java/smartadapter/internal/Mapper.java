@@ -78,6 +78,7 @@ public class Mapper {
      * @param <VH> Subtype of SmartViewHolder
      * @return Target view holder
      */
+    @SuppressWarnings("unchecked")
     public <VH extends SmartViewHolder> VH createViewHolder(
             HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> viewEventListeners,
             ViewGroup parent,
