@@ -27,7 +27,7 @@ public class Mapper {
 
     private int identifier = 0;
     private final SparseArray<Class<? extends SmartViewHolder>> viewTypeMapper = new SparseArray<>();
-    private final HashMap<Class, Constructor> viewHolderConstructorMapper = new HashMap<>();
+    private final ViewHolderConstructorMapper viewHolderConstructorMapper = new ViewHolderConstructorMapper();
     private HashMap<String, Class<? extends SmartViewHolder>> dataTypeViewHolderMapper = new HashMap<>();
     private HashMap<Class<? extends SmartViewHolder>, SmartRecyclerAdapter> smartRecyclerAdapterMapper = new HashMap<>();
 
@@ -82,35 +82,18 @@ public class Mapper {
             HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> viewEventListeners,
             ViewGroup parent,
             int viewType) {
-        Constructor constructor;
         VH viewHolder;
-        Class<? extends SmartViewHolder> smartViewHolderConstructor;
-        try {
-            smartViewHolderConstructor = viewTypeMapper.get(viewType);
-            if (!viewHolderConstructorMapper.containsKey(smartViewHolderConstructor)) {
-                constructor = ReflectionUtils.getConstructor(smartViewHolderConstructor,
-                        ReflectionUtils.isNonStaticInnerClass(smartViewHolderConstructor) ?
-                                new Class[]{ caller.getClass(), ViewGroup.class } :
-                                new Class[]{ ViewGroup.class }
-                );
-                viewHolderConstructorMapper.put(smartViewHolderConstructor, constructor);
-            } else {
-                constructor = viewHolderConstructorMapper.get(smartViewHolderConstructor);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(String.format("'%s' must have a constructor which take 'ViewGroup parent' as param or " + e.getMessage(), viewTypeMapper.get(viewType).toString()));
-        }
+        Class<? extends SmartViewHolder> smartViewHolderClass = viewTypeMapper.get(viewType);
+        Constructor constructor = viewHolderConstructorMapper.getConstructor(smartViewHolderClass);
 
         try {
-            viewHolder = (VH) ReflectionUtils.invokeConstructor(smartViewHolderConstructor, constructor,
-                    ReflectionUtils.isNonStaticInnerClass(smartViewHolderConstructor)
+            viewHolder = (VH) ReflectionUtils.invokeConstructor(constructor,
+                    ReflectionUtils.isNonStaticInnerClass(smartViewHolderClass)
                             ? new Object[]{caller, parent}
                             : new Object[]{parent}
             );
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(String.format("Error in '%s' constructor: " + e.getCause(), viewTypeMapper.get(viewType).toString()));
+            throw new RuntimeException(String.format("Could not invoke constructor for '%s', '%s'", smartViewHolderClass.toString(), e.getMessage()), e);
         }
 
         /*
@@ -123,8 +106,9 @@ public class Mapper {
             ((ViewEventHolder)viewHolder).setViewEventListeners(viewEventListeners.get(viewHolder.getClass()));
         }
 
-        if (viewHolder instanceof SmartAdapterHolder && smartRecyclerAdapterMapper.containsKey(viewHolder.getClass())) {
-            ((SmartAdapterHolder)viewHolder).setSmartRecyclerAdapter(smartRecyclerAdapterMapper.get(viewHolder.getClass()));
+        SmartRecyclerAdapter smartRecyclerAdapter = smartRecyclerAdapterMapper.get(viewHolder.getClass());
+        if (viewHolder instanceof SmartAdapterHolder && smartRecyclerAdapter != null) {
+            ((SmartAdapterHolder)viewHolder).setSmartRecyclerAdapter(smartRecyclerAdapter);
         }
 
         return viewHolder;
@@ -132,10 +116,12 @@ public class Mapper {
 
     public void addMapping(Class<?> itemType, Class<? extends SmartViewHolder> viewHolderType) {
         dataTypeViewHolderMapper.put(itemType.getName(), viewHolderType);
+        viewHolderConstructorMapper.add(viewHolderType);
     }
 
     public void setDataTypeViewHolderMapper(HashMap<String, Class<? extends SmartViewHolder>> dataTypeViewHolderMapper) {
         this.dataTypeViewHolderMapper = dataTypeViewHolderMapper;
+        viewHolderConstructorMapper.add(dataTypeViewHolderMapper.values());
     }
 
     public void setSmartRecyclerAdapterMapper(HashMap<Class<? extends SmartViewHolder>, SmartRecyclerAdapter> smartRecyclerAdapterMapper) {
