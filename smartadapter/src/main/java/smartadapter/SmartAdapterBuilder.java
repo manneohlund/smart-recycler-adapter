@@ -158,7 +158,7 @@ public class SmartAdapterBuilder {
 
     public final SmartRecyclerAdapter into(RecyclerView recyclerView) {
         SmartRecyclerAdapterImpl smartRecyclerAdapter = new SmartRecyclerAdapterImpl(recyclerView.getContext(), items);
-        smartRecyclerAdapter.setMapper(viewHolderMapper);
+        smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper);
         smartRecyclerAdapter.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper);
         smartRecyclerAdapter.setViewTypeResolver(viewTypeResolver);
         smartRecyclerAdapter.setViewEventListeners(viewEventListenerMap);
@@ -170,7 +170,7 @@ public class SmartAdapterBuilder {
 
     public final SmartRecyclerAdapter create() {
         SmartRecyclerAdapterImpl smartRecyclerAdapter = new SmartRecyclerAdapterImpl(null, items);
-        smartRecyclerAdapter.setMapper(viewHolderMapper);
+        smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper);
         smartRecyclerAdapter.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper);
         smartRecyclerAdapter.setViewTypeResolver(viewTypeResolver);
         smartRecyclerAdapter.setViewEventListeners(viewEventListenerMap);

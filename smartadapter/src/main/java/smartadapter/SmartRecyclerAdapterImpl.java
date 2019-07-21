@@ -268,7 +268,7 @@ public class SmartRecyclerAdapterImpl extends RecyclerView.Adapter<SmartViewHold
         return mapper;
     }
 
-    void setMapper(HashMap<String, Class<? extends SmartViewHolder>> dataTypeViewHolderMapper) {
+    void setDataTypeViewHolderMapper(HashMap<String, Class<? extends SmartViewHolder>> dataTypeViewHolderMapper) {
         mapper.setDataTypeViewHolderMapper(dataTypeViewHolderMapper);
     }
 
