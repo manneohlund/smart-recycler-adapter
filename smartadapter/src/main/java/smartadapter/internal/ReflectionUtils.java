@@ -10,15 +10,26 @@ import java.lang.reflect.Modifier;
 
 public class ReflectionUtils {
 
-    public static Constructor getConstructor(Class<?> clazz, Class<?>... parameterTypes) throws Exception {
-        if (isNonStaticInnerClass(clazz)) {
-            return clazz.getDeclaredConstructor(parameterTypes);
-        } else {
-            return clazz.getConstructor(parameterTypes);
+    public static Constructor getConstructor(Class<?> clazz, Class<?>... validConstructorClasses) throws ConstructorNotFoundException {
+        if (validConstructorClasses.length == 0) {
+            throw new IllegalArgumentException("No validConstructorClasses passed");
         }
+        for (Constructor<?> constructor : clazz.getConstructors()) {
+            int targetParameterIndex = isNonStaticInnerClass(clazz) ? 1 : 0;
+            if (constructor.getParameterTypes().length == 1 + targetParameterIndex) {
+                Class<?> constructorParameter = constructor.getParameterTypes()[targetParameterIndex];
+                for (Class<?> validConstructorClass : validConstructorClasses) {
+                    if (validConstructorClass.isAssignableFrom(constructorParameter)) {
+                        return constructor;
+                    }
+                }
+            }
+        }
+
+        throw new ConstructorNotFoundException(clazz);
     }
 
-    public static Object invokeConstructor(Class<?> clazz, Constructor constructor, Object... args) throws Exception {
+    public static Object invokeConstructor(Constructor constructor, Object... args) throws Exception {
         return constructor.newInstance(args);
     }
 
