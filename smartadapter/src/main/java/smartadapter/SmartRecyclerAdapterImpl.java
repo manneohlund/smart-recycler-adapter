@@ -60,6 +60,12 @@ public class SmartRecyclerAdapterImpl extends RecyclerView.Adapter<SmartViewHold
     }
 
     @Override
+    public void onViewRecycled(@NonNull SmartViewHolder holder) {
+        super.onViewRecycled(holder);
+        holder.unbind();
+    }
+
+    @Override
     public int getItemCount() {
         return itemCount;
     }
