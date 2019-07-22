@@ -1,7 +1,7 @@
 package smartadapter;
 
 /*
- * Created by Manne Öhlund on 02/04/17.
+ * Created by Manne Öhlund on 2019-06-25.
  * Copyright © 2019 All rights reserved.
  */
 
@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import smartadapter.internal.Mapper;
+import smartadapter.listener.OnViewAttachedToWindowListener;
 import smartadapter.listener.OnViewDetachedFromWindowListener;
 import smartadapter.listener.ViewEventListener;
 import smartadapter.viewholder.SmartViewHolder;
@@ -64,6 +65,14 @@ public class SmartRecyclerAdapterImpl extends RecyclerView.Adapter<SmartViewHold
     public void onViewRecycled(@NonNull SmartViewHolder holder) {
         super.onViewRecycled(holder);
         holder.unbind();
+    }
+
+    @Override
+    public void onViewAttachedToWindow(@NonNull SmartViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        if (holder instanceof OnViewAttachedToWindowListener) {
+            ((OnViewAttachedToWindowListener)holder).onViewAttachedToWindow();
+        }
     }
 
     @Override
