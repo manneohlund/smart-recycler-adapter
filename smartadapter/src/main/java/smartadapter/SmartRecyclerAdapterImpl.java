@@ -37,14 +37,6 @@ public class SmartRecyclerAdapterImpl extends RecyclerView.Adapter<SmartViewHold
     }
 
     @Override
-    public void onViewDetachedFromWindow(@NonNull SmartViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-        if (onViewDetachedFromWindowListener != null) {
-            onViewDetachedFromWindowListener.onViewDetachedFromWindow(holder);
-        }
-    }
-
-    @Override
     public int getItemViewType(int position) {
         return mapper.getItemViewType(viewTypeResolver, items.get(position), position);
     }
@@ -72,6 +64,14 @@ public class SmartRecyclerAdapterImpl extends RecyclerView.Adapter<SmartViewHold
         super.onViewAttachedToWindow(holder);
         if (holder instanceof OnViewAttachedToWindowListener) {
             ((OnViewAttachedToWindowListener)holder).onViewAttachedToWindow();
+        }
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull SmartViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        if (holder instanceof OnViewDetachedFromWindowListener) {
+            ((OnViewDetachedFromWindowListener)holder).onViewDetachedFromWindow();
         }
     }
 
