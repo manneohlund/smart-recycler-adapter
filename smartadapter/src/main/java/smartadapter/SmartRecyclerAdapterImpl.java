@@ -17,6 +17,7 @@ import smartadapter.internal.Mapper;
 import smartadapter.listener.OnViewAttachedToWindowListener;
 import smartadapter.listener.OnViewDetachedFromWindowListener;
 import smartadapter.listener.ViewEventListener;
+import smartadapter.viewholder.RecyclableViewHolder;
 import smartadapter.viewholder.SmartViewHolder;
 import smartadapter.widget.ViewTypeResolver;
 
@@ -56,6 +57,14 @@ public class SmartRecyclerAdapterImpl extends RecyclerView.Adapter<SmartViewHold
     public void onViewRecycled(@NonNull SmartViewHolder holder) {
         super.onViewRecycled(holder);
         holder.unbind();
+    }
+
+    @Override
+    public boolean onFailedToRecycleView(@NonNull SmartViewHolder holder) {
+        if (holder instanceof RecyclableViewHolder) {
+            return ((RecyclableViewHolder)holder).onFailedToRecycleView();
+        }
+        return super.onFailedToRecycleView(holder);
     }
 
     @Override
