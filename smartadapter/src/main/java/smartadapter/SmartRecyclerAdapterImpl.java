@@ -28,7 +28,6 @@ public class SmartRecyclerAdapterImpl extends RecyclerView.Adapter<SmartViewHold
     private final Mapper mapper;
     private ViewTypeResolver viewTypeResolver;
     private HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> viewEventListeners;
-    private OnViewDetachedFromWindowListener onViewDetachedFromWindowListener;
 
     SmartRecyclerAdapterImpl(Object callerEnclosingClass, List items) {
         mapper = new Mapper(callerEnclosingClass);
@@ -315,10 +314,5 @@ public class SmartRecyclerAdapterImpl extends RecyclerView.Adapter<SmartViewHold
     @Override
     public void setViewEventListeners(HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> viewEventListeners) {
         this.viewEventListeners = viewEventListeners;
-    }
-
-    @Override
-    public void setOnViewDetachedFromWindowListener(OnViewDetachedFromWindowListener onViewDetachedFromWindowListener) {
-        this.onViewDetachedFromWindowListener = onViewDetachedFromWindowListener;
     }
 }

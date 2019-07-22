@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import smartadapter.internal.Mapper;
-import smartadapter.listener.OnViewDetachedFromWindowListener;
 import smartadapter.listener.ViewEventListener;
 import smartadapter.viewholder.SmartViewHolder;
 import smartadapter.widget.ViewTypeResolver;
@@ -272,12 +271,6 @@ public interface SmartRecyclerAdapter {
      * @param viewEventListeners map of ViewEventListeners
      */
     void setViewEventListeners(HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> viewEventListeners);
-
-    /**
-     * Sets OnViewDetachedFromWindowListener for view holder detach listening.
-     * @param onViewDetachedFromWindowListener the OnViewDetachedFromWindowListener
-     */
-    void setOnViewDetachedFromWindowListener(OnViewDetachedFromWindowListener onViewDetachedFromWindowListener);
 
     /**
      * Builder of {@link SmartRecyclerAdapter} for easy implementation

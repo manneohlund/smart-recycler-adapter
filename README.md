@@ -166,8 +166,7 @@ SmartRecyclerAdapter
 ### Adapter creation with ViewTypeResolver
   
 If you want to bind one data type with different view holders depending on some attribute you can set a ViewTypeResolver.  
-Note .map() call not needed in this case but you can combine if you want to.  
-You can also set an OnViewDetachedFromWindowListener for immediate view holder detach handling.
+Note .map() call not needed in this case but you can combine if you want to.
   
 ```java
 SmartRecyclerAdapter
@@ -178,11 +177,6 @@ SmartRecyclerAdapter
     } else if (item instanceof MovieModel && ((MovieModel)item).isRatedR()) { 
       return RMovieViewHolder.class; 
     } return MovieViewHolder.class; // Add default view if needed, else SmartRecyclerAdapter will look at the base `.map` mapping
-  })
-  .setOnViewDetachedFromWindowListener(holder -> {
-    if (holder instanceof ImageViewHolder) {
-      ImageCacheManager.getInstance().cancelAsyncTask(holder);
-    }
   })
   .into(recyclerView);
 ```
