@@ -5,8 +5,13 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import smartadapter.viewholders.BindableTestViewHolder;
+import smartadapter.viewholders.RecyclableTestViewHolder;
+import smartadapter.viewholders.ViewAttachedToWindowTestViewHolder;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /*
@@ -143,5 +148,50 @@ public class SmartRecyclerAdapterImplTest {
 
         // Then
         assertEquals(adapter.getItems().get(0), replaceItem);
+    }
+
+    @Test
+    public void testRecyclableViewHolder() {
+        // Given
+        RecyclableTestViewHolder viewHolder = mock(RecyclableTestViewHolder.class);
+        SmartRecyclerAdapterImpl adapter = (SmartRecyclerAdapterImpl) SmartRecyclerAdapter.empty().create();
+
+        // When
+        adapter.onFailedToRecycleView(viewHolder);
+
+        // Then
+        verify(viewHolder, times(1)).onFailedToRecycleView();
+    }
+
+    @Test
+    public void testBindableViewHolder() {
+        // Given
+        List<Object> items = new ArrayList<>();
+        items.add("Test");
+        BindableTestViewHolder viewHolder = mock(BindableTestViewHolder.class);
+        SmartRecyclerAdapterImpl adapter = (SmartRecyclerAdapterImpl) SmartRecyclerAdapter.items(items).create();
+
+        // When
+        adapter.onBindViewHolder(viewHolder, 0);
+        adapter.onViewRecycled(viewHolder);
+
+        // Then
+        verify(viewHolder, times(1)).bind(items.get(0));
+        verify(viewHolder, times(1)).unbind();
+    }
+
+    @Test
+    public void testRecyclableViewHolder2() {
+        // Given
+        ViewAttachedToWindowTestViewHolder viewHolder = mock(ViewAttachedToWindowTestViewHolder.class);
+        SmartRecyclerAdapterImpl adapter = (SmartRecyclerAdapterImpl) SmartRecyclerAdapter.empty().create();
+
+        // When
+        adapter.onViewAttachedToWindow(viewHolder);
+        adapter.onViewDetachedFromWindow(viewHolder);
+
+        // Then
+        verify(viewHolder, times(1)).onViewAttachedToWindow();
+        verify(viewHolder, times(1)).onViewDetachedFromWindow();
     }
 }

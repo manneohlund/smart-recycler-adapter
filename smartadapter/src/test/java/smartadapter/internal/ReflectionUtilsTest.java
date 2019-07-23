@@ -9,6 +9,9 @@ import org.junit.Test;
 import java.lang.reflect.Constructor;
 
 import smartadapter.viewholder.SmartViewHolder;
+import smartadapter.viewholders.InvalidTestViewHolder;
+import smartadapter.viewholders.TestViewGroupViewHolder;
+import smartadapter.viewholders.TestViewHolder;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
