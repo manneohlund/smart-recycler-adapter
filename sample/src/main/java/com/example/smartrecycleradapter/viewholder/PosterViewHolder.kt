@@ -6,6 +6,7 @@ package com.example.smartrecycleradapter.viewholder
  */
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
@@ -16,9 +17,9 @@ import com.example.smartrecycleradapter.utils.displayHeight
 import com.example.smartrecycleradapter.utils.displayWidth
 import smartadapter.viewholder.SmartAutoEventViewHolder
 
-class PosterViewHolder(parentView: ViewGroup) : SmartAutoEventViewHolder<MovieModel>(
+class PosterViewHolder(parentView: View) : SmartAutoEventViewHolder<MovieModel>(
         LayoutInflater.from(parentView.context)
-                .inflate(R.layout.poster_item, parentView, false)) {
+                .inflate(R.layout.poster_item,  parentView as ViewGroup, false)) {
 
     private val imageView: ImageView = itemView.findViewById(R.id.imageView)
 
@@ -33,5 +34,9 @@ class PosterViewHolder(parentView: ViewGroup) : SmartAutoEventViewHolder<MovieMo
                 .override(imageView.context.displayWidth, imageView.context.displayHeight)
                 .centerInside()
                 .into(imageView)
+    }
+
+    override fun unbind() {
+        Glide.with(imageView).clear(imageView)
     }
 }

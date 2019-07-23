@@ -82,7 +82,7 @@ public class DemoActivity extends AppCompatActivity {
         items.add(new SciFiMoviesModel("Sci-Fi"));
         items.add(new MovieBannerModel("Promotion", MovieDataItems.INSTANCE.getRandomBanner()));
         items.add(new RecentlyPlayedMoviesModel("Recently played"));
-        items.add(new CopyrightModel("SmartRecyclerAdapter v2.0.1\n\nDeveloped by Manne Öhlund"));
+        items.add(new CopyrightModel(String.format("SmartRecyclerAdapter v%s\n\nDeveloped by Manne Öhlund", BuildConfig.VERSION_NAME)));
 
         mainSmartMovieAdapter = SmartRecyclerAdapter
                 .items(items)

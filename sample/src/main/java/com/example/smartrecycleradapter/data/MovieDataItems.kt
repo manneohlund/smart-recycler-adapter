@@ -113,15 +113,12 @@ object MovieDataItems {
             MovieModel("Abominable", "abominable"),
             MovieModel("How to train your dragon 2", "how_to_train_your_dragon_two"),
             MovieModel("Incredibles 2", "incredibles"),
-            MovieModel("Angry birds 2", "angry_birds_movie_two")
-
-    )
+            MovieModel("Angry birds 2", "angry_birds_movie_two"))
 
     // Recent viewed items
     var nestedRecentViewedItems = ArrayList<Any>()
     init {
         nestedRecentViewedItems.addAll(comingSoonItems)
-        nestedRecentViewedItems.add(MovieModel("Dumb and dumber 2", "dumb_and_dumber_two"))
         nestedRecentViewedItems.add(MovieModel("Her", "her"))
         nestedRecentViewedItems.add(MovieModel("Imitation game", "imitation_game"))
         nestedRecentViewedItems.add(MovieModel("Interview", "interview"))

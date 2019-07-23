@@ -12,11 +12,11 @@ import android.view.View;
  * Extension of {@link RecyclerView.ViewHolder} containing data item binding method.
  * @param <T> Data item type
  */
-public abstract class SmartViewHolder<T> extends RecyclerView.ViewHolder {
+public abstract class SmartViewHolder<T>
+        extends RecyclerView.ViewHolder
+        implements BindableViewHolder<T> {
 
     public SmartViewHolder(View view) {
         super(view);
     }
-
-    public abstract void bind(T item);
 }
