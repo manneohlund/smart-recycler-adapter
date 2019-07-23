@@ -23,11 +23,23 @@ allprojects {
 #### Step 2. Add the dependency  
 ```groovy
 dependencies {  
-  implementation 'com.github.manneohlund:smart-recycler-adapter:2.0.1'
+  implementation 'com.github.manneohlund:smart-recycler-adapter:2.1.0'
 }
 ```
 
-# New complex SmartRecyclerAdapter v2.0.0
+# Basic
+### Basic adapter creation
+
+```java
+SmartRecyclerAdapter
+  .items(items)
+  .map(MoviePosterModel.class, PosterViewHolder.class)
+  .map(MovieBannerModel.class, BannerViewHolder.class)
+  .map(TopNewsModel.class, TopNewsViewHolder.class)
+  .into(recyclerView);
+ ```
+
+# New nested SmartRecyclerAdapter from v2.0.0
 
 New in `SmartRecyclerAdapter` v2.0.0 is support for nested recycler adapter.
 Now you can easily build complex nested adapters without hustle and have full control of the adapter in your view controlling `Fragment` or `Activity`. 
@@ -62,40 +74,33 @@ SmartRecyclerAdapter
 
 ```java
 class MyWatchListViewHolder
-        extends SmartAutoEventViewHolder<MyWatchListModel>
-        implements SmartAdapterHolder {
+    extends SmartAutoEventViewHolder<MyWatchListModel>
+    implements SmartAdapterHolder {
     
-    // Constructor here
+  // Constructor here
     
-    @Override
-    public void setSmartRecyclerAdapter(SmartRecyclerAdapter smartRecyclerAdapter) {
-        recyclerView.setLayoutManager(LinearLayoutManager(recyclerView.context, HORIZONTAL, false);
-        recyclerView.adapter = (RecyclerView.Adapter) smartRecyclerAdapter;
-    }
+  @Override
+  public void setSmartRecyclerAdapter(SmartRecyclerAdapter smartRecyclerAdapter) {
+    recyclerView.setLayoutManager(new LinearLayoutManager(context, HORIZONTAL, false));
+    recyclerView.setAdapter(smartRecyclerAdapter);
+  }
 
-    public void bind(MyWatchListModel myWatchListModel) {
-        // bind model data to views
-    }
+  public void bind(MyWatchListModel myWatchListModel) {
+    // bind model data to views
+  }
+    
+  public void unbind() {
+    // optional unbinding of view data model
+  }
 }
 ```
 
-# Basic
-### Basic adapter creation
-
-```java
-SmartRecyclerAdapter
-  .items(items)
-  .map(MoviePosterModel.class, PosterViewHolder.class)
-  .map(MovieBannerModel.class, BannerViewHolder.class)
-  .map(TopNewsModel.class, TopNewsViewHolder.class)
-  .into(recyclerView);
- ```
-  
 ### ViewHolder
 
 Just extend your ViewHolder class with SmartViewHolder and pass in the target type ex `SmartViewHolder<Mail>`.  
-Note that the constructor must take `ViewGroup` as parameter, in this case `PosterViewHolder(ViewGroup parentView)`.  
+Note that the constructor can both take `View` or `ViewGroup` as parameter, in this case `PosterViewHolder(ViewGroup parentView)` to avoid casting to ViewGroup while inflating.  
 The `parentView` is the recyclerView.<br/>
+The method `unbind` has an default implementation and is optional. 
 ##### Works with Android DataBinding! Just add the DataBinding LayoutInflater in `super` call. 🚀
 
 ```java
@@ -111,10 +116,15 @@ public class PosterViewHolder extends SmartViewHolder<MoviePosterModel> {
       .load(model.icon)
       .into(imageView);
   }
+  
+  @Override 
+  public void unbind() {
+    Glide.with(imageView).clear(imageView);
+  }
 } 
 ```
 
-### View event listener  
+### View event listener
   
 You can easily assign events to views and add an `ViewEventListener` to the SmartRecyclerAdapter for easy handling.<br/>
 You must extend your `ViewHolder` with `SmartEventViewHolder`.
@@ -135,10 +145,10 @@ Your `ViewHolder` must extend `SmartEventViewHolder`.
   
 ```java
 class MovieViewHolder extends SmartEventViewHolder<MovieModel> {
-    @Override
-    public void bind(MovieModel movieModel) {
-      imageView.setOnClickListener(view -> notifyOnItemEvent(view, R.id.action_play_movie));
-    }
+  @Override
+  public void bind(MovieModel movieModel) {
+    imageView.setOnClickListener(view -> notifyOnItemEvent(view, R.id.action_play_movie));
+  }
 }
 ```
 
@@ -181,13 +191,54 @@ SmartRecyclerAdapter
   .into(recyclerView);
 ```
 
+### RecyclableViewHolder
+
+Sometimes a ViewHolder created by the Adapter cannot be recycled due to its transient state.
+In order to fix this is to implement `Re` in your `SmartViewHolder` extension so that upon receiving this callback, 
+Adapter can clear the animation(s) that effect the View's transient state and return <code>true</code> so that the View can be recycled.
+
+```java
+class MovieViewHolder 
+    extends SmartViewHolder
+    implements RecyclableViewHolder {
+  @Override
+  public boolean onFailedToRecycleView() {
+    // Clear animations or other stuff
+    return true; 
+  }
+}
+```
+
+### OnViewAttachedToWindowListener and OnViewDetachedFromWindowListener
+
+If you want to catch when the view is attached and detached from the window in your ViewHolder you can implement `OnViewAttachedToWindowListener` and `OnViewDetachedFromWindowListener` in your `SmartViewHolder` extension.
+Becoming detached from the window is not necessarily a permanent condition the consumer of an Adapter's views may choose to cache views offscreen while they are not visible, attaching and detaching them as appropriate.
+
+```java
+public class MovieViewHolder 
+    extends SmartViewHolder 
+    implements OnViewAttachedToWindowListener, 
+               OnViewDetachedFromWindowListener { 
+
+  @Override
+  public void onViewAttachedToWindow() {
+    // Restore
+  }
+
+  @Override
+  public void onViewDetachedFromWindow() {
+    // Cache
+  }
+}
+```
+
 ### More SmartRecyclerAdapter features
 
 ```java
 SmartRecyclerAdapter adapter = SmartRecyclerAdapter
-        .items(items)
-        .map(MovieModel.class, MovieViewHolder.class)
-        .into(recyclerView);
+    .items(items)
+    .map(MovieModel.class, MovieViewHolder.class)
+    .into(recyclerView);
 
 // We can add more data
 adapter.addItems(items);
