@@ -19,6 +19,9 @@ import smartadapter.widget.ViewTypeResolver;
 
 import static smartadapter.internal.ViewEventValidator.isViewEventIdValid;
 
+/**
+ * Builder for SmartRecyclerAdapter.
+ */
 public class SmartAdapterBuilder {
 
     private RecyclerView.LayoutManager layoutManager;
@@ -149,7 +152,7 @@ public class SmartAdapterBuilder {
     }
 
     public final SmartRecyclerAdapter into(RecyclerView recyclerView) {
-        SmartRecyclerAdapterImpl smartRecyclerAdapter = new SmartRecyclerAdapterImpl(recyclerView.getContext(), items);
+        SmartRecyclerAdapter smartRecyclerAdapter = new SmartRecyclerAdapter(recyclerView.getContext(), items);
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper);
         smartRecyclerAdapter.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper);
         smartRecyclerAdapter.setViewTypeResolver(viewTypeResolver);
@@ -160,7 +163,7 @@ public class SmartAdapterBuilder {
     }
 
     public final SmartRecyclerAdapter create() {
-        SmartRecyclerAdapterImpl smartRecyclerAdapter = new SmartRecyclerAdapterImpl(null, items);
+        SmartRecyclerAdapter smartRecyclerAdapter = new SmartRecyclerAdapter(null, items);
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper);
         smartRecyclerAdapter.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper);
         smartRecyclerAdapter.setViewTypeResolver(viewTypeResolver);

@@ -154,7 +154,7 @@ public class SmartRecyclerAdapterImplTest {
     public void testRecyclableViewHolder() {
         // Given
         RecyclableTestViewHolder viewHolder = mock(RecyclableTestViewHolder.class);
-        SmartRecyclerAdapterImpl adapter = (SmartRecyclerAdapterImpl) SmartRecyclerAdapter.empty().create();
+        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.empty().create();
 
         // When
         adapter.onFailedToRecycleView(viewHolder);
@@ -169,7 +169,7 @@ public class SmartRecyclerAdapterImplTest {
         List<Object> items = new ArrayList<>();
         items.add("Test");
         BindableTestViewHolder viewHolder = mock(BindableTestViewHolder.class);
-        SmartRecyclerAdapterImpl adapter = (SmartRecyclerAdapterImpl) SmartRecyclerAdapter.items(items).create();
+        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.items(items).create();
 
         // When
         adapter.onBindViewHolder(viewHolder, 0);
@@ -184,7 +184,7 @@ public class SmartRecyclerAdapterImplTest {
     public void testRecyclableViewHolder2() {
         // Given
         ViewAttachedToWindowTestViewHolder viewHolder = mock(ViewAttachedToWindowTestViewHolder.class);
-        SmartRecyclerAdapterImpl adapter = (SmartRecyclerAdapterImpl) SmartRecyclerAdapter.empty().create();
+        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.empty().create();
 
         // When
         adapter.onViewAttachedToWindow(viewHolder);
