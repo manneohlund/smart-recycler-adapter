@@ -5,7 +5,6 @@ package smartadapter;
  * Copyright (c) All rights reserved.
  */
 
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -18,12 +17,6 @@ import smartadapter.viewholder.SmartViewHolder;
 import smartadapter.widget.ViewTypeResolver;
 
 public interface ISmartRecyclerAdapter {
-
-    /**
-     * Overrides {@link RecyclerView.Adapter#onViewDetachedFromWindow(RecyclerView.ViewHolder)}.
-     * @see RecyclerView.Adapter#onViewDetachedFromWindow(RecyclerView.ViewHolder)
-     */
-    void onViewDetachedFromWindow(@NonNull SmartViewHolder holder);
 
     /**
      * Overrides {@link RecyclerView.Adapter#getItemCount()}.
