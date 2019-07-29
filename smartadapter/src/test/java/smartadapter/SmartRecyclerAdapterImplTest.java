@@ -10,6 +10,7 @@ import smartadapter.viewholders.RecyclableTestViewHolder;
 import smartadapter.viewholders.ViewAttachedToWindowTestViewHolder;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -20,6 +21,17 @@ import static org.mockito.Mockito.verify;
  */
 
 public class SmartRecyclerAdapterImplTest {
+
+    @Test
+    public void testImplicitInstantiate() {
+        SmartRecyclerAdapter.empty().create();
+    }
+
+    @Test
+    public void testExplicitInstantiate() {
+        SmartRecyclerAdapter smartRecyclerAdapter = SmartRecyclerAdapter.empty().create();
+        assertNotNull(smartRecyclerAdapter);
+    }
 
     @Test
     public void testSmartRecyclerAdapterDataList_addItem() {
