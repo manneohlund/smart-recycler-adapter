@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import smartadapter.internal.Mapper;
+import smartadapter.internal.mapper.ViewHolderMapper;
 import smartadapter.listener.OnViewAttachedToWindowListener;
 import smartadapter.listener.OnViewDetachedFromWindowListener;
 import smartadapter.listener.ViewEventListener;
@@ -31,12 +31,12 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
     private int itemCount = 0;
     private List items = new ArrayList();
 
-    private final Mapper mapper;
+    private final ViewHolderMapper mapper;
     private ViewTypeResolver viewTypeResolver;
     private HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> viewEventListeners;
 
     SmartRecyclerAdapter(Object callerEnclosingClass, List items) {
-        mapper = new Mapper(callerEnclosingClass);
+        mapper = new ViewHolderMapper(callerEnclosingClass);
         setItems(items, false);
         updateItemCount();
     }
@@ -292,7 +292,7 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
     }
 
     @Override
-    public Mapper getMapper() {
+    public ViewHolderMapper getMapper() {
         return mapper;
     }
 

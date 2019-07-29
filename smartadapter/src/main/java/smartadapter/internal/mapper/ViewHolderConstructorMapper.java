@@ -1,4 +1,4 @@
-package smartadapter.internal;
+package smartadapter.internal.mapper;
 
 /*
  * Created by Manne Öhlund on 2019-07-16.
@@ -12,6 +12,7 @@ import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.HashMap;
 
+import smartadapter.internal.utils.ReflectionUtils;
 import smartadapter.viewholder.SmartViewHolder;
 
 public class ViewHolderConstructorMapper {

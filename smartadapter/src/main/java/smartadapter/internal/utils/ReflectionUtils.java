@@ -1,4 +1,4 @@
-package smartadapter.internal;
+package smartadapter.internal.utils;
 
 /*
  * Created by Manne Öhlund on 24/03/17.
@@ -7,6 +7,8 @@ package smartadapter.internal;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
+
+import smartadapter.internal.exception.ConstructorNotFoundException;
 
 public class ReflectionUtils {
 

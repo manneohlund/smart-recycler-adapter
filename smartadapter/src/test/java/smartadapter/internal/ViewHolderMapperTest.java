@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
+import smartadapter.internal.mapper.ViewHolderMapper;
 import smartadapter.viewholder.SmartViewHolder;
 
 import static org.junit.Assert.assertEquals;
@@ -20,13 +21,13 @@ import static org.mockito.Mockito.mock;
  */
 
 @RunWith(RobolectricTestRunner.class)
-public class MapperTest {
+public class ViewHolderMapperTest {
 
-    private Mapper mapper;
+    private ViewHolderMapper mapper;
 
     @Before
     public void setUp() {
-        mapper = new Mapper(null);
+        mapper = new ViewHolderMapper(null);
         mapper.addMapping(String.class, TestViewHolder.class);
         mapper.addMapping(Integer.class, TestViewHolder2.class);
     }
