@@ -6,11 +6,11 @@ package smartadapter;
  */
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.HashMap;
-import java.util.List;
 
 import smartadapter.listener.ViewEventListener;
 import smartadapter.viewholder.SmartAutoEventViewHolder;
@@ -29,10 +29,10 @@ public class SmartAdapterBuilder {
     private HashMap<String, Class<? extends SmartViewHolder>> viewHolderMapper = new HashMap<>();
     private HashMap<Class<? extends SmartViewHolder>, SmartRecyclerAdapter> smartRecyclerAdapterMapper = new HashMap<>();
     private HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> viewEventListenerMap = new HashMap<>();
-    private List items;
+    private SmartRecyclerAdapter smartRecyclerAdapter;
 
-    SmartAdapterBuilder(List items) {
-        this.items = items;
+    SmartAdapterBuilder(@NonNull SmartRecyclerAdapter smartRecyclerAdapter) {
+        this.smartRecyclerAdapter = smartRecyclerAdapter;
     }
 
     public final SmartAdapterBuilder map(Class<?> itemType, Class<? extends SmartViewHolder> viewHolderType) {
@@ -151,23 +151,23 @@ public class SmartAdapterBuilder {
         return this;
     }
 
-    public final SmartRecyclerAdapter into(RecyclerView recyclerView) {
-        SmartRecyclerAdapter smartRecyclerAdapter = new SmartRecyclerAdapter(recyclerView.getContext(), items);
+    @SuppressWarnings("unchecked")
+    public final <T> T into(RecyclerView recyclerView) {
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper);
         smartRecyclerAdapter.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper);
         smartRecyclerAdapter.setViewTypeResolver(viewTypeResolver);
         smartRecyclerAdapter.setViewEventListeners(viewEventListenerMap);
         recyclerView.setAdapter(smartRecyclerAdapter);
         recyclerView.setLayoutManager(getLayoutManager(recyclerView.getContext()));
-        return smartRecyclerAdapter;
+        return (T) smartRecyclerAdapter;
     }
 
-    public final SmartRecyclerAdapter create() {
-        SmartRecyclerAdapter smartRecyclerAdapter = new SmartRecyclerAdapter(null, items);
+    @SuppressWarnings("unchecked")
+    public final <T> T create() {
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper);
         smartRecyclerAdapter.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper);
         smartRecyclerAdapter.setViewTypeResolver(viewTypeResolver);
         smartRecyclerAdapter.setViewEventListeners(viewEventListenerMap);
-        return smartRecyclerAdapter;
+        return (T) smartRecyclerAdapter;
     }
 }

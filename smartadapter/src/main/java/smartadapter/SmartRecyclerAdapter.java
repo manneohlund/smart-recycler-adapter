@@ -334,7 +334,7 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
      * @return SmartAdapterBuilder
      */
     public static SmartAdapterBuilder items(List items) {
-        return new SmartAdapterBuilder(items);
+        return new SmartAdapterBuilder(new SmartRecyclerAdapter(null, items));
     }
 
     /**
@@ -342,6 +342,6 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
      * @return SmartAdapterBuilder
      */
     public static SmartAdapterBuilder empty() {
-        return new SmartAdapterBuilder(new ArrayList());
+        return new SmartAdapterBuilder(new SmartRecyclerAdapter(null, new ArrayList()));
     }
 }
