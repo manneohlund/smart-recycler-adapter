@@ -179,7 +179,7 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
         if (items != null) {
             this.items.addAll(items);
             if (notifyDataSetChanged) {
-                smartNotifyDataSetChanged();
+                smartNotifyItemRangeInserted(getItemCount(), items.size());
             }
         }
     }
@@ -194,7 +194,7 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
         if (items != null) {
             this.items.addAll(index, items);
             if (notifyDataSetChanged) {
-                smartNotifyDataSetChanged();
+                smartNotifyItemRangeInserted(index, items.size());
             }
         }
     }
