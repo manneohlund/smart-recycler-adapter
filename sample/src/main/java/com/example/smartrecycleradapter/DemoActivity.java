@@ -220,7 +220,7 @@ public class DemoActivity extends AppCompatActivity {
                         })
                 .create();
 
-        //
+        // Set custom load more view
         comingSoonSmartMovieAdapter.setCustomLoadMoreLayoutResource(R.layout.custom_loadmore_view);
 
         // Pagination ends after 3 loads
