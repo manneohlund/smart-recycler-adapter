@@ -23,7 +23,7 @@ allprojects {
 #### Step 2. Add the dependency  
 ```groovy
 dependencies {  
-  implementation 'com.github.manneohlund:smart-recycler-adapter:2.1.0'
+  implementation 'com.github.manneohlund:smart-recycler-adapter:2.2.0'
 }
 ```
 
@@ -196,13 +196,13 @@ endlessScrollAdapter.setOnLoadMoreListener(() -> {
 });
 ```
 
-#### More features
+#### More SmartEndlessScrollRecyclerAdapter features
 
 Enable/Disable endless scrolling and thus removing the loading view.
-`comingSoonSmartMovieAdapter.setEndlessScrollEnabled(false);`
+`endlessScrollAdapter.setEndlessScrollEnabled(false);`
 
 You can also set your custom loading/loadmore view.
-`.setCustomLoadMoreLayoutResource(R.layout.your_custom_loadmore_view);`
+`endlessScrollAdapter.setCustomLoadMoreLayoutResource(R.layout.your_custom_loadmore_view);`
 
 ### Adapter creation with ViewTypeResolver
   
