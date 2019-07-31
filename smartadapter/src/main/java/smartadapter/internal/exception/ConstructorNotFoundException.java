@@ -1,4 +1,4 @@
-package smartadapter.internal;
+package smartadapter.internal.exception;
 
 /*
  * Created by Manne Öhlund on 2019-07-17.

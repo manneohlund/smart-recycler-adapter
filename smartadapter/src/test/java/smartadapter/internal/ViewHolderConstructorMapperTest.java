@@ -5,6 +5,8 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import smartadapter.internal.mapper.ViewHolderConstructorMapper;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 

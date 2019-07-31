@@ -1,4 +1,4 @@
-package smartadapter.internal;
+package smartadapter.internal.mapper;
 
 /*
  * Created by Manne Öhlund on 30/05/17.
@@ -12,6 +12,7 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 
 import smartadapter.SmartRecyclerAdapter;
+import smartadapter.internal.utils.ReflectionUtils;
 import smartadapter.listener.ViewEventListener;
 import smartadapter.viewholder.SmartAdapterHolder;
 import smartadapter.viewholder.SmartViewHolder;
@@ -21,7 +22,7 @@ import smartadapter.widget.ViewTypeResolver;
 /**
  * Responsible for mapping subtype of SmartViewHolder with target data type.
  */
-public class Mapper {
+public class ViewHolderMapper {
 
     private final Object caller;
 
@@ -31,7 +32,7 @@ public class Mapper {
     private HashMap<String, Class<? extends SmartViewHolder>> dataTypeViewHolderMapper = new HashMap<>();
     private HashMap<Class<? extends SmartViewHolder>, SmartRecyclerAdapter> smartRecyclerAdapterMapper = new HashMap<>();
 
-    public Mapper(Object callerEnclosingClass) {
+    public ViewHolderMapper(Object callerEnclosingClass) {
         this.caller = callerEnclosingClass;
     }
 

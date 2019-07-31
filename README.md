@@ -23,7 +23,7 @@ allprojects {
 #### Step 2. Add the dependency  
 ```groovy
 dependencies {  
-  implementation 'com.github.manneohlund:smart-recycler-adapter:2.1.0'
+  implementation 'com.github.manneohlund:smart-recycler-adapter:2.2.0'
 }
 ```
 
@@ -172,7 +172,38 @@ SmartRecyclerAdapter
                         (view, actionId, position) -> openMovieInfo())
   .into(recyclerView);
 ```
-  
+
+### SmartEndlessScrollRecyclerAdapter
+
+A popular feature in apps is to have endless scrolling with pagination, in other words load more items when user has scrolled to bottom.
+With SmartEndlessScrollRecyclerAdapter you can achieve this.
+
+#### 1. Create adapter
+```java
+SmartEndlessScrollRecyclerAdapter endlessScrollAdapter = SmartEndlessScrollRecyclerAdapter
+  .items(items)
+  .map(MovieModel.class, MovieViewHolder.class)
+  .into(recyclerView);
+```
+
+#### 2. Set OnLoadMoreListener to your SmartEndlessScrollRecyclerAdapter
+
+Called when scrolled to the last item and loading view is visible.
+
+```java
+endlessScrollAdapter.setOnLoadMoreListener(() -> {
+  endlessScrollAdapter.addItems(moreItems);
+});
+```
+
+#### More SmartEndlessScrollRecyclerAdapter features
+
+Enable/Disable endless scrolling and thus removing the loading view.
+`endlessScrollAdapter.setEndlessScrollEnabled(false);`
+
+You can also set your custom loading/loadmore view.
+`endlessScrollAdapter.setCustomLoadMoreLayoutResource(R.layout.your_custom_loadmore_view);`
+
 ### Adapter creation with ViewTypeResolver
   
 If you want to bind one data type with different view holders depending on some attribute you can set a ViewTypeResolver.  

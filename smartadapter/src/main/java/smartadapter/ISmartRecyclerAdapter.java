@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import smartadapter.internal.Mapper;
+import smartadapter.internal.mapper.ViewHolderMapper;
 import smartadapter.listener.ViewEventListener;
 import smartadapter.viewholder.SmartViewHolder;
 import smartadapter.widget.ViewTypeResolver;
@@ -230,9 +230,9 @@ public interface ISmartRecyclerAdapter {
 
     /**
      * Returns the data item view holder mapper.
-     * @return Mapper
+     * @return ViewHolderMapper
      */
-    Mapper getMapper();
+    ViewHolderMapper getMapper();
 
     /**
      * Returns {@link ViewTypeResolver}.

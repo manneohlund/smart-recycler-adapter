@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.lang.reflect.Constructor;
 
+import smartadapter.internal.utils.ReflectionUtils;
 import smartadapter.viewholder.SmartViewHolder;
 import smartadapter.viewholders.InvalidTestViewHolder;
 import smartadapter.viewholders.TestViewGroupViewHolder;
