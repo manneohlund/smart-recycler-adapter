@@ -17,7 +17,7 @@ object MovieDataItems {
     const val THUMBS_BASE_URL = "https://raw.githubusercontent.com/manneohlund/smart-recycler-adapter-resources/master/thumbs/"
 
     // Coming soon
-    val comingSoonItems: List<Any> = asList(
+    val comingSoonItems: List<Any> = mutableListOf(
             MovieModel("Fist man", "first_man"),
             MovieModel("Terminator dark fate", "terminator_dark_fate"),
             MovieModel("Murder Mystery", "murder_mystery"),
@@ -38,6 +38,23 @@ object MovieDataItems {
             MovieModel("Godzilla king of the mosters", "godzilla_king_of_the_monsters"),
             MovieModel("Godzilla", "godzilla"),
             MovieModel("Abominable", "abominable")
+    )
+
+    // Load more items
+    val loadMoreItems: List<Any> = asList(
+            MovieModel("Terminator dark fate", "terminator_dark_fate"),
+            MovieModel("Joker", "joker"),
+            MovieModel("Fist man", "first_man"),
+            MovieModel("The Lion king", "lion_king"),
+            MovieModel("John Wick 3", "john_wick_3"),
+            MovieModel("Grinch", "grinch"),
+            MovieModel("Wonder Woman", "woderwoman"),
+            MovieModel("Hellboy", "hellboy"),
+            MovieModel("Predator", "predator"),
+            MovieModel("It 2", "it_2"),
+            MovieModel("Once upon a time in Hollywood", "once_hollywood"),
+            MovieModel("Age of uprising", "age_of_uprising"),
+            MovieModel("Murder Mystery", "murder_mystery")
     )
 
     // My watchlist

@@ -7,6 +7,7 @@ package com.example.smartrecycleradapter;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -43,13 +44,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import smartadapter.SmartEndlessScrollRecyclerAdapter;
 import smartadapter.SmartRecyclerAdapter;
 
 public class DemoActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
-    SmartRecyclerAdapter mainSmartMovieAdapter;
-    SmartRecyclerAdapter comingSoonSmartMovieAdapter;
+    SmartEndlessScrollRecyclerAdapter mainSmartMovieAdapter;
+    SmartEndlessScrollRecyclerAdapter comingSoonSmartMovieAdapter;
     SmartRecyclerAdapter myWatchListSmartMovieAdapter;
     SmartRecyclerAdapter actionMoviesSmartMovieAdapter;
     SmartRecyclerAdapter adventuresMoviesSmartMovieAdapter;
@@ -84,7 +86,7 @@ public class DemoActivity extends AppCompatActivity {
         items.add(new RecentlyPlayedMoviesModel("Recently played"));
         items.add(new CopyrightModel(String.format("SmartRecyclerAdapter v%s\n\nDeveloped by Manne Öhlund", BuildConfig.VERSION_NAME)));
 
-        mainSmartMovieAdapter = SmartRecyclerAdapter
+        mainSmartMovieAdapter = SmartEndlessScrollRecyclerAdapter
                 .items(items)
                 .map(MoviePosterModel.class, PosterViewHolder.class)
                 .map(MovieBannerModel.class, BannerViewHolder.class)
@@ -184,10 +186,25 @@ public class DemoActivity extends AppCompatActivity {
                 .map(RecentlyPlayedMoviesViewHolder.class, recentlyPlayedMoviesSmartMovieAdapter)
 
                 .into(recyclerView);
+
+        // Endless pagination
+        mainSmartMovieAdapter.setOnLoadMoreListener(() -> {
+            Toast.makeText(getApplicationContext(), "LoadMore", Toast.LENGTH_SHORT).show();
+
+            int indexBeforeCopyright = 2;
+            new Handler().postDelayed(() -> {
+                        mainSmartMovieAdapter.addItem(
+                                mainSmartMovieAdapter.getItemCount() - indexBeforeCopyright,
+                                new MovieBannerModel("More items loaded", MovieDataItems.INSTANCE.getRandomBanner())
+                        );
+                    },
+                    800);
+        });
     }
 
+    int moreItemsLoadedCount = 0;
     private void initNestedSmartRecyclerAdapters() {
-        comingSoonSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.INSTANCE.getComingSoonItems())
+        comingSoonSmartMovieAdapter = SmartEndlessScrollRecyclerAdapter.items(MovieDataItems.INSTANCE.getComingSoonItems())
                 .map(MovieModel.class, LargeThumbViewHolder.class)
                 .addViewEventListener(
                         LargeThumbViewHolder.class,
@@ -202,6 +219,24 @@ public class DemoActivity extends AppCompatActivity {
                             myWatchListSmartMovieAdapter.addItem(1, comingSoonSmartMovieAdapter.getItem(position));
                         })
                 .create();
+
+        //
+        comingSoonSmartMovieAdapter.setCustomLoadMoreLayoutResource(R.layout.custom_loadmore_view);
+
+        // Pagination ends after 3 loads
+        comingSoonSmartMovieAdapter.setOnLoadMoreListener(() -> {
+            Toast.makeText(getApplicationContext(), "LoadMore", Toast.LENGTH_SHORT).show();
+
+            new Handler().postDelayed(() -> {
+                        comingSoonSmartMovieAdapter.addItems(
+                                comingSoonSmartMovieAdapter.getItemCount()-1,
+                                MovieDataItems.INSTANCE.getLoadMoreItems()
+                        );
+                        if (moreItemsLoadedCount++ == 2)
+                            comingSoonSmartMovieAdapter.setEndlessScrollEnabled(false);
+                    },
+                    1000);
+        });
 
         myWatchListSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.INSTANCE.getMyWatchListItems())
                 .map(MovieModel.class, ThumbViewHolder.class)
