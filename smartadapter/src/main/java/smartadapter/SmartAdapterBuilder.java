@@ -12,7 +12,7 @@ import android.support.v7.widget.RecyclerView;
 
 import java.util.HashMap;
 
-import smartadapter.listener.ViewEventListener;
+import smartadapter.listener.OnViewActionListener;
 import smartadapter.viewholder.SmartAutoEventViewHolder;
 import smartadapter.viewholder.SmartViewHolder;
 import smartadapter.widget.ViewTypeResolver;
@@ -28,7 +28,7 @@ public class SmartAdapterBuilder {
     private ViewTypeResolver viewTypeResolver;
     private HashMap<String, Class<? extends SmartViewHolder>> viewHolderMapper = new HashMap<>();
     private HashMap<Class<? extends SmartViewHolder>, SmartRecyclerAdapter> smartRecyclerAdapterMapper = new HashMap<>();
-    private HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> viewEventListenerMap = new HashMap<>();
+    private HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, OnViewActionListener>>> viewActionListenerMap = new HashMap<>();
     private SmartRecyclerAdapter smartRecyclerAdapter;
 
     SmartAdapterBuilder(@NonNull SmartRecyclerAdapter smartRecyclerAdapter) {
@@ -63,91 +63,37 @@ public class SmartAdapterBuilder {
     }
 
     /**
-     * Will add ViewEventListener to all ViewHolders and assign simple list item onClickListener event listener.
+     * Adds {@link OnViewActionListener} to the {@link SmartRecyclerAdapter}.
+     * The adapter will then automatically map the {@link OnViewActionListener} to the target view holder class with {@link OnViewActionListener#getViewHolderType()},
+     * set the viewActionListener on the right View with viewId using {@link OnViewActionListener#getViewId()}.
      *
-     * @param viewEventListener global ViewEventListener
-     * @return SmartAdapterBuilder
-     */
-    public final SmartAdapterBuilder addViewEventListener(ViewEventListener viewEventListener) {
-        return addViewEventListener(SmartViewHolder.class, R.id.undefined, R.id.undefined, viewEventListener);
-    }
-
-    public final SmartAdapterBuilder addViewEventListener(ViewEventListener viewEventListener, int autoViewEventId) {
-        return addViewEventListener(SmartViewHolder.class, R.id.undefined, autoViewEventId, viewEventListener);
-    }
-
-    /**
-     * Will add ViewEventListener to all ViewHolders and assign simple list item onClickListener and/or onLongClickListener event listener.
+     * @see OnViewActionListener#getViewActionId() for predefined actionIds.
      *
-     * @param viewEventListener global ViewEventListener
-     * @param autoViewEventId   target auto view event id, for predefined see smartadapter.R.id.xxx
+     * @param viewActionListener target OnViewActionListener
      * @return SmartAdapterBuilder
      */
-    public final SmartAdapterBuilder addViewEventListener(
-            int autoViewEventId,
-            ViewEventListener viewEventListener) {
-        return addViewEventListener(SmartViewHolder.class, R.id.undefined, autoViewEventId, viewEventListener);
-    }
+    public final SmartAdapterBuilder addViewActionListener(OnViewActionListener viewActionListener) {
+        if (!isViewEventIdValid(viewActionListener.getViewActionId()))
+            throw new RuntimeException(String.format("Invalid view event id (%d) for ViewHolder (%s)", viewActionListener.getViewActionId(), viewActionListener.getViewHolderType()));
+        if (viewActionListener.getViewActionId() != R.id.undefined &&
+                isViewEventIdValid(viewActionListener.getViewActionId()) &&
+                !viewActionListener.getViewHolderType().equals(SmartViewHolder.class) &&
+                !SmartAutoEventViewHolder.class.isAssignableFrom(viewActionListener.getViewHolderType()))
+            throw new RuntimeException(String.format("View event id (%d) set but ViewHolder (%s) is not assignable from SmartAutoEventViewHolder",
+                    viewActionListener.getViewActionId(),
+                    viewActionListener.getViewHolderType()));
 
-    /**
-     * Will automatically add a onClick viewEventListener to the viewHolderTypes view.
-     *
-     * @param viewHolderType    ViewHolder that extends SmartViewHolder
-     * @param viewEventListener target ViewEventListener
-     * @return SmartAdapterBuilder
-     */
-    public final SmartAdapterBuilder addViewEventListener(
-            Class<? extends SmartViewHolder> viewHolderType,
-            ViewEventListener viewEventListener) {
-        return addViewEventListener(viewHolderType, R.id.undefined, R.id.undefined, viewEventListener);
-    }
-
-    /**
-     * @param viewHolderType    ViewHolder that extends SmartViewHolder
-     * @param autoViewEventId   target auto view event id, for predefined see smartadapter.R.id.xxx
-     * @param viewEventListener target ViewEventListener
-     * @return SmartAdapterBuilder
-     */
-    public final SmartAdapterBuilder addViewEventListener(
-            Class<? extends SmartViewHolder> viewHolderType,
-            int autoViewEventId,
-            ViewEventListener viewEventListener) {
-        return addViewEventListener(viewHolderType, R.id.undefined, autoViewEventId, viewEventListener);
-    }
-
-    /**
-     * Specify the target view and automatically add a viewEventListener to the viewHolderTypes view.
-     *
-     * @param viewHolderType    ViewHolder that extends SmartViewHolder
-     * @param viewId            target view id for the ViewHolder type
-     * @param autoViewEventId   target auto view event id, must be smartadapter.R.id
-     * @param viewEventListener target ViewEventListener
-     * @return SmartAdapterBuilder
-     */
-    public final SmartAdapterBuilder addViewEventListener(
-            Class<? extends SmartViewHolder> viewHolderType,
-            int viewId,
-            int autoViewEventId,
-            ViewEventListener viewEventListener) {
-        if (!isViewEventIdValid(autoViewEventId))
-            throw new RuntimeException(String.format("Invalid view event id (%d) for ViewHolder (%s)", autoViewEventId, viewHolderType));
-        if (autoViewEventId != R.id.undefined &&
-                isViewEventIdValid(autoViewEventId) &&
-                !viewHolderType.equals(SmartViewHolder.class) &&
-                !SmartAutoEventViewHolder.class.isAssignableFrom(viewHolderType))
-            throw new RuntimeException(String.format("View event id (%d) set but ViewHolder (%s) is not assignable from SmartAutoEventViewHolder", autoViewEventId, viewHolderType));
-
-        HashMap<Integer, HashMap<Integer, ViewEventListener>> mapper;
-        if ((mapper = viewEventListenerMap.get(viewHolderType)) == null) {
+        HashMap<Integer, HashMap<Integer, OnViewActionListener>> mapper;
+        if ((mapper = viewActionListenerMap.get(viewActionListener.getViewHolderType())) == null) {
             mapper = new HashMap<>();
         }
-        if (!mapper.containsKey(viewId)) {
-            final HashMap<Integer, ViewEventListener> viewEventAndListenerMap = new HashMap<>();
-            viewEventAndListenerMap.put(autoViewEventId, viewEventListener);
-            mapper.put(viewId, viewEventAndListenerMap);
+        if (!mapper.containsKey(viewActionListener.getViewId())) {
+            final HashMap<Integer, OnViewActionListener> viewEventAndListenerMap = new HashMap<>();
+            viewEventAndListenerMap.put(viewActionListener.getViewActionId(), viewActionListener);
+            mapper.put(viewActionListener.getViewId(), viewEventAndListenerMap);
         }
-        mapper.get(viewId).put(autoViewEventId, viewEventListener);
-        this.viewEventListenerMap.put(viewHolderType, mapper);
+        mapper.get(viewActionListener.getViewId()).put(viewActionListener.getViewActionId(), viewActionListener);
+        this.viewActionListenerMap.put(viewActionListener.getViewHolderType(), mapper);
         return this;
     }
 
@@ -156,7 +102,7 @@ public class SmartAdapterBuilder {
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper);
         smartRecyclerAdapter.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper);
         smartRecyclerAdapter.setViewTypeResolver(viewTypeResolver);
-        smartRecyclerAdapter.setViewEventListeners(viewEventListenerMap);
+        smartRecyclerAdapter.setViewEventListeners(viewActionListenerMap);
         recyclerView.setAdapter(smartRecyclerAdapter);
         recyclerView.setLayoutManager(getLayoutManager(recyclerView.getContext()));
         return (T) smartRecyclerAdapter;
@@ -167,7 +113,7 @@ public class SmartAdapterBuilder {
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper);
         smartRecyclerAdapter.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper);
         smartRecyclerAdapter.setViewTypeResolver(viewTypeResolver);
-        smartRecyclerAdapter.setViewEventListeners(viewEventListenerMap);
+        smartRecyclerAdapter.setViewEventListeners(viewActionListenerMap);
         return (T) smartRecyclerAdapter;
     }
 }
