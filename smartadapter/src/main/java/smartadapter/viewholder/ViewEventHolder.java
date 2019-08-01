@@ -7,8 +7,8 @@ package smartadapter.viewholder;
 
 import java.util.HashMap;
 
-import smartadapter.listener.ViewEventListener;
+import smartadapter.listener.OnViewActionListener;
 
 public interface ViewEventHolder {
-    void setViewEventListeners(HashMap<Integer, HashMap<Integer, ViewEventListener>> viewEventListeners);
+    void setViewEventListeners(HashMap<Integer, HashMap<Integer, OnViewActionListener>> viewEventListeners);
 }

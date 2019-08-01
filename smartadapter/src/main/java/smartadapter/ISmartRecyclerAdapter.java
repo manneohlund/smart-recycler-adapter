@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import smartadapter.internal.mapper.ViewHolderMapper;
-import smartadapter.listener.ViewEventListener;
+import smartadapter.listener.OnViewActionListener;
 import smartadapter.viewholder.SmartViewHolder;
 import smartadapter.widget.ViewTypeResolver;
 
@@ -250,18 +250,18 @@ public interface ISmartRecyclerAdapter {
      * Get all ViewEventListeners.
      * @return map of ViewEventListeners
      */
-    HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> getViewEventListeners();
+    HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, OnViewActionListener>>> getViewEventListeners();
 
     /**
      * Get ViewEventListeners for target ViewHolder.
      * @param viewHolderType SmartViewHolder type
      * @return map of ViewEventListeners
      */
-    HashMap<Integer, HashMap<Integer, ViewEventListener>> getViewEventListenersForViewHolder(Class<? extends SmartViewHolder> viewHolderType);
+    HashMap<Integer, HashMap<Integer, OnViewActionListener>> getViewEventListenersForViewHolder(Class<? extends SmartViewHolder> viewHolderType);
 
     /**
      * Sets map of {@link ViewTypeResolver}.
      * @param viewEventListeners map of ViewEventListeners
      */
-    void setViewEventListeners(HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> viewEventListeners);
+    void setViewEventListeners(HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, OnViewActionListener>>> viewEventListeners);
 }

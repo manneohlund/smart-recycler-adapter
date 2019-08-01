@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import smartadapter.R;
-import smartadapter.listener.ViewEventListener;
+import smartadapter.listener.OnViewActionListener;
 
 public abstract class SmartAutoEventViewHolder<T> extends SmartEventViewHolder<T> {
 
@@ -20,23 +20,23 @@ public abstract class SmartAutoEventViewHolder<T> extends SmartEventViewHolder<T
     }
 
     @Override
-    public void setViewEventListeners(HashMap<Integer, HashMap<Integer, ViewEventListener>> viewEventListeners) {
+    public void setViewEventListeners(HashMap<Integer, HashMap<Integer, OnViewActionListener>> viewEventListeners) {
         super.setViewEventListeners(viewEventListeners);
 
         if (viewEventListeners == null) {
             return;
         }
 
-        for (Map.Entry<Integer, HashMap<Integer, ViewEventListener>> listenerEntry : viewEventListeners.entrySet()) {
+        for (Map.Entry<Integer, HashMap<Integer, OnViewActionListener>> listenerEntry : viewEventListeners.entrySet()) {
             View targetView = itemView;
             int eventViewId = listenerEntry.getKey();
             if (eventViewId != R.id.undefined) {
                 targetView = itemView.findViewById(eventViewId);
             }
 
-            for (Map.Entry<Integer, ViewEventListener> viewEventEntry : listenerEntry.getValue().entrySet()) {
+            for (Map.Entry<Integer, OnViewActionListener> viewEventEntry : listenerEntry.getValue().entrySet()) {
                 int viewEventId = viewEventEntry.getKey();
-                ViewEventListener viewEventListener = viewEventEntry.getValue();
+                OnViewActionListener viewEventListener = viewEventEntry.getValue();
 
                 if (viewEventId == R.id.action_on_click) {
                     targetView.setOnClickListener(v ->

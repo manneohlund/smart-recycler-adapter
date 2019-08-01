@@ -11,18 +11,18 @@ import android.view.View;
 import java.util.HashMap;
 
 import smartadapter.R;
-import smartadapter.listener.ViewEventListener;
+import smartadapter.listener.OnViewActionListener;
 
 public abstract class SmartEventViewHolder<T> extends SmartViewHolder<T> implements ViewEventHolder, OnViewEventListener {
 
-    protected HashMap<Integer, HashMap<Integer, ViewEventListener>> viewEventListeners = new HashMap<>();
+    protected HashMap<Integer, HashMap<Integer, OnViewActionListener>> viewEventListeners = new HashMap<>();
 
     public SmartEventViewHolder(View view) {
         super(view);
     }
 
     @Override
-    public void setViewEventListeners(HashMap<Integer, HashMap<Integer, ViewEventListener>> viewEventListeners) {
+    public void setViewEventListeners(HashMap<Integer, HashMap<Integer, OnViewActionListener>> viewEventListeners) {
         if (viewEventListeners == null) {
             return;
         }

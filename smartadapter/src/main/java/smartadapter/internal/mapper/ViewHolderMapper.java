@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 import smartadapter.SmartRecyclerAdapter;
 import smartadapter.internal.utils.ReflectionUtils;
-import smartadapter.listener.ViewEventListener;
+import smartadapter.listener.OnViewActionListener;
 import smartadapter.viewholder.SmartAdapterHolder;
 import smartadapter.viewholder.SmartViewHolder;
 import smartadapter.viewholder.ViewEventHolder;
@@ -81,7 +81,7 @@ public class ViewHolderMapper {
      */
     @SuppressWarnings("unchecked")
     public <VH extends SmartViewHolder> VH createViewHolder(
-            HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> viewEventListeners,
+            HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, OnViewActionListener>>> viewEventListeners,
             ViewGroup parent,
             int viewType) {
         VH viewHolder;
