@@ -7,16 +7,18 @@ package smartadapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import smartadapter.internal.mapper.ViewEventMapper;
 import smartadapter.internal.mapper.ViewHolderMapper;
-import smartadapter.listener.OnViewActionListener;
 import smartadapter.listener.OnViewAttachedToWindowListener;
 import smartadapter.listener.OnViewDetachedFromWindowListener;
+import smartadapter.listener.OnViewEventListener;
 import smartadapter.viewholder.RecyclableViewHolder;
 import smartadapter.viewholder.SmartViewHolder;
 import smartadapter.widget.ViewTypeResolver;
@@ -33,7 +35,7 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
 
     private final ViewHolderMapper mapper;
     private ViewTypeResolver viewTypeResolver;
-    private HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, OnViewActionListener>>> viewEventListeners;
+    private ViewEventMapper viewActionMapper;
 
     SmartRecyclerAdapter(Object callerEnclosingClass, List items) {
         mapper = new ViewHolderMapper(callerEnclosingClass);
@@ -49,7 +51,9 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
     @NonNull
     @Override
     public SmartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return mapper.createViewHolder(viewEventListeners, parent, viewType);
+        SmartViewHolder smartViewHolder = mapper.createViewHolder(parent, viewType);
+        viewActionMapper.mapViewActionWith(smartViewHolder);
+        return smartViewHolder;
     }
 
     @Override
@@ -315,18 +319,18 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
     }
 
     @Override
-    public HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, OnViewActionListener>>> getViewEventListeners() {
-        return this.viewEventListeners;
+    public HashMap<Class<? extends SmartViewHolder>, SparseArray<SparseArray<OnViewEventListener>>> getViewEventListeners() {
+        return this.viewActionMapper.getViewEventListenerMap();
     }
 
     @Override
-    public HashMap<Integer, HashMap<Integer, OnViewActionListener>> getViewEventListenersForViewHolder(Class<? extends SmartViewHolder> viewHolderType) {
+    public SparseArray<SparseArray<OnViewEventListener>> getViewEventListenersForViewHolder(Class<? extends SmartViewHolder> viewHolderType) {
         return getViewEventListeners().get(viewHolderType);
     }
 
     @Override
-    public void setViewEventListeners(HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, OnViewActionListener>>> viewEventListeners) {
-        this.viewEventListeners = viewEventListeners;
+    public void setViewEventMapper(@NonNull ViewEventMapper viewActionMapper) {
+        this.viewActionMapper = viewActionMapper;
     }
 
     /**

@@ -12,12 +12,10 @@ import android.support.v7.widget.RecyclerView;
 
 import java.util.HashMap;
 
-import smartadapter.listener.OnViewActionListener;
-import smartadapter.viewholder.SmartAutoEventViewHolder;
+import smartadapter.internal.mapper.ViewEventMapper;
+import smartadapter.listener.OnViewEventListener;
 import smartadapter.viewholder.SmartViewHolder;
 import smartadapter.widget.ViewTypeResolver;
-
-import static smartadapter.internal.utils.ViewEventValidator.isViewEventIdValid;
 
 /**
  * Builder for SmartRecyclerAdapter.
@@ -28,7 +26,7 @@ public class SmartAdapterBuilder {
     private ViewTypeResolver viewTypeResolver;
     private HashMap<String, Class<? extends SmartViewHolder>> viewHolderMapper = new HashMap<>();
     private HashMap<Class<? extends SmartViewHolder>, SmartRecyclerAdapter> smartRecyclerAdapterMapper = new HashMap<>();
-    private HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, OnViewActionListener>>> viewActionListenerMap = new HashMap<>();
+    private ViewEventMapper viewEventMapper = new ViewEventMapper();
     private SmartRecyclerAdapter smartRecyclerAdapter;
 
     SmartAdapterBuilder(@NonNull SmartRecyclerAdapter smartRecyclerAdapter) {
@@ -63,37 +61,17 @@ public class SmartAdapterBuilder {
     }
 
     /**
-     * Adds {@link OnViewActionListener} to the {@link SmartRecyclerAdapter}.
-     * The adapter will then automatically map the {@link OnViewActionListener} to the target view holder class with {@link OnViewActionListener#getViewHolderType()},
-     * set the viewActionListener on the right View with viewId using {@link OnViewActionListener#getViewId()}.
+     * Adds {@link OnViewEventListener} to the {@link SmartRecyclerAdapter}.
+     * The adapter will then automatically map the {@link OnViewEventListener} to the target view holder class with {@link OnViewEventListener#getViewHolderType()},
+     * set the viewActionListener on the right View with viewId using {@link OnViewEventListener#getViewId()}.
      *
-     * @see OnViewActionListener#getViewActionId() for predefined actionIds.
+     * @see OnViewEventListener#getViewEventId() for predefined eventIds.
      *
-     * @param viewActionListener target OnViewActionListener
+     * @param viewEventListener target {@link OnViewEventListener}
      * @return SmartAdapterBuilder
      */
-    public final SmartAdapterBuilder addViewActionListener(OnViewActionListener viewActionListener) {
-        if (!isViewEventIdValid(viewActionListener.getViewActionId()))
-            throw new RuntimeException(String.format("Invalid view event id (%d) for ViewHolder (%s)", viewActionListener.getViewActionId(), viewActionListener.getViewHolderType()));
-        if (viewActionListener.getViewActionId() != R.id.undefined &&
-                isViewEventIdValid(viewActionListener.getViewActionId()) &&
-                !viewActionListener.getViewHolderType().equals(SmartViewHolder.class) &&
-                !SmartAutoEventViewHolder.class.isAssignableFrom(viewActionListener.getViewHolderType()))
-            throw new RuntimeException(String.format("View event id (%d) set but ViewHolder (%s) is not assignable from SmartAutoEventViewHolder",
-                    viewActionListener.getViewActionId(),
-                    viewActionListener.getViewHolderType()));
-
-        HashMap<Integer, HashMap<Integer, OnViewActionListener>> mapper;
-        if ((mapper = viewActionListenerMap.get(viewActionListener.getViewHolderType())) == null) {
-            mapper = new HashMap<>();
-        }
-        if (!mapper.containsKey(viewActionListener.getViewId())) {
-            final HashMap<Integer, OnViewActionListener> viewEventAndListenerMap = new HashMap<>();
-            viewEventAndListenerMap.put(viewActionListener.getViewActionId(), viewActionListener);
-            mapper.put(viewActionListener.getViewId(), viewEventAndListenerMap);
-        }
-        mapper.get(viewActionListener.getViewId()).put(viewActionListener.getViewActionId(), viewActionListener);
-        this.viewActionListenerMap.put(viewActionListener.getViewHolderType(), mapper);
+    public final SmartAdapterBuilder addViewEventListener(OnViewEventListener viewEventListener) {
+        viewEventMapper.addViewEventListener(viewEventListener);
         return this;
     }
 
@@ -102,7 +80,7 @@ public class SmartAdapterBuilder {
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper);
         smartRecyclerAdapter.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper);
         smartRecyclerAdapter.setViewTypeResolver(viewTypeResolver);
-        smartRecyclerAdapter.setViewEventListeners(viewActionListenerMap);
+        smartRecyclerAdapter.setViewEventMapper(viewEventMapper);
         recyclerView.setAdapter(smartRecyclerAdapter);
         recyclerView.setLayoutManager(getLayoutManager(recyclerView.getContext()));
         return (T) smartRecyclerAdapter;
@@ -113,7 +91,7 @@ public class SmartAdapterBuilder {
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper);
         smartRecyclerAdapter.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper);
         smartRecyclerAdapter.setViewTypeResolver(viewTypeResolver);
-        smartRecyclerAdapter.setViewEventListeners(viewActionListenerMap);
+        smartRecyclerAdapter.setViewEventMapper(viewEventMapper);
         return (T) smartRecyclerAdapter;
     }
 }

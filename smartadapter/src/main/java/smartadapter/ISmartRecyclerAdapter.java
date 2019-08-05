@@ -5,14 +5,17 @@ package smartadapter;
  * Copyright (c) All rights reserved.
  */
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import smartadapter.internal.mapper.ViewEventMapper;
 import smartadapter.internal.mapper.ViewHolderMapper;
-import smartadapter.listener.OnViewActionListener;
+import smartadapter.listener.OnViewEventListener;
 import smartadapter.viewholder.SmartViewHolder;
 import smartadapter.widget.ViewTypeResolver;
 
@@ -250,18 +253,18 @@ public interface ISmartRecyclerAdapter {
      * Get all ViewEventListeners.
      * @return map of ViewEventListeners
      */
-    HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, OnViewActionListener>>> getViewEventListeners();
+    HashMap<Class<? extends SmartViewHolder>, SparseArray<SparseArray<OnViewEventListener>>> getViewEventListeners();
 
     /**
      * Get ViewEventListeners for target ViewHolder.
      * @param viewHolderType SmartViewHolder type
      * @return map of ViewEventListeners
      */
-    HashMap<Integer, HashMap<Integer, OnViewActionListener>> getViewEventListenersForViewHolder(Class<? extends SmartViewHolder> viewHolderType);
+    SparseArray<SparseArray<OnViewEventListener>> getViewEventListenersForViewHolder(Class<? extends SmartViewHolder> viewHolderType);
 
     /**
-     * Sets map of {@link ViewTypeResolver}.
-     * @param viewEventListeners map of ViewEventListeners
+     * Sets {@link ViewEventMapper} containing {@link OnViewEventListener}s.
+     * @param viewEventMapper holder and mapper of {@link OnViewEventListener}s
      */
-    void setViewEventListeners(HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, OnViewActionListener>>> viewEventListeners);
+    void setViewEventMapper(@NonNull ViewEventMapper viewEventMapper);
 }
