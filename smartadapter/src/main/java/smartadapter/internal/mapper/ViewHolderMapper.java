@@ -13,10 +13,8 @@ import java.util.HashMap;
 
 import smartadapter.SmartRecyclerAdapter;
 import smartadapter.internal.utils.ReflectionUtils;
-import smartadapter.listener.OnViewActionListener;
 import smartadapter.viewholder.SmartAdapterHolder;
 import smartadapter.viewholder.SmartViewHolder;
-import smartadapter.viewholder.ViewEventHolder;
 import smartadapter.widget.ViewTypeResolver;
 
 /**
@@ -73,7 +71,6 @@ public class ViewHolderMapper {
     /**
      * Instantiates the target view holder and set view event listeners if specified.
      *
-     * @param viewEventListeners Contains general purpose or view id specific event listeners.
      * @param parent Parent ViewGroup
      * @param viewType View holder type
      * @param <VH> Subtype of SmartViewHolder
@@ -81,7 +78,6 @@ public class ViewHolderMapper {
      */
     @SuppressWarnings("unchecked")
     public <VH extends SmartViewHolder> VH createViewHolder(
-            HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, OnViewActionListener>>> viewEventListeners,
             ViewGroup parent,
             int viewType) {
         VH viewHolder;
@@ -96,16 +92,6 @@ public class ViewHolderMapper {
             );
         } catch (Exception e) {
             throw new RuntimeException(String.format("Could not invoke constructor for '%s', '%s'", smartViewHolderClass.toString(), e.getMessage()), e);
-        }
-
-        /*
-         * Set view event listeners.
-         * First check if viewEventListeners has general SmartViewHolder event listener.
-         * Then if viewEventListeners has viewHolder.getClass() event listener, will override smartListener.
-         */
-        if (viewHolder instanceof ViewEventHolder) {
-            ((ViewEventHolder)viewHolder).setViewEventListeners(viewEventListeners.get(SmartViewHolder.class));
-            ((ViewEventHolder)viewHolder).setViewEventListeners(viewEventListeners.get(viewHolder.getClass()));
         }
 
         SmartRecyclerAdapter smartRecyclerAdapter = smartRecyclerAdapterMapper.get(viewHolder.getClass());
