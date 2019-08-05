@@ -10,9 +10,9 @@ import smartadapter.R;
 /**
  * Default implementation of adapter item row long click listener.
  */
-public interface OnItemLongClickListener extends OnViewActionListener {
+public interface OnItemLongClickListener extends OnViewEventListener {
     @Override
-    default int getViewActionId() {
-        return R.id.action_on_long_click;
+    default int getViewEventId() {
+        return R.id.event_on_long_click;
     }
 }

@@ -14,8 +14,8 @@ public class ViewEventValidator {
 
     private static final List autoViewEvents = Arrays.asList(
             R.id.undefined,
-            R.id.action_on_click,
-            R.id.action_on_long_click
+            R.id.event_on_click,
+            R.id.event_on_long_click
     );
 
     public static boolean isViewEventIdValid(int viewEventId) {

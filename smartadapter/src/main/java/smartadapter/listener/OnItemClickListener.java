@@ -10,9 +10,9 @@ import smartadapter.R;
 /**
  * Default implementation of adapter item row click listener.
  */
-public interface OnItemClickListener extends OnViewActionListener {
+public interface OnItemClickListener extends OnViewEventListener {
     @Override
-    default int getViewActionId() {
-        return R.id.action_on_click;
+    default int getViewEventId() {
+        return R.id.event_on_click;
     }
 }

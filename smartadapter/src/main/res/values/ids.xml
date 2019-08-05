@@ -3,7 +3,7 @@
     <!-- View ids -->
     <id name="undefined" />
 
-    <!-- Actions -->
-    <id name="action_on_click" />
-    <id name="action_on_long_click" />
+    <!-- View events -->
+    <id name="event_on_click" />
+    <id name="event_on_long_click" />
 </resources>

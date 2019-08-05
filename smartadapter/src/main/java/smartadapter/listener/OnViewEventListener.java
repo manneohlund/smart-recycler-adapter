@@ -11,15 +11,15 @@ import smartadapter.R;
 import smartadapter.viewholder.SmartViewHolder;
 
 /**
- * Callback added in {@link smartadapter.SmartRecyclerAdapter} for view actions listening in {@link SmartViewHolder} extensions.
+ * Callback added in {@link smartadapter.SmartRecyclerAdapter} for view events listening in {@link SmartViewHolder} extensions.
  */
-public interface OnViewActionListener {
+public interface OnViewEventListener {
 
     /**
      * Default implementation returns {@link SmartViewHolder} class which
-     * {@link smartadapter.SmartRecyclerAdapter} will resolve to all {@link SmartViewHolder} extensions.
+     * {@link smartadapter.SmartRecyclerAdapter} will bind to all {@link SmartViewHolder} extensions.
      *
-     * <p>Can be overridden to target specific {@link SmartViewHolder} extension.</p>
+     * <p>Can be overridden to a specific target {@link SmartViewHolder} extension.</p>
      *
      * @return {@link SmartViewHolder}.class
      */
@@ -28,7 +28,7 @@ public interface OnViewActionListener {
     }
 
     /**
-     * Default implementation returns {@link R.id#undefined} which will point to root view of the view holder.
+     * Default implementation returns {@link R.id#undefined} which will point to the root view of the view in the view holder.
      *
      * <p>Can be overridden to target specific view id.</p>
      *
@@ -39,23 +39,23 @@ public interface OnViewActionListener {
     }
 
     /**
-     * Default implementation returns {@link R.id#undefined} and any {@link SmartViewHolder} extensions must implement ViewEventHolder.
+     * Default implementation returns {@link R.id#undefined} and any {@link SmartViewHolder} extensions must implement {@link smartadapter.viewholder.SmartViewEventListenerHolder}.
      *
      * <p>Can be overridden with predefined view action ids.</p>
-     * {@link R.id#action_on_click}
-     * {@link R.id#action_on_long_click}
+     * {@link R.id#event_on_click}
+     * {@link R.id#event_on_long_click}
      *
      * @return {@link R.id#undefined}
      */
-    default int getViewActionId() {
+    default int getViewEventId() {
         return R.id.undefined;
     }
 
     /**
-     * Receiver of a view action.
+     * Receiver of a view events.
      *
      * @param view source view which dispatched the action
-     * @param actionId callback actionId defined in {@link #getViewActionId()}
+     * @param actionId callback actionId defined in {@link #getViewEventId()}
      * @param position the adapter position
      */
     void onViewEvent(View view, int actionId, int position);
