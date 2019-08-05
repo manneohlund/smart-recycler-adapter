@@ -49,7 +49,7 @@ public class ViewHolderMapperTest {
     public void createViewHolder() {
         // When
         mapper.getItemViewType(null, "Hello", 0);
-        SmartViewHolder viewHolder = mapper.createViewHolder(null, mock(RecyclerView.class), 0);
+        SmartViewHolder viewHolder = mapper.createViewHolder(mock(RecyclerView.class), 0);
 
         // Then
         assertTrue(viewHolder instanceof TestViewHolder);
