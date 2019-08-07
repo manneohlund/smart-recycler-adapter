@@ -50,6 +50,8 @@ public class ViewHolderMapper {
         Class<? extends SmartViewHolder> viewHolder = viewTypeResolver == null ? null : viewTypeResolver.getViewType(item, position);
         if (viewHolder == null) {
             viewHolder = dataTypeViewHolderMapper.get(item.getClass().getName());
+        } else {
+            viewHolderConstructorMapper.add(viewHolder);
         }
 
         if (viewHolder != null) {
