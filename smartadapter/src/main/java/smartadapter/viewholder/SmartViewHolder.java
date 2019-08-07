@@ -5,8 +5,9 @@ package smartadapter.viewholder;
  * Copyright (c) All rights reserved.
  */
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Extension of {@link RecyclerView.ViewHolder} containing data item binding method.

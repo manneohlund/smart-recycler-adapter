@@ -5,9 +5,10 @@ package smartadapter;
  * Copyright (c) All rights reserved.
  */
 
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.view.ViewGroup;
+
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -5,9 +5,10 @@ package smartadapter.internal.mapper;
  * Copyright (c) All rights reserved.
  */
 
-import android.support.annotation.NonNull;
 import android.util.SparseArray;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import smartadapter.R;
 import smartadapter.listener.OnViewEventListener;

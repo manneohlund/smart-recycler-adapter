@@ -5,10 +5,11 @@ package smartadapter.internal.mapper;
  * Copyright (c) All rights reserved.
  */
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import java.util.HashMap;
 
