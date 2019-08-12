@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.HashMap;
 
 import smartadapter.internal.mapper.ViewEventMapper;
+import smartadapter.listener.OnItemSelectedListener;
 import smartadapter.listener.OnViewEventListener;
 import smartadapter.viewholder.SmartViewHolder;
 import smartadapter.widget.ViewTypeResolver;
@@ -34,17 +35,17 @@ public class SmartAdapterBuilder {
         this.smartRecyclerAdapter = smartRecyclerAdapter;
     }
 
-    public final SmartAdapterBuilder map(Class<?> itemType, Class<? extends SmartViewHolder> viewHolderType) {
+    public final SmartAdapterBuilder map(@NonNull Class<?> itemType, @NonNull Class<? extends SmartViewHolder> viewHolderType) {
         viewHolderMapper.put(itemType.getName(), viewHolderType);
         return this;
     }
 
-    public final SmartAdapterBuilder map(Class<? extends SmartViewHolder> viewHolderType, SmartRecyclerAdapter smartRecyclerAdapter) {
+    public final SmartAdapterBuilder map(@NonNull Class<? extends SmartViewHolder> viewHolderType, @NonNull SmartRecyclerAdapter smartRecyclerAdapter) {
         smartRecyclerAdapterMapper.put(viewHolderType, smartRecyclerAdapter);
         return this;
     }
 
-    public final SmartAdapterBuilder setLayoutManager(RecyclerView.LayoutManager layoutManager) {
+    public final SmartAdapterBuilder setLayoutManager(@NonNull RecyclerView.LayoutManager layoutManager) {
         this.layoutManager = layoutManager;
         return this;
     }
@@ -56,7 +57,7 @@ public class SmartAdapterBuilder {
         return layoutManager;
     }
 
-    public final SmartAdapterBuilder setViewTypeResolver(ViewTypeResolver viewTypeResolver) {
+    public final SmartAdapterBuilder setViewTypeResolver(@NonNull ViewTypeResolver viewTypeResolver) {
         this.viewTypeResolver = viewTypeResolver;
         return this;
     }
@@ -71,8 +72,13 @@ public class SmartAdapterBuilder {
      * @param viewEventListener target {@link OnViewEventListener}
      * @return SmartAdapterBuilder
      */
-    public final SmartAdapterBuilder addViewEventListener(OnViewEventListener viewEventListener) {
-        viewEventMapper.addViewEventListener(viewEventListener);
+    public final SmartAdapterBuilder addViewEventListener(@NonNull OnViewEventListener viewEventListener) {
+        if (viewEventListener instanceof OnItemSelectedListener) {
+            ((OnItemSelectedListener)viewEventListener).getSelectionStateHolder().setSmartRecyclerAdapter(smartRecyclerAdapter);
+            viewEventMapper.addViewEventListener(viewEventListener);
+        } else {
+            viewEventMapper.addViewEventListener(viewEventListener);
+        }
         return this;
     }
 
