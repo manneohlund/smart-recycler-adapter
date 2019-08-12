@@ -61,11 +61,11 @@ public class ViewHolderMapperTest {
         assertTrue(mapper.createViewHolder(mock(ViewGroup.class), id4) instanceof TestViewHolder3);
         assertTrue(mapper.createViewHolder(mock(ViewGroup.class), id5) instanceof TestViewHolder4);
 
-        assertEquals(0, id);
-        assertEquals(0, id2);
-        assertEquals(1, id3);
-        assertEquals(2, id4);
-        assertEquals(3, id5);
+        assertEquals(TestViewHolder.class.getName().hashCode(), id);
+        assertEquals(TestViewHolder.class.getName().hashCode(), id2);
+        assertEquals(TestViewHolder2.class.getName().hashCode(), id3);
+        assertEquals(TestViewHolder3.class.getName().hashCode(), id4);
+        assertEquals(TestViewHolder4.class.getName().hashCode(), id5);
     }
 
     @Test
@@ -76,16 +76,16 @@ public class ViewHolderMapperTest {
         int id3 = mapper.getItemViewType(null, 2, 2);
 
         // Then
-        assertEquals(0, id);
-        assertEquals(0, id2);
-        assertEquals(1, id3);
+        assertEquals(TestViewHolder.class.getName().hashCode(), id);
+        assertEquals(TestViewHolder.class.getName().hashCode(), id2);
+        assertEquals(TestViewHolder2.class.getName().hashCode(), id3);
     }
 
     @Test
     public void createViewHolder() {
         // When
         mapper.getItemViewType(null, "Hello", 0);
-        SmartViewHolder viewHolder = mapper.createViewHolder(mock(RecyclerView.class), 0);
+        SmartViewHolder viewHolder = mapper.createViewHolder(mock(RecyclerView.class), TestViewHolder.class.getName().hashCode());
 
         // Then
         assertTrue(viewHolder instanceof TestViewHolder);
