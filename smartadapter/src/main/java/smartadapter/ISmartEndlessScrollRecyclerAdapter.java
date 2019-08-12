@@ -35,6 +35,15 @@ public interface ISmartEndlessScrollRecyclerAdapter {
     void setEndlessScrollEnabled(boolean enabled);
 
     /**
+     * Enables or disables the auto load more view.
+     *
+     * <li>Enabled state shows and indeterminate spinner.</li>
+     * <li>Disabled state shows an load more button for passive activation.</li>
+     * @param enabled auto load more state
+     */
+    void setAutoLoadMore(boolean enabled);
+
+    /**
      * Checks if the {@link SmartEndlessScrollRecyclerAdapter} is in loading state.
      * Good to use when async loading takes time and user scrolls back and forth.
      * @return loading state

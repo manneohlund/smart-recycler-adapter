@@ -8,17 +8,39 @@ package smartadapter.viewholder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
+
+import smartadapter.R;
 
 /**
  * Default implementation of load more view holder.
  */
 public class LoadMoreViewHolder extends SmartViewHolder {
 
-    public LoadMoreViewHolder(@NonNull View itemView, @LayoutRes int loadingView) {
-        super(LayoutInflater.from(itemView.getContext()).inflate(loadingView, (ViewGroup) itemView, false));
+    private int loadingViewRes;
+
+    public LoadMoreViewHolder(@NonNull View parentView, @LayoutRes int loadingView, boolean isAutoLoadEnabled) {
+        super(LayoutInflater.from(parentView.getContext()).inflate(loadingView, (ViewGroup) parentView, false));
+        loadingViewRes = loadingView;
+        toggleState(isAutoLoadEnabled);
+    }
+
+    public void toggleState(boolean isAutoLoadEnabled) {
+        if (loadingViewRes == R.layout.load_more_view) {
+            AppCompatButton loadMoreButton = itemView.findViewById(R.id.loadMoreButton);
+            ProgressBar progressBar = itemView.findViewById(R.id.progressBar);
+            if (isAutoLoadEnabled) {
+                progressBar.setVisibility(View.VISIBLE);
+                loadMoreButton.setVisibility(View.GONE);
+            } else {
+                progressBar.setVisibility(View.INVISIBLE);
+                loadMoreButton.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     @Override

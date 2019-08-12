@@ -26,8 +26,9 @@ public class SmartEndlessScrollRecyclerAdapter extends SmartRecyclerAdapter impl
 
     private OnLoadMoreListener onLoadMoreListener;
     private boolean endlessScrollEnabled = true;
+    private boolean autoLoadMoreEnabled = true;
     private boolean loading = false;
-    private int loadMoreLayoutResource = R.layout.loadmore_view;
+    private int loadMoreLayoutResource = R.layout.load_more_view;
 
     SmartEndlessScrollRecyclerAdapter(Object callerEnclosingClass, @NonNull List items) {
         super(callerEnclosingClass, items);
@@ -45,7 +46,7 @@ public class SmartEndlessScrollRecyclerAdapter extends SmartRecyclerAdapter impl
     @Override
     public SmartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_LOADING) {
-            return new LoadMoreViewHolder(parent, loadMoreLayoutResource);
+            return new LoadMoreViewHolder(parent, loadMoreLayoutResource, autoLoadMoreEnabled);
         }
         return super.onCreateViewHolder(parent, viewType);
     }
@@ -66,7 +67,15 @@ public class SmartEndlessScrollRecyclerAdapter extends SmartRecyclerAdapter impl
     public void onViewAttachedToWindow(@NonNull SmartViewHolder holder) {
         super.onViewAttachedToWindow(holder);
         if (holder instanceof LoadMoreViewHolder) {
-            onLoadMoreListener.onLoadMore();
+            if (autoLoadMoreEnabled) {
+                onLoadMoreListener.onLoadMore();
+            } else {
+                ((LoadMoreViewHolder)holder).toggleState(false);
+                holder.itemView.findViewById(R.id.loadMoreButton).setOnClickListener(v -> {
+                    onLoadMoreListener.onLoadMore();
+                    ((LoadMoreViewHolder)holder).toggleState(true);
+                });
+            }
         }
     }
 
@@ -83,7 +92,12 @@ public class SmartEndlessScrollRecyclerAdapter extends SmartRecyclerAdapter impl
     @Override
     public void setEndlessScrollEnabled(boolean enabled) {
         this.endlessScrollEnabled = enabled;
-        smartNotifyDataSetChanged();
+        smartNotifyItemChanged(getItemCount());
+    }
+
+    @Override
+    public void setAutoLoadMore(boolean enabled) {
+        this.autoLoadMoreEnabled = enabled;
     }
 
     @Override
