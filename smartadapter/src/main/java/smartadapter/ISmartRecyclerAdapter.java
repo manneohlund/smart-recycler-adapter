@@ -16,6 +16,7 @@ import java.util.List;
 
 import smartadapter.internal.mapper.ViewEventMapper;
 import smartadapter.internal.mapper.ViewHolderMapper;
+import smartadapter.listener.OnViewAttachedToWindowListener;
 import smartadapter.listener.OnViewEventListener;
 import smartadapter.viewholder.SmartViewHolder;
 import smartadapter.widget.ViewTypeResolver;
@@ -268,4 +269,10 @@ public interface ISmartRecyclerAdapter {
      * @param viewEventMapper holder and mapper of {@link OnViewEventListener}s
      */
     void setViewEventMapper(@NonNull ViewEventMapper viewEventMapper);
+
+    /**
+     * Adds an {@link OnViewAttachedToWindowListener} to the {@link SmartRecyclerAdapter} that will be called from {@link SmartRecyclerAdapter#onViewAttachedToWindow(SmartViewHolder)}.
+     * @param onViewAttachedToWindowListener listener
+     */
+    void addOnViewAttachedToWindowListener(@NonNull OnViewAttachedToWindowListener onViewAttachedToWindowListener);
 }

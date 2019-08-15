@@ -37,6 +37,7 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
     private final ViewHolderMapper mapper;
     private ViewTypeResolver viewTypeResolver;
     private ViewEventMapper viewActionMapper;
+    private List<OnViewAttachedToWindowListener> onViewAttachedToWindowListeners = new ArrayList<>();
 
     SmartRecyclerAdapter(Object callerEnclosingClass, List items) {
         mapper = new ViewHolderMapper(callerEnclosingClass);
@@ -80,7 +81,10 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
     public void onViewAttachedToWindow(@NonNull SmartViewHolder holder) {
         super.onViewAttachedToWindow(holder);
         if (holder instanceof OnViewAttachedToWindowListener) {
-            ((OnViewAttachedToWindowListener)holder).onViewAttachedToWindow();
+            ((OnViewAttachedToWindowListener)holder).onViewAttachedToWindow(holder);
+        }
+        for (OnViewAttachedToWindowListener listener : onViewAttachedToWindowListeners) {
+            listener.onViewAttachedToWindow(holder);
         }
     }
 
@@ -332,6 +336,11 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
     @Override
     public void setViewEventMapper(@NonNull ViewEventMapper viewActionMapper) {
         this.viewActionMapper = viewActionMapper;
+    }
+
+    @Override
+    public void addOnViewAttachedToWindowListener(@NonNull OnViewAttachedToWindowListener onViewAttachedToWindowListener) {
+        this.onViewAttachedToWindowListeners.add(onViewAttachedToWindowListener);
     }
 
     /**
