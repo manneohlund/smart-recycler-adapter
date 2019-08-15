@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.HashMap;
 
+import smartadapter.internal.factory.SmartRecyclerAdapterExtensionFactory;
 import smartadapter.internal.mapper.ViewEventMapper;
 import smartadapter.listener.OnItemSelectedListener;
 import smartadapter.listener.OnViewEventListener;
@@ -24,12 +25,13 @@ import smartadapter.widget.ViewTypeResolver;
  */
 public class SmartAdapterBuilder {
 
+    private SmartRecyclerAdapter smartRecyclerAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private ViewTypeResolver viewTypeResolver;
     private HashMap<String, Class<? extends SmartViewHolder>> viewHolderMapper = new HashMap<>();
     private HashMap<Class<? extends SmartViewHolder>, SmartRecyclerAdapter> smartRecyclerAdapterMapper = new HashMap<>();
     private ViewEventMapper viewEventMapper = new ViewEventMapper();
-    private SmartRecyclerAdapter smartRecyclerAdapter;
+    private SmartRecyclerAdapterExtensionFactory smartRecyclerAdapterExtensionFactory = new SmartRecyclerAdapterExtensionFactory();
 
     SmartAdapterBuilder(@NonNull SmartRecyclerAdapter smartRecyclerAdapter) {
         this.smartRecyclerAdapter = smartRecyclerAdapter;
@@ -82,6 +84,18 @@ public class SmartAdapterBuilder {
         return this;
     }
 
+    /**
+     * Adds {@link SmartRecyclerAdapterExtensionBuilder} to {@link SmartRecyclerAdapterExtensionFactory} that will build and bind
+     * the {@link SmartRecyclerAdapter} and {@link RecyclerView} to the ExtensionBuilder.
+     *
+     * @param smartExtensionBuilder extension builder
+     * @return SmartAdapterBuilder
+     */
+    public final SmartAdapterBuilder addExtensionBuilder(@NonNull SmartRecyclerAdapterExtensionBuilder smartExtensionBuilder) {
+        smartRecyclerAdapterExtensionFactory.add(smartExtensionBuilder);
+        return this;
+    }
+
     @SuppressWarnings("unchecked")
     public final <T> T into(RecyclerView recyclerView) {
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper);
@@ -90,6 +104,7 @@ public class SmartAdapterBuilder {
         smartRecyclerAdapter.setViewEventMapper(viewEventMapper);
         recyclerView.setAdapter(smartRecyclerAdapter);
         recyclerView.setLayoutManager(getLayoutManager(recyclerView.getContext()));
+        smartRecyclerAdapterExtensionFactory.build(smartRecyclerAdapter, recyclerView);
         return (T) smartRecyclerAdapter;
     }
 
