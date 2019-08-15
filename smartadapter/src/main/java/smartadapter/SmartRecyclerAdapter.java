@@ -38,6 +38,7 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
     private ViewTypeResolver viewTypeResolver;
     private ViewEventMapper viewActionMapper;
     private List<OnViewAttachedToWindowListener> onViewAttachedToWindowListeners = new ArrayList<>();
+    private List<OnViewDetachedFromWindowListener> onViewDetachedFromWindowListeners = new ArrayList<>();
 
     SmartRecyclerAdapter(Object callerEnclosingClass, List items) {
         mapper = new ViewHolderMapper(callerEnclosingClass);
@@ -92,7 +93,10 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
     public void onViewDetachedFromWindow(@NonNull SmartViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
         if (holder instanceof OnViewDetachedFromWindowListener) {
-            ((OnViewDetachedFromWindowListener)holder).onViewDetachedFromWindow();
+            ((OnViewDetachedFromWindowListener)holder).onViewDetachedFromWindow(holder);
+        }
+        for (OnViewDetachedFromWindowListener listener : onViewDetachedFromWindowListeners) {
+            listener.onViewDetachedFromWindow(holder);
         }
     }
 
@@ -341,6 +345,11 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
     @Override
     public void addOnViewAttachedToWindowListener(@NonNull OnViewAttachedToWindowListener onViewAttachedToWindowListener) {
         this.onViewAttachedToWindowListeners.add(onViewAttachedToWindowListener);
+    }
+
+    @Override
+    public void addOnViewDetachedFromWindowListener(@NonNull OnViewDetachedFromWindowListener onViewDetachedFromWindowListener) {
+        this.onViewDetachedFromWindowListeners.add(onViewDetachedFromWindowListener);
     }
 
     /**
