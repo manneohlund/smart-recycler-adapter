@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +25,7 @@ public class DragAndDropExtension extends ItemTouchHelper.Callback {
     private SmartRecyclerAdapter smartRecyclerAdapter;
     private ItemTouchHelper touchHelper;
     private HashSet<RecyclerView.ViewHolder> draggableViews = new HashSet<>();
+    private int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
 
     public DragAndDropExtension(boolean longPressDragEnabled) {
         this.longPressDragEnabled = longPressDragEnabled;
@@ -31,7 +33,6 @@ public class DragAndDropExtension extends ItemTouchHelper.Callback {
 
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-        int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
         return makeMovementFlags(dragFlags, 0);
     }
 
@@ -65,7 +66,14 @@ public class DragAndDropExtension extends ItemTouchHelper.Callback {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void setupDragAndDrop() {
+    private void setupDragAndDrop(RecyclerView recyclerView) {
+        int gridDragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT;
+        int linearDragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+
+        dragFlags = recyclerView.getLayoutManager() instanceof GridLayoutManager
+                ? gridDragFlags
+                : linearDragFlags;
+
         if (!isLongPressDragEnabled()) {
             smartRecyclerAdapter.addOnViewAttachedToWindowListener(viewHolder -> {
                 if (viewHolder instanceof DraggableViewHolder && !draggableViews.contains(viewHolder)) {
@@ -115,7 +123,7 @@ public class DragAndDropExtension extends ItemTouchHelper.Callback {
             ItemTouchHelper touchHelper = new ItemTouchHelper(dragAndDropExtension);
             dragAndDropExtension.setTouchHelper(touchHelper);
             touchHelper.attachToRecyclerView(recyclerView);
-            dragAndDropExtension.setupDragAndDrop();
+            dragAndDropExtension.setupDragAndDrop(recyclerView);
         }
     }
 }
