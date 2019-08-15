@@ -7,6 +7,8 @@ package smartadapter.listener;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import smartadapter.R;
 import smartadapter.viewholder.SmartViewHolder;
 
@@ -23,6 +25,7 @@ public interface OnViewEventListener {
      *
      * @return {@link SmartViewHolder}.class
      */
+    @NonNull
     default Class<? extends SmartViewHolder> getViewHolderType() {
         return SmartViewHolder.class;
     }
@@ -58,5 +61,5 @@ public interface OnViewEventListener {
      * @param actionId callback actionId defined in {@link #getViewEventId()}
      * @param position the adapter position
      */
-    void onViewEvent(View view, int actionId, int position);
+    void onViewEvent(@NonNull View view, int actionId, int position);
 }
