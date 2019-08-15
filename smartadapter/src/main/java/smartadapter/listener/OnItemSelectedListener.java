@@ -15,7 +15,7 @@ public interface OnItemSelectedListener extends OnItemClickListener {
     SelectionStateHolder selectionStateHolder = new SelectionStateHolder();
 
     /**
-     * Default implementation, provides the {@link SelectionStateHolder}.
+     * Default implementation, provides and global static {@link SelectionStateHolder}.
      * @return selectionStateHolder
      */
     default SelectionStateHolder getSelectionStateHolder() {

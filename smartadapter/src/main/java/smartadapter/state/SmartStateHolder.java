@@ -5,39 +5,31 @@ package smartadapter.state;
  * Copyright (c) All rights reserved.
  */
 
-import java.util.TreeSet;
-
 /**
  * Defines the SortedSet for enabled adapter positions.
  */
 public interface SmartStateHolder {
 
-    TreeSet<Integer> enabledAdapterPositions = new TreeSet<>();
-
     /**
      * Adds the position to the data set.
      * @param position the adapter position
      */
-    default void enable(int position) {
-        enabledAdapterPositions.add(position);
-    }
+    void enable(int position);
 
     /**
      * Removes the position from the data set.
      * @param position the adapter position
      */
-    default void disable(int position) {
-        enabledAdapterPositions.remove(position);
-    }
+    void disable(int position);
 
     /**
      * Enables or disables the position in the data set.
      * @param position the adapter position
      */
-    default void toggle(int position) {
-        if (enabledAdapterPositions.contains(position))
-            disable(position);
-        else
-            enable(position);
-    }
+    void toggle(int position);
+
+    /**
+     * Clears all the stored states.
+     */
+    void clear();
 }

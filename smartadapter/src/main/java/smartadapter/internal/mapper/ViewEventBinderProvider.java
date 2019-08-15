@@ -85,7 +85,7 @@ public class ViewEventBinderProvider {
                 targetView.setOnLongClickListener(v -> {
                     ((OnItemSelectedListener) viewEventListener)
                             .getSelectionStateHolder()
-                            .toggleSelection(smartViewHolder.getAdapterPosition());
+                            .toggle(smartViewHolder.getAdapterPosition());
                     viewEventListener.onViewEvent(v, viewEventId, smartViewHolder.getAdapterPosition());
                     return true;
                 });
@@ -97,7 +97,7 @@ public class ViewEventBinderProvider {
                         && ((OnItemSelectedListener) viewEventListener).getSelectionStateHolder().getSelectedItemsCount() > 0) {
                     ((OnItemSelectedListener) viewEventListener)
                             .getSelectionStateHolder()
-                            .toggleSelection(smartViewHolder.getAdapterPosition());
+                            .toggle(smartViewHolder.getAdapterPosition());
                 }
                 viewEventListener.onViewEvent(v, viewEventId, smartViewHolder.getAdapterPosition());
             });

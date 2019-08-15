@@ -14,15 +14,36 @@ import smartadapter.SmartRecyclerAdapter;
  */
 public class SelectionStateHolder implements SmartStateHolder {
 
-    private SmartRecyclerAdapter smartRecyclerAdapter;
+    protected SmartRecyclerAdapter smartRecyclerAdapter;
+    protected TreeSet<Integer> enabledAdapterPositions = new TreeSet<>();
+
+    @Override
+    public void enable(int position) {
+        enabledAdapterPositions.add(position);
+    }
+
+    @Override
+    public void disable(int position) {
+        enabledAdapterPositions.remove(position);
+    }
 
     /**
      * Toggles selection of a position in adapter and calls {@link SmartRecyclerAdapter#smartNotifyItemChanged(int)}.
-     * @param position position in adapter
+     * @param position the adapter position
      */
-    public void toggleSelection(int position) {
-        toggle(position);
+    @Override
+    public void toggle(int position) {
+        if (enabledAdapterPositions.contains(position))
+            disable(position);
+        else
+            enable(position);
+
         smartRecyclerAdapter.smartNotifyItemChanged(position);
+    }
+
+    @Override
+    public void clear() {
+        enabledAdapterPositions.clear();
     }
 
     /**
