@@ -5,9 +5,9 @@ package com.example.smartrecycleradapter;
  * Copyright © 2017 All rights reserved.
  */
 
-import android.support.test.espresso.ViewAssertion;
-import android.support.test.rule.ActivityTestRule;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.espresso.ViewAssertion;
+import androidx.test.rule.ActivityTestRule;
 
 import com.example.smartrecycleradapter.models.ActionMoviesModel;
 import com.example.smartrecycleradapter.models.AdventureMoviesModel;
@@ -35,9 +35,9 @@ import org.junit.Test;
 
 import smartadapter.SmartRecyclerAdapter;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;

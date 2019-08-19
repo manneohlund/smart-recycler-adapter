@@ -10,9 +10,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.example.smartrecycleradapter.R
 import com.example.smartrecycleradapter.models.CopyrightModel
-import smartadapter.viewholder.SmartAutoEventViewHolder
+import smartadapter.viewholder.SmartViewHolder
 
-class CopyrightViewHolder(parentView: ViewGroup) : SmartAutoEventViewHolder<CopyrightModel>(
+class CopyrightViewHolder(parentView: ViewGroup) : SmartViewHolder<CopyrightModel>(
         LayoutInflater.from(parentView.context)
                 .inflate(R.layout.copyright, parentView, false)) {
 

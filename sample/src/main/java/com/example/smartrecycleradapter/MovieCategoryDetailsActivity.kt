@@ -2,9 +2,10 @@ package com.example.smartrecycleradapter
 
 import android.os.Bundle
 import android.os.Handler
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
+import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.smartrecycleradapter.data.MovieDataItems
 import com.example.smartrecycleradapter.extension.GridAutoLayoutManager
 import com.example.smartrecycleradapter.models.MovieModel
@@ -49,7 +50,7 @@ class MovieCategoryDetailsActivity : AppCompatActivity() {
             MovieType.SCI_FI -> MovieDataItems.nestedSciFiItems
         }
 
-        val adapterItems: ArrayList<Any> = ArrayList<Any>()
+        val adapterItems: ArrayList<Any> = ArrayList()
         adapterItems.add(movieType.title)
         adapterItems.addAll(movieItems)
 
@@ -66,9 +67,11 @@ class MovieCategoryDetailsActivity : AppCompatActivity() {
                         .map(String::class.java, HeaderViewHolder::class.java)
                         .map(MovieModel::class.java, ThumbViewHolder::class.java)
                         .setLayoutManager(gridAutoLayoutManager)
-                        .addViewEventListener(ThumbViewHolder::class.java, R.id.action_on_click) { view, actionId, position ->
-                            Toast.makeText(this, "Movie $position", Toast.LENGTH_SHORT).show()
-                        }
+                        .addViewEventListener(object : ThumbViewHolder.OnItemClickListener {
+                            override fun onViewEvent(view: View, actionId: Int, position: Int) {
+                                Toast.makeText(applicationContext, "Movie $position", Toast.LENGTH_SHORT).show()
+                            }
+                        })
                         .into(recyclerView)
             }
             MovieType.ACTION, MovieType.ADVENTURE,MovieType.ANIMATED, MovieType.SCI_FI -> {
@@ -76,9 +79,11 @@ class MovieCategoryDetailsActivity : AppCompatActivity() {
                         .map(String::class.java, HeaderViewHolder::class.java)
                         .map(MovieModel::class.java, ThumbViewHolder::class.java)
                         .setLayoutManager(gridAutoLayoutManager)
-                        .addViewEventListener(ThumbViewHolder::class.java, R.id.action_on_click) { view, actionId, position ->
-                            Toast.makeText(this, "Movie $position", Toast.LENGTH_SHORT).show()
-                        }
+                        .addViewEventListener(object : ThumbViewHolder.OnItemClickListener {
+                            override fun onViewEvent(view: View, actionId: Int, position: Int) {
+                                Toast.makeText(applicationContext, "Movie $position", Toast.LENGTH_SHORT).show()
+                            }
+                        })
                         .into(recyclerView)
 
                 endlessScrollAdapter.setOnLoadMoreListener {

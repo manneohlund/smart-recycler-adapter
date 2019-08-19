@@ -8,13 +8,34 @@ package com.example.smartrecycleradapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.smartrecycleradapter.data.MovieDataItems;
+import com.example.smartrecycleradapter.extension.PreCachingLinearLayoutManager;
+import com.example.smartrecycleradapter.feature.CustomViewEventActivity;
+import com.example.smartrecycleradapter.feature.DragAndDropHandleItemActivity;
+import com.example.smartrecycleradapter.feature.DragAndDropItemActivity;
+import com.example.smartrecycleradapter.feature.EndlessScrollActivity;
+import com.example.smartrecycleradapter.feature.EndlessScrollLoadMoreButtonActivity;
+import com.example.smartrecycleradapter.feature.GridActivity;
+import com.example.smartrecycleradapter.feature.MultiSelectCheckBoxItemsActivity;
+import com.example.smartrecycleradapter.feature.MultiSelectItemsActivity;
+import com.example.smartrecycleradapter.feature.MultiSelectSwitchItemsActivity;
+import com.example.smartrecycleradapter.feature.MultipleEventsAndExtensionsActivity;
+import com.example.smartrecycleradapter.feature.MultipleViewTypesResolverActivity;
+import com.example.smartrecycleradapter.feature.NestedSmartRecyclerAdaptersActivity;
+import com.example.smartrecycleradapter.feature.SimpleItemActivity;
+import com.example.smartrecycleradapter.feature.SimpleItemOnClickOnLongClickActivity;
+import com.example.smartrecycleradapter.feature.SingleSelectCheckBoxItemsActivity;
+import com.example.smartrecycleradapter.feature.SwipeRemoveItemActivity;
 import com.example.smartrecycleradapter.models.ActionMoviesModel;
 import com.example.smartrecycleradapter.models.AdventureMoviesModel;
 import com.example.smartrecycleradapter.models.AnimatedMoviesModel;
@@ -32,20 +53,26 @@ import com.example.smartrecycleradapter.viewholder.AnimatedMoviesViewHolder;
 import com.example.smartrecycleradapter.viewholder.BannerViewHolder;
 import com.example.smartrecycleradapter.viewholder.ComingSoonMoviesViewHolder;
 import com.example.smartrecycleradapter.viewholder.CopyrightViewHolder;
+import com.example.smartrecycleradapter.viewholder.HeaderViewHolder;
 import com.example.smartrecycleradapter.viewholder.LargeThumbViewHolder;
 import com.example.smartrecycleradapter.viewholder.MyWatchListViewHolder;
 import com.example.smartrecycleradapter.viewholder.PosterViewHolder;
 import com.example.smartrecycleradapter.viewholder.RecentlyPlayedMoviesViewHolder;
+import com.example.smartrecycleradapter.viewholder.SampleFabViewHolder;
 import com.example.smartrecycleradapter.viewholder.SciFiMoviesViewHolder;
 import com.example.smartrecycleradapter.viewholder.SmallThumbViewHolder;
 import com.example.smartrecycleradapter.viewholder.ThumbViewHolder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
 import smartadapter.SmartEndlessScrollRecyclerAdapter;
 import smartadapter.SmartRecyclerAdapter;
+import smartadapter.listener.OnItemClickListener;
+import smartadapter.listener.OnItemLongClickListener;
+import smartadapter.viewholder.SmartViewHolder;
 
 public class DemoActivity extends AppCompatActivity {
 
@@ -58,6 +85,9 @@ public class DemoActivity extends AppCompatActivity {
     SmartRecyclerAdapter animatedMoviesSmartMovieAdapter;
     SmartRecyclerAdapter sciFiMoviesSmartMovieAdapter;
     SmartRecyclerAdapter recentlyPlayedMoviesSmartMovieAdapter;
+    SmartRecyclerAdapter dialogAdapter;
+
+    AlertDialog moreSamplesDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +98,14 @@ public class DemoActivity extends AppCompatActivity {
 
         initNestedSmartRecyclerAdapters();
         initSmartRecyclerAdapter();
+        initMoreDemosButton();
     }
 
     private void initSmartRecyclerAdapter() {
         List<Object> items = new ArrayList<>();
 
         items.add(new MoviePosterModel(MovieDataItems.INSTANCE.getRandomPoster()));
+        items.add(new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_widgets_black_24dp, "More samples"));
         items.add(new ComingSoonMoviesModel("Coming soon"));
         items.add(new MyWatchListModel("My watch list"));
         items.add(new MovieBannerModel("Recommended", MovieDataItems.INSTANCE.getRandomBanner()));
@@ -89,6 +121,7 @@ public class DemoActivity extends AppCompatActivity {
         mainSmartMovieAdapter = SmartEndlessScrollRecyclerAdapter
                 .items(items)
                 .map(MoviePosterModel.class, PosterViewHolder.class)
+                .map(SampleFabViewHolder.SimpleFabItem.class, SampleFabViewHolder.class)
                 .map(MovieBannerModel.class, BannerViewHolder.class)
                 .map(ComingSoonMoviesModel.class, ComingSoonMoviesViewHolder.class)
                 .map(MyWatchListModel.class, MyWatchListViewHolder.class)
@@ -99,83 +132,6 @@ public class DemoActivity extends AppCompatActivity {
                 .map(RecentlyPlayedMoviesModel.class, RecentlyPlayedMoviesViewHolder.class)
                 .map(CopyrightModel.class, CopyrightViewHolder.class)
 
-                // You need to define your own view event listeners like onClickListener on a view
-                .addViewEventListener((view, actionId, position) ->
-                        showToast(getActionName(actionId) + " " + position))
-
-                /** Adds event listener and also automatically adds row item {@link View.OnClickListener} on all items root view */
-                .addViewEventListener(
-                        R.id.action_on_click, // Events for SmartRecyclerAdapter to add automatically
-                        (view, actionId, position) ->
-                                DemoActivity.this.showToast(DemoActivity.this.getActionName(actionId) + " " + position))
-
-                /** Adds event listener and also automatically adds row item {@link View.OnLongClickListener} on all items root view */
-                .addViewEventListener(
-                        R.id.action_on_long_click, // Events for SmartRecyclerAdapter to add automatically
-                        (view, actionId, position) ->
-                                showToast(getActionName(actionId) + " " + position))
-
-                .addViewEventListener(
-                        PosterViewHolder.class,
-                        R.id.action_on_click,
-                        (view, actionId, position) -> {
-                            mainSmartMovieAdapter.replaceItem(0, new MoviePosterModel(MovieDataItems.INSTANCE.getRandomPoster()));
-                        })
-
-                .addViewEventListener(
-                        PosterViewHolder.class,
-                        R.id.playButton,
-                        R.id.action_on_click,
-                        (view, actionId, position) -> showToast("PLAY"))
-
-                .addViewEventListener(
-                        PosterViewHolder.class,
-                        R.id.starButton,
-                        R.id.action_on_click,
-                        (view, actionId, position) -> showToast("ADD to favorites"))
-
-                .addViewEventListener(
-                        PosterViewHolder.class,
-                        R.id.infoButton,
-                        R.id.action_on_click,
-                        (view, actionId, position) -> showToast("INFO"))
-
-                .addViewEventListener(
-                        ComingSoonMoviesViewHolder.class,
-                        R.id.more,
-                        R.id.action_on_click,
-                        (view, actionId, position) -> startMovieCategoryDetailsActivity(MovieType.COMING_SOON))
-
-                .addViewEventListener(
-                        MyWatchListViewHolder.class,
-                        R.id.more,
-                        R.id.action_on_click,
-                        (view, actionId, position) -> startMovieCategoryDetailsActivity(MovieType.MY_WATCH_LIST))
-
-                .addViewEventListener(
-                        ActionMoviesViewHolder.class,
-                        R.id.more,
-                        R.id.action_on_click,
-                        (view, actionId, position) -> startMovieCategoryDetailsActivity(MovieType.ACTION))
-
-                .addViewEventListener(
-                        AdventureMoviesViewHolder.class,
-                        R.id.more,
-                        R.id.action_on_click,
-                        (view, actionId, position) -> startMovieCategoryDetailsActivity(MovieType.ADVENTURE))
-
-                .addViewEventListener(
-                        AnimatedMoviesViewHolder.class,
-                        R.id.more,
-                        R.id.action_on_click,
-                        (view, actionId, position) -> startMovieCategoryDetailsActivity(MovieType.ANIMATED))
-
-                .addViewEventListener(
-                        SciFiMoviesViewHolder.class,
-                        R.id.more,
-                        R.id.action_on_click,
-                        (view, actionId, position) -> startMovieCategoryDetailsActivity(MovieType.SCI_FI))
-
                 // Map nested SmartRecyclerAdapter
                 .map(ComingSoonMoviesViewHolder.class, comingSoonSmartMovieAdapter)
                 .map(MyWatchListViewHolder.class, myWatchListSmartMovieAdapter)
@@ -185,37 +141,82 @@ public class DemoActivity extends AppCompatActivity {
                 .map(SciFiMoviesViewHolder.class, sciFiMoviesSmartMovieAdapter)
                 .map(RecentlyPlayedMoviesViewHolder.class, recentlyPlayedMoviesSmartMovieAdapter)
 
+                .setLayoutManager(PreCachingLinearLayoutManager.getInstance(this))
+
+                // You need to define your own view event listeners like onClickListener on a view
+                .addViewEventListener((view, actionId, position) ->
+                        showToast(getActionName(actionId) + " " + position))
+
+                /** Adds event listener and also automatically adds row item {@link View.OnClickListener} on all items root view */
+                .addViewEventListener(
+                        (OnItemClickListener) (view, actionId, position) ->
+                                showToast(getActionName(actionId) + " " + position))
+
+                /** Adds event listener and also automatically adds row item {@link View.OnLongClickListener} on all items root view */
+                .addViewEventListener(
+                        (OnItemLongClickListener) (view, actionId, position) ->
+                                showToast(getActionName(actionId) + " " + position))
+
+                .addViewEventListener(
+                        (PosterViewHolder.OnItemClickListener) (view, actionId, position) -> {
+                            mainSmartMovieAdapter.replaceItem(0, new MoviePosterModel(MovieDataItems.INSTANCE.getRandomPoster()));
+                        })
+
+                //.addViewEventListener((PosterViewHolder.OnPlayButtonClickListener)(view, actionId, position) -> showToast("PLAY"))
+
+                .addViewEventListener(
+                        (PosterViewHolder.OnStarButtonClickListener) (view, actionId, position) -> showToast("ADD to favorites"))
+
+                .addViewEventListener(
+                        (PosterViewHolder.OnInfoButtonClickListener) (view, actionId, position) -> showToast("INFO"))
+
+                .addViewEventListener(
+                        (ComingSoonMoviesViewHolder.OnMoreButtonClickListener) (view, actionId, position) -> startMovieCategoryDetailsActivity(MovieType.COMING_SOON))
+
+                .addViewEventListener(
+                        (MyWatchListViewHolder.OnMoreButtonClickListener) (view, actionId, position) -> startMovieCategoryDetailsActivity(MovieType.MY_WATCH_LIST))
+
+                .addViewEventListener(
+                        (ActionMoviesViewHolder.OnMoreButtonClickListener) (view, actionId, position) -> startMovieCategoryDetailsActivity(MovieType.ACTION))
+
+                .addViewEventListener(
+                        (AdventureMoviesViewHolder.OnMoreButtonClickListener) (view, actionId, position) -> startMovieCategoryDetailsActivity(MovieType.ADVENTURE))
+
+                .addViewEventListener(
+                        (AnimatedMoviesViewHolder.OnMoreButtonClickListener) (view, actionId, position) -> startMovieCategoryDetailsActivity(MovieType.ANIMATED))
+
+                .addViewEventListener(
+                        (SciFiMoviesViewHolder.OnMoreButtonClickListener) (view, actionId, position) -> startMovieCategoryDetailsActivity(MovieType.SCI_FI))
+
+                .addViewEventListener((FabOnClickListener) (view, actionId, position) ->
+                        moreSamplesDialog.show())
                 .into(recyclerView);
 
         // Endless pagination
+        mainSmartMovieAdapter.setAutoLoadMore(false);
         mainSmartMovieAdapter.setOnLoadMoreListener(() -> {
-            Toast.makeText(getApplicationContext(), "LoadMore", Toast.LENGTH_SHORT).show();
-
             int indexBeforeCopyright = 2;
             new Handler().postDelayed(() -> {
                         mainSmartMovieAdapter.addItem(
                                 mainSmartMovieAdapter.getItemCount() - indexBeforeCopyright,
-                                new MovieBannerModel("More items loaded", MovieDataItems.INSTANCE.getRandomBanner())
-                        );
+                                new MovieBannerModel("More items loaded", MovieDataItems.INSTANCE.getRandomBanner()));
+                        mainSmartMovieAdapter.setEndlessScrollEnabled(true); // TODO notifyAdapterLoadMoreDone();
                     },
                     800);
         });
     }
 
     int moreItemsLoadedCount = 0;
+
     private void initNestedSmartRecyclerAdapters() {
         comingSoonSmartMovieAdapter = SmartEndlessScrollRecyclerAdapter.items(MovieDataItems.INSTANCE.getComingSoonItems())
                 .map(MovieModel.class, LargeThumbViewHolder.class)
                 .addViewEventListener(
-                        LargeThumbViewHolder.class,
-                        R.id.action_on_click,
-                        (view, actionId, position) ->
-                            showToast("Coming soon \n%s \n%s index: %d", getMovieTitle(comingSoonSmartMovieAdapter, position), getActionName(actionId), position))
+                        (LargeThumbViewHolder.OnItemClickListener) (view, actionId, position) ->
+                                showToast("Coming soon \n%s \n%s index: %d", getMovieTitle(comingSoonSmartMovieAdapter, position), getActionName(actionId), position))
                 .addViewEventListener(
-                        LargeThumbViewHolder.class,
-                        R.id.action_on_long_click,
-                        (view, actionId, position) -> {
-                            showToast("Add to My watch list");
+                        (LargeThumbViewHolder.OnItemLongClickListener) (view, actionId, position) -> {
+                            showToast(String.format("Add \n%s \nto My watch list", getMovieTitle(comingSoonSmartMovieAdapter, position)));
                             myWatchListSmartMovieAdapter.addItem(1, comingSoonSmartMovieAdapter.getItem(position));
                         })
                 .create();
@@ -229,7 +230,7 @@ public class DemoActivity extends AppCompatActivity {
 
             new Handler().postDelayed(() -> {
                         comingSoonSmartMovieAdapter.addItems(
-                                comingSoonSmartMovieAdapter.getItemCount()-1,
+                                comingSoonSmartMovieAdapter.getItemCount() - 1,
                                 MovieDataItems.INSTANCE.getLoadMoreItems()
                         );
                         if (moreItemsLoadedCount++ == 2)
@@ -241,70 +242,177 @@ public class DemoActivity extends AppCompatActivity {
         myWatchListSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.INSTANCE.getMyWatchListItems())
                 .map(MovieModel.class, ThumbViewHolder.class)
                 .addViewEventListener(
-                        ThumbViewHolder.class,
-                        R.id.action_on_long_click,
-                        (view, actionId, position) -> {
+                        (ThumbViewHolder.OnItemLongClickListener) (view, actionId, position) -> {
                             showToast("Remove " + getActionName(actionId) + " item: " + position);
                             myWatchListSmartMovieAdapter.removeItem(position);
                         })
                 .addViewEventListener(
-                        ThumbViewHolder.class,
-                        R.id.action_on_click,
-                        (view, actionId, position) ->
-                            showToast("My watch list \n%s \n%s index: %d", getMovieTitle(myWatchListSmartMovieAdapter, position), getActionName(actionId), position))
+                        (ThumbViewHolder.OnItemClickListener) (view, actionId, position) ->
+                                showToast("My watch list \n%s \n%s index: %d", getMovieTitle(myWatchListSmartMovieAdapter, position), getActionName(actionId), position))
                 .create();
 
         actionMoviesSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.INSTANCE.getNestedActionItems())
                 .map(MovieModel.class, ThumbViewHolder.class)
                 .addViewEventListener(
-                        ThumbViewHolder.class,
-                        R.id.action_on_click,
-                        (view, actionId, position) ->
-                            showToast("Action \n%s \n%s index: %d", getMovieTitle(actionMoviesSmartMovieAdapter, position), getActionName(actionId), position))
+                        (ThumbViewHolder.OnItemClickListener) (view, actionId, position) ->
+                                showToast("Action \n%s \n%s index: %d", getMovieTitle(actionMoviesSmartMovieAdapter, position), getActionName(actionId), position))
                 .create();
 
         adventuresMoviesSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.INSTANCE.getNestedAdventureItems())
                 .map(MovieModel.class, ThumbViewHolder.class)
                 .addViewEventListener(
-                        ThumbViewHolder.class,
-                        R.id.action_on_click,
-                        (view, actionId, position) ->
-                            showToast("Adventure \n%s \n%s index: %d", getMovieTitle(adventuresMoviesSmartMovieAdapter, position), getActionName(actionId), position))
+                        (ThumbViewHolder.OnItemClickListener) (view, actionId, position) ->
+                                showToast("Adventure \n%s \n%s index: %d", getMovieTitle(adventuresMoviesSmartMovieAdapter, position), getActionName(actionId), position))
                 .create();
 
         animatedMoviesSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.INSTANCE.getNestedAnimatedItems())
                 .map(MovieModel.class, ThumbViewHolder.class)
                 .addViewEventListener(
-                        ThumbViewHolder.class,
-                        R.id.action_on_click,
-                        (view, actionId, position) ->
-                            showToast("Animated \n%s \n%s index: %d", getMovieTitle(animatedMoviesSmartMovieAdapter, position), getActionName(actionId), position))
+                        (ThumbViewHolder.OnItemClickListener) (view, actionId, position) ->
+                                showToast("Animated \n%s \n%s index: %d", getMovieTitle(animatedMoviesSmartMovieAdapter, position), getActionName(actionId), position))
                 .create();
 
         sciFiMoviesSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.INSTANCE.getNestedSciFiItems())
                 .map(MovieModel.class, ThumbViewHolder.class)
                 .addViewEventListener(
-                        ThumbViewHolder.class,
-                        R.id.action_on_click,
-                        (view, actionId, position) ->
-                            showToast("Sci-Fi \n%s \n%s index: %d", getMovieTitle(sciFiMoviesSmartMovieAdapter, position), getActionName(actionId), position))
+                        (ThumbViewHolder.OnItemClickListener) (view, actionId, position) ->
+                                showToast("Sci-Fi \n%s \n%s index: %d", getMovieTitle(sciFiMoviesSmartMovieAdapter, position), getActionName(actionId), position))
                 .create();
 
         recentlyPlayedMoviesSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.INSTANCE.getNestedRecentViewedItems())
                 .map(MovieModel.class, SmallThumbViewHolder.class)
                 .addViewEventListener(
-                        SmallThumbViewHolder.class,
-                        R.id.action_on_long_click,
-                        (view, actionId, position) -> {
+                        (SmallThumbViewHolder.OnItemLongClickListener) (view, actionId, position) -> {
                             showToast("Remove " + getActionName(actionId) + " item: " + position);
                             recentlyPlayedMoviesSmartMovieAdapter.removeItem(position);
                         })
                 .addViewEventListener(
-                        SmallThumbViewHolder.class,
-                        R.id.action_on_click,
-                        (view, actionId, position) ->
-                            showToast("Recently played \n%s \n%s index: %d", getMovieTitle(recentlyPlayedMoviesSmartMovieAdapter, position), getActionName(actionId), position))
+                        (SmallThumbViewHolder.OnItemClickListener) (view, actionId, position) ->
+                                showToast("Recently played \n%s \n%s index: %d", getMovieTitle(recentlyPlayedMoviesSmartMovieAdapter, position), getActionName(actionId), position))
                 .create();
+    }
+
+    interface FabOnClickListener extends OnItemClickListener {
+        @NonNull
+        @Override
+        default Class<? extends SmartViewHolder> getViewHolderType() {
+            return SampleFabViewHolder.class;
+        }
+
+        @Override
+        default int getViewId() {
+            return R.id.fabItem;
+        }
+    }
+
+    private void initMoreDemosButton() {
+        RecyclerView dialogRecyclerView = (RecyclerView) LayoutInflater.from(this).inflate(R.layout.dialog_recycler_view, null);
+        moreSamplesDialog = new AlertDialog.Builder(DemoActivity.this)
+                .setView(dialogRecyclerView)
+                .setCancelable(true)
+                .create();
+
+        if (moreSamplesDialog.getWindow() != null) {
+            moreSamplesDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
+
+        List items = Arrays.asList(
+                "More Samples",
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_list_black_24dp, "Simple Item"),
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_touch_app_black_24dp, "Smart onClick/onLongClick"),
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_edit_black_24dp, "Custom View Event"),
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_drag_drop_swap_vert_black_24dp, "Drag & drop"),
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_drag_handle_black_24dp, "Drag & drop handle"),
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_swipe_black_24dp, "Swipe remove item"),
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_multiple_events_gesture_black_24dp, "Drag & Drop + Swipe"),
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_grid_black_24dp, "Grid + Drag & Drop"),
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_list_numbered_black_24dp, "Multiple Types Resolver"),
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_select_all_black_24dp, "Multiple Items Select"),
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_check_box_black_24dp, "Single CheckBox Items Select"),
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_check_circle_black_24dp, "Multiple CheckBox Items Select"),
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_switch_black_24dp, "Multiple Switch Items Select"),
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_nested_scroll_layers_black_24dp, "Nested Smart Adapter"),
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_endless_scroll_arrow_downward_black_24dp, "Endless Scroll"),
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_endless_scroll_load_more_black_24dp, "Endless Scroll Load More")
+        );
+
+        dialogAdapter = SmartRecyclerAdapter.items(items)
+                .map(String.class, HeaderViewHolder.class)
+                .map(SampleFabViewHolder.SimpleFabItem.class, SampleFabViewHolder.class)
+                .addViewEventListener((FabOnClickListener) (view, actionId, position) -> {
+                    showToast("Dialog item click");
+                    SampleFabViewHolder.SimpleFabItem sfi = (SampleFabViewHolder.SimpleFabItem) dialogAdapter.getItem(position);
+                    switch (sfi.getIcon()) {
+                        case R.drawable.ic_sample_list_black_24dp: {
+                            startActivity(SimpleItemActivity.class);
+                            break;
+                        }
+                        case R.drawable.ic_sample_touch_app_black_24dp: {
+                            startActivity(SimpleItemOnClickOnLongClickActivity.class);
+                            break;
+                        }
+                        case R.drawable.ic_sample_edit_black_24dp: {
+                            startActivity(CustomViewEventActivity.class);
+                            break;
+                        }
+                        case R.drawable.ic_sample_list_numbered_black_24dp: {
+                            startActivity(MultipleViewTypesResolverActivity.class);
+                            break;
+                        }
+                        case R.drawable.ic_sample_drag_drop_swap_vert_black_24dp: {
+                            startActivity(DragAndDropItemActivity.class);
+                            break;
+                        }
+                        case R.drawable.ic_drag_handle_black_24dp: {
+                            startActivity(DragAndDropHandleItemActivity.class);
+                            break;
+                        }
+                        case R.drawable.ic_sample_swipe_black_24dp: {
+                            startActivity(SwipeRemoveItemActivity.class);
+                            break;
+                        }
+                        case R.drawable.ic_sample_multiple_events_gesture_black_24dp: {
+                            startActivity(MultipleEventsAndExtensionsActivity.class);
+                            break;
+                        }
+                        case R.drawable.ic_sample_grid_black_24dp: {
+                            startActivity(GridActivity.class);
+                            break;
+                        }
+                        case R.drawable.ic_sample_select_all_black_24dp: {
+                            startActivity(MultiSelectItemsActivity.class);
+                            break;
+                        }
+                        case R.drawable.ic_sample_check_box_black_24dp: {
+                            startActivity(SingleSelectCheckBoxItemsActivity.class);
+                            break;
+                        }
+                        case R.drawable.ic_sample_check_circle_black_24dp: {
+                            startActivity(MultiSelectCheckBoxItemsActivity.class);
+                            break;
+                        }
+                        case R.drawable.ic_switch_black_24dp: {
+                            startActivity(MultiSelectSwitchItemsActivity.class);
+                            break;
+                        }
+                        case R.drawable.ic_sample_nested_scroll_layers_black_24dp:
+                            startActivity(NestedSmartRecyclerAdaptersActivity.class);
+                            break;
+                        case R.drawable.ic_sample_endless_scroll_arrow_downward_black_24dp:
+                            startActivity(EndlessScrollActivity.class);
+                            break;
+                        case R.drawable.ic_endless_scroll_load_more_black_24dp:
+                            startActivity(EndlessScrollLoadMoreButtonActivity.class);
+                            break;
+                    }
+                    //moreSamplesDialog.dismiss();
+                })
+                .into(dialogRecyclerView);
+    }
+
+    private void startActivity(Class clazz) {
+        Intent intent = new Intent(DemoActivity.this, clazz);
+        ActivityCompat.startActivity(this, intent, null);
     }
 
     private void startMovieCategoryDetailsActivity(MovieType movieType) {
@@ -325,12 +433,14 @@ public class DemoActivity extends AppCompatActivity {
                 Toast.LENGTH_LONG).show();
     }
 
-    public String getActionName(int actionId) {
+    public static String getActionName(int actionId) {
         switch (actionId) {
-            case R.id.action_on_click:
+            case R.id.event_on_click:
                 return "onClick";
-            case R.id.action_on_long_click:
+            case R.id.event_on_long_click:
                 return "onLongClick";
+            case R.id.event_play:
+                return "PLAY";
             default:
                 return "Unknown";
         }

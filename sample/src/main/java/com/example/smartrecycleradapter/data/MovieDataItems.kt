@@ -17,7 +17,7 @@ object MovieDataItems {
     const val THUMBS_BASE_URL = "https://raw.githubusercontent.com/manneohlund/smart-recycler-adapter-resources/master/thumbs/"
 
     // Coming soon
-    val comingSoonItems: List<Any> = mutableListOf(
+    val comingSoonItems: List<MovieModel> = mutableListOf(
             MovieModel("Fist man", "first_man"),
             MovieModel("Terminator dark fate", "terminator_dark_fate"),
             MovieModel("Murder Mystery", "murder_mystery"),
@@ -74,7 +74,7 @@ object MovieDataItems {
     )
 
     // Action
-    var nestedActionItems: List<Any> = asList(
+    var nestedActionItems: List<MovieModel> = asList(
             MovieModel("Fury", "fury"),
             MovieModel("Edge of tomorrow", "edge_of_tomorrow"),
             MovieModel("Godzilla king of the monsters", "godzilla_king_of_the_monsters"),
@@ -95,7 +95,7 @@ object MovieDataItems {
     )
 
     // Adventure
-    var nestedAdventureItems: List<Any> = asList(
+    var nestedAdventureItems: List<MovieModel> = asList(
             MovieModel("Hercules", "hercules"),
             MovieModel("Mummy", "mummy"),
             MovieModel("Age of uprising", "age_of_uprising"),
@@ -109,7 +109,7 @@ object MovieDataItems {
     )
 
     // Sci-Fi
-    var nestedSciFiItems: List<Any> = asList(
+    var nestedSciFiItems: List<MovieModel> = asList(
             MovieModel("Godzilla", "interstellar"),
             MovieModel("Matrix", "matrix"),
             MovieModel("Edge of tomorrow", "edge_of_tomorrow"),
@@ -120,7 +120,7 @@ object MovieDataItems {
     )
 
     // Animated
-    var nestedAnimatedItems: List<Any> = asList(
+    var nestedAnimatedItems: List<MovieModel> = asList(
             MovieModel("The Lion king", "lion_king"),
             MovieModel("Dora", "dora"),
             MovieModel("Frozen 2", "frozen2"),
@@ -133,7 +133,7 @@ object MovieDataItems {
             MovieModel("Angry birds 2", "angry_birds_movie_two"))
 
     // Recent viewed items
-    var nestedRecentViewedItems = ArrayList<Any>()
+    var nestedRecentViewedItems = ArrayList<MovieModel>()
     init {
         nestedRecentViewedItems.addAll(comingSoonItems)
         nestedRecentViewedItems.add(MovieModel("Her", "her"))

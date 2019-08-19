@@ -8,12 +8,10 @@ package com.example.smartrecycleradapter.viewholder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
-
 import com.example.smartrecycleradapter.R
+import smartadapter.viewholder.SmartViewHolder
 
-import smartadapter.viewholder.SmartAutoEventViewHolder
-
-class HeaderViewHolder(parentView: ViewGroup) : SmartAutoEventViewHolder<String>(
+class HeaderViewHolder(parentView: ViewGroup) : SmartViewHolder<String>(
         LayoutInflater.from(parentView.context)
                 .inflate(R.layout.header, parentView, false)) {
 

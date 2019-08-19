@@ -16,9 +16,9 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.smartrecycleradapter.R
 import com.example.smartrecycleradapter.models.MovieBannerModel
 import com.example.smartrecycleradapter.utils.displayWidth
-import smartadapter.viewholder.SmartAutoEventViewHolder
+import smartadapter.viewholder.SmartViewHolder
 
-class BannerViewHolder(parentView: ViewGroup) : SmartAutoEventViewHolder<MovieBannerModel>(
+class BannerViewHolder(parentView: ViewGroup) : SmartViewHolder<MovieBannerModel>(
         LayoutInflater.from(parentView.context)
                 .inflate(R.layout.banner_item, parentView, false)) {
 
@@ -27,6 +27,7 @@ class BannerViewHolder(parentView: ViewGroup) : SmartAutoEventViewHolder<MovieBa
 
     private val requestOption = RequestOptions()
             .error(R.drawable.ic_broken_image_black_48dp)
+            .override(imageView.context.displayWidth, imageView.context.displayWidth)
             .centerInside()
 
     override fun bind(movie: MovieBannerModel) {
@@ -39,8 +40,6 @@ class BannerViewHolder(parentView: ViewGroup) : SmartAutoEventViewHolder<MovieBa
         Glide.with(imageView)
                 .load(movie.iconUrl)
                 .apply(requestOption)
-                .override(imageView.context.displayWidth, imageView.context.displayWidth)
-                .fitCenter()
                 .into(imageView)
     }
 }

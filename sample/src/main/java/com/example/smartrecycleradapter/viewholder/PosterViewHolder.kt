@@ -1,10 +1,11 @@
 package com.example.smartrecycleradapter.viewholder
 
 /*
- * Created by Manne Öhlund on 04/10/17.
- * Copyright © 2017. All rights reserved.
+ * Created by Manne Öhlund on 2019-06-25.
+ * Copyright © 2019. All rights reserved.
  */
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,13 +16,28 @@ import com.example.smartrecycleradapter.R
 import com.example.smartrecycleradapter.models.MovieModel
 import com.example.smartrecycleradapter.utils.displayHeight
 import com.example.smartrecycleradapter.utils.displayWidth
-import smartadapter.viewholder.SmartAutoEventViewHolder
+import smartadapter.listener.OnViewEventListener
+import smartadapter.viewholder.SmartViewEventListenerHolder
+import smartadapter.viewholder.SmartViewHolder
 
-class PosterViewHolder(parentView: View) : SmartAutoEventViewHolder<MovieModel>(
+class PosterViewHolder(parentView: View) : SmartViewHolder<MovieModel>(
         LayoutInflater.from(parentView.context)
-                .inflate(R.layout.poster_item,  parentView as ViewGroup, false)) {
+                .inflate(R.layout.poster_item,  parentView as ViewGroup, false)),
+        SmartViewEventListenerHolder {
 
     private val imageView: ImageView = itemView.findViewById(R.id.imageView)
+
+    private val playButton: ImageView = itemView.findViewById(R.id.playButton)
+    private var viewActionListener: OnViewEventListener? = null;
+
+    override fun setOnViewEventListener(viewActionListener: OnViewEventListener) {
+        Log.e("PosterViewHolder", "::::::::::::::::::::::::::: setOnViewEventListener")
+        this.viewActionListener = viewActionListener;
+
+        playButton.setOnClickListener { playButton ->
+            viewActionListener.onViewEvent(playButton, R.id.event_play, adapterPosition)
+        }
+    }
 
     private val requestOption = RequestOptions()
             .error(R.drawable.ic_broken_image_black_48dp)
@@ -38,5 +54,30 @@ class PosterViewHolder(parentView: View) : SmartAutoEventViewHolder<MovieModel>(
 
     override fun unbind() {
         Glide.with(imageView).clear(imageView)
+    }
+
+    // Event listeners
+    internal interface OnItemClickListener : smartadapter.listener.OnItemClickListener {
+
+        @JvmDefault
+        override fun getViewHolderType() = PosterViewHolder::class.java
+    }
+
+    internal interface OnPlayButtonClickListener : OnItemClickListener {
+
+        @JvmDefault
+        override fun getViewId(): Int = R.id.playButton
+    }
+
+    internal interface OnStarButtonClickListener : OnItemClickListener {
+
+        @JvmDefault
+        override fun getViewId(): Int = R.id.starButton
+    }
+
+    internal interface OnInfoButtonClickListener : OnItemClickListener {
+
+        @JvmDefault
+        override fun getViewId(): Int = R.id.infoButton
     }
 }
