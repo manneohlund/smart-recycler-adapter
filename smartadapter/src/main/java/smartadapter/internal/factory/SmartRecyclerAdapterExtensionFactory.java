@@ -13,12 +13,14 @@ import java.util.List;
 
 import smartadapter.SmartRecyclerAdapter;
 import smartadapter.SmartRecyclerAdapterExtensionBuilder;
+import smartadapter.widget.BasicDragAndDropExtension;
+import smartadapter.widget.BasicSwipeExtension;
 
 /**
  * Builds {@link SmartRecyclerAdapterExtensionBuilder} extensions.
  *
- * @see smartadapter.widget.SwipeExtension
- * @see smartadapter.widget.DragAndDropExtension
+ * @see BasicSwipeExtension
+ * @see BasicDragAndDropExtension
  */
 public class SmartRecyclerAdapterExtensionFactory {
 
