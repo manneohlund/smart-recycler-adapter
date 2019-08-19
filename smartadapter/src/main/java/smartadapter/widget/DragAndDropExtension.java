@@ -1,129 +1,57 @@
 package smartadapter.widget;
 
 /*
- * Created by Manne Öhlund on 2019-08-15.
+ * Created by Manne Öhlund on 2019-08-17.
  * Copyright (c) All rights reserved.
  */
 
-import android.annotation.SuppressLint;
-import android.view.MotionEvent;
-
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.HashSet;
+import java.util.List;
 
-import smartadapter.SmartRecyclerAdapter;
-import smartadapter.SmartRecyclerAdapterExtensionBuilder;
-import smartadapter.viewholder.DraggableViewHolder;
+import smartadapter.listener.OnItemMovedListener;
+import smartadapter.viewholder.SmartViewHolder;
 
-public class DragAndDropExtension extends ItemTouchHelper.Callback {
+/**
+ * Defines basic functionality of the DragAndDropExtension.
+ */
+public abstract class DragAndDropExtension extends ItemTouchHelper.Callback {
 
-    private final boolean longPressDragEnabled;
-    private SmartRecyclerAdapter smartRecyclerAdapter;
-    private ItemTouchHelper touchHelper;
-    private HashSet<RecyclerView.ViewHolder> draggableViews = new HashSet<>();
-    private int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+    /**
+     * Sets target drag flags.
+     * @param dragFlags target flags
+     */
+    abstract public void setDragFlags(int dragFlags);
 
-    public DragAndDropExtension(boolean longPressDragEnabled) {
-        this.longPressDragEnabled = longPressDragEnabled;
-    }
+    /**
+     * Defines if item should be draggable after long press.
+     * @param longPressDragEnabled should drag be enabled
+     */
+    abstract public void setLongPressDragEnabled(boolean longPressDragEnabled);
 
-    @Override
-    public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-        return makeMovementFlags(dragFlags, 0);
-    }
+    /**
+     * Defines the draggable flags or binds touch listener to target drag view.
+     * @param recyclerView target RecyclerView
+     */
+    abstract protected void setupDragAndDrop(@NonNull RecyclerView recyclerView);
 
-    @Override
-    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-        int oldPosition = viewHolder.getAdapterPosition();
-        int newPosition = target.getAdapterPosition();
-        Object targetItem = smartRecyclerAdapter.getItems().get(oldPosition);
-        smartRecyclerAdapter.getItems().remove(oldPosition);
-        smartRecyclerAdapter.getItems().add(newPosition, targetItem);
-        smartRecyclerAdapter.notifyItemMoved(oldPosition, newPosition);
-        return true;
-    }
+    /**
+     * Sets {@link ItemTouchHelper} for custom item view touch handling.
+     * @param touchHelper target helper
+     */
+    abstract public void setTouchHelper(@NonNull ItemTouchHelper touchHelper);
 
-    @Override
-    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-        // Noop
-    }
+    /**
+     * Sets target view holder types that should be draggable.
+     * @param viewHolderTypes class types
+     */
+    abstract public void setViewHolderTypes(@NonNull List<Class<? extends SmartViewHolder>> viewHolderTypes);
 
-    @Override
-    public boolean isLongPressDragEnabled() {
-        return longPressDragEnabled;
-    }
-
-    public void setSmartRecyclerAdapter(@NonNull SmartRecyclerAdapter smartRecyclerAdapter) {
-        this.smartRecyclerAdapter = smartRecyclerAdapter;
-    }
-
-    public void setTouchHelper(ItemTouchHelper touchHelper) {
-        this.touchHelper = touchHelper;
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private void setupDragAndDrop(RecyclerView recyclerView) {
-        int gridDragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT;
-        int linearDragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-
-        dragFlags = recyclerView.getLayoutManager() instanceof GridLayoutManager
-                ? gridDragFlags
-                : linearDragFlags;
-
-        if (!isLongPressDragEnabled()) {
-            smartRecyclerAdapter.addOnViewAttachedToWindowListener(viewHolder -> {
-                if (viewHolder instanceof DraggableViewHolder && !draggableViews.contains(viewHolder)) {
-                    draggableViews.add(viewHolder);
-                    ((DraggableViewHolder) viewHolder).getDraggableView()
-                            .setOnTouchListener((v, event) -> {
-                                if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                                    touchHelper.startDrag(viewHolder);
-                                }
-                                return false;
-                            });
-                }
-            });
-        }
-    }
-
-    public static class DragAndDropBuilder implements SmartRecyclerAdapterExtensionBuilder<DragAndDropBuilder> {
-
-        private SmartRecyclerAdapter smartRecyclerAdapter;
-        private RecyclerView recyclerView;
-        protected boolean longPressDragEnabled;
-
-        public DragAndDropBuilder() {
-            this(true);
-        }
-
-        public DragAndDropBuilder(boolean longPressDragEnabled) {
-            this.longPressDragEnabled = longPressDragEnabled;
-        }
-
-        @Override
-        public DragAndDropBuilder setSmartRecyclerAdapter(@NonNull SmartRecyclerAdapter smartRecyclerAdapter) {
-            this.smartRecyclerAdapter = smartRecyclerAdapter;
-            return this;
-        }
-
-        @Override
-        public DragAndDropBuilder setRecyclerView(@NonNull RecyclerView recyclerView) {
-            this.recyclerView = recyclerView;
-            return this;
-        }
-
-        @Override
-        public void build() {
-            DragAndDropExtension dragAndDropExtension = new DragAndDropExtension(longPressDragEnabled);
-            dragAndDropExtension.setSmartRecyclerAdapter(smartRecyclerAdapter);
-            ItemTouchHelper touchHelper = new ItemTouchHelper(dragAndDropExtension);
-            dragAndDropExtension.setTouchHelper(touchHelper);
-            touchHelper.attachToRecyclerView(recyclerView);
-            dragAndDropExtension.setupDragAndDrop(recyclerView);
-        }
-    }
+    /**
+     * Sets the drag/move listener
+     * @param onItemMovedListener listener
+     */
+    abstract public void setOnItemMovedListener(@NonNull OnItemMovedListener onItemMovedListener);
 }

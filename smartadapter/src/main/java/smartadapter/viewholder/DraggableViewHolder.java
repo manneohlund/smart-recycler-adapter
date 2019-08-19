@@ -10,9 +10,11 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import smartadapter.widget.BasicDragAndDropExtension;
+
 /**
  * Provides target view for draggable purposes.
- * Lets ItemTouchHelper handler such as {@link smartadapter.widget.DragAndDropExtension}
+ * Lets ItemTouchHelper handler such as {@link BasicDragAndDropExtension}
  * to bind {@link androidx.recyclerview.widget.ItemTouchHelper#startDrag(RecyclerView.ViewHolder)}.
  */
 public interface DraggableViewHolder {
