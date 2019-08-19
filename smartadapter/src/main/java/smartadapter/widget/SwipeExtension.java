@@ -1,90 +1,25 @@
 package smartadapter.widget;
 
 /*
- * Created by Manne Öhlund on 2019-08-15.
+ * Created by Manne Öhlund on 2019-08-17.
  * Copyright (c) All rights reserved.
  */
 
-import android.graphics.Canvas;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.RecyclerView;
 
-import smartadapter.SmartRecyclerAdapter;
-import smartadapter.SmartRecyclerAdapterExtensionBuilder;
+import java.util.List;
 
-public class SwipeExtension extends ItemTouchHelper.Callback {
+import smartadapter.listener.OnItemSwipedListener;
+import smartadapter.viewholder.SmartViewHolder;
 
-    private SmartRecyclerAdapter smartRecyclerAdapter;
+public abstract class SwipeExtension extends ItemTouchHelper.Callback {
 
-    @Override
-    public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-        int swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
-        return makeMovementFlags(0, swipeFlags);
-    }
+    abstract public void setSwipeFlags(int swipeFlags);
 
-    @Override
-    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-        return false;
-    }
+    abstract public void setLongPressDragEnabled(boolean longPressDragEnabled);
 
-    @Override
-    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-        smartRecyclerAdapter.getItems().remove(viewHolder.getAdapterPosition());
-        smartRecyclerAdapter.smartNotifyItemRemoved(viewHolder.getAdapterPosition());
-    }
+    abstract public void setViewHolderTypes(@NonNull List<Class<? extends SmartViewHolder>> viewHolderTypes);
 
-    @Override
-    public boolean isLongPressDragEnabled() {
-        return false;
-    }
-
-    @Override
-    public void onChildDraw(@NonNull Canvas c,
-                            @NonNull RecyclerView recyclerView,
-                            @NonNull RecyclerView.ViewHolder viewHolder,
-                            float dX,
-                            float dY,
-                            int actionState,
-                            boolean isCurrentlyActive) {
-        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            float alpha = 1 - (Math.abs(dX) / recyclerView.getWidth());
-            viewHolder.itemView.setAlpha(alpha);
-        }
-        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-    }
-
-    public void setSmartRecyclerAdapter(@NonNull SmartRecyclerAdapter smartRecyclerAdapter) {
-        this.smartRecyclerAdapter = smartRecyclerAdapter;
-    }
-
-    /**
-     * Builder for {@link SwipeExtension} that is build from {@link smartadapter.internal.factory.SmartRecyclerAdapterExtensionFactory}.
-     */
-    public static class SwipeExtensionBuilder implements SmartRecyclerAdapterExtensionBuilder<SwipeExtensionBuilder> {
-
-        private SmartRecyclerAdapter smartRecyclerAdapter;
-        private RecyclerView recyclerView;
-
-        @Override
-        public SwipeExtensionBuilder setSmartRecyclerAdapter(@NonNull SmartRecyclerAdapter smartRecyclerAdapter) {
-            this.smartRecyclerAdapter = smartRecyclerAdapter;
-            return this;
-        }
-
-        @Override
-        public SwipeExtensionBuilder setRecyclerView(@NonNull RecyclerView recyclerView) {
-            this.recyclerView = recyclerView;
-            return this;
-        }
-
-        @Override
-        public void build() {
-            SwipeExtension dragAndDropExtension = new SwipeExtension();
-            dragAndDropExtension.setSmartRecyclerAdapter(smartRecyclerAdapter);
-            ItemTouchHelper touchHelper = new ItemTouchHelper(dragAndDropExtension);
-            touchHelper.attachToRecyclerView(recyclerView);
-        }
-    }
+    abstract void setOnItemSwipedListener(@NonNull OnItemSwipedListener onItemSwipedListener);
 }
