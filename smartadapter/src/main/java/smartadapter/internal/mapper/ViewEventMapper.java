@@ -12,6 +12,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import smartadapter.R;
 import smartadapter.SmartRecyclerAdapter;
@@ -60,8 +61,12 @@ public class ViewEventMapper {
     }
 
     public void mapViewActionWith(@NonNull SmartViewHolder smartViewHolder) {
-        mapViewActionWith(smartViewHolder, viewEventListenerMap.get(SmartViewHolder.class));
-        mapViewActionWith(smartViewHolder, viewEventListenerMap.get(smartViewHolder.getClass()));
+        for (Map.Entry<Class<? extends SmartViewHolder>, SparseArray<SparseArray<OnViewEventListener>>> viewEventListenerMapEntry : viewEventListenerMap.entrySet()) {
+            if (viewEventListenerMapEntry.getKey().isAssignableFrom(smartViewHolder.getClass())
+                    || viewEventListenerMapEntry.getKey().isAssignableFrom(SmartViewHolder.class)) {
+                mapViewActionWith(smartViewHolder, viewEventListenerMapEntry.getValue());
+            }
+        }
     }
 
     private  void mapViewActionWith(@NonNull SmartViewHolder smartViewHolder, SparseArray<SparseArray<OnViewEventListener>> viewIdActionIdMap) {
