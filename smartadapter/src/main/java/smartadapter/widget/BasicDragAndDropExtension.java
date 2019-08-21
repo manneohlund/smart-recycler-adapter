@@ -27,7 +27,7 @@ import smartadapter.viewholder.SmartViewHolder;
 public class BasicDragAndDropExtension extends DragAndDropExtension {
 
     private boolean longPressDragEnabled;
-    private int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+    private int dragFlags;
     private List<Class<? extends SmartViewHolder>> viewHolderTypes = Collections.singletonList(SmartViewHolder.class);
     protected ItemTouchHelper touchHelper;
     protected HashSet<RecyclerView.ViewHolder> draggableViews = new HashSet<>();

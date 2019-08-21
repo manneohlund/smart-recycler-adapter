@@ -27,7 +27,7 @@ public class DragAndDropExtensionBuilder implements SmartRecyclerAdapterExtensio
     private DragAndDropExtension dragAndDropExtension;
     private SmartRecyclerAdapter smartRecyclerAdapter;
     private RecyclerView recyclerView;
-    private int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+    private int dragFlags;
     private boolean longPressDragEnabled;
     private List<Class<? extends SmartViewHolder>> viewHolderTypes = Collections.singletonList(SmartViewHolder.class);
     private OnItemMovedListener onItemMovedListener = (oldViewHolder, targetViewHolder) -> {}; // Noop
