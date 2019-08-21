@@ -55,7 +55,7 @@ public class SmartRecyclerAdapter extends RecyclerView.Adapter<SmartViewHolder> 
     @Override
     public SmartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         SmartViewHolder smartViewHolder = mapper.createViewHolder(parent, viewType);
-        viewActionMapper.mapViewActionWith(smartViewHolder);
+        viewActionMapper.mapViewEventWith(smartViewHolder);
         return smartViewHolder;
     }
 

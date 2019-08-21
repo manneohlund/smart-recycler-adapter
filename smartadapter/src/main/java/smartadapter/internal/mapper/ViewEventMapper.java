@@ -60,16 +60,18 @@ public class ViewEventMapper {
         return viewEventListenerMap;
     }
 
-    public void mapViewActionWith(@NonNull SmartViewHolder smartViewHolder) {
+    public void mapViewEventWith(@NonNull SmartViewHolder smartViewHolder) {
+        mapViewEventWith(smartViewHolder, viewEventListenerMap.get(SmartViewHolder.class));
+
         for (Map.Entry<Class<? extends SmartViewHolder>, SparseArray<SparseArray<OnViewEventListener>>> viewEventListenerMapEntry : viewEventListenerMap.entrySet()) {
-            if (viewEventListenerMapEntry.getKey().isAssignableFrom(smartViewHolder.getClass())
-                    || viewEventListenerMapEntry.getKey().isAssignableFrom(SmartViewHolder.class)) {
-                mapViewActionWith(smartViewHolder, viewEventListenerMapEntry.getValue());
+            if (viewEventListenerMapEntry.getKey() != SmartViewHolder.class
+                    && viewEventListenerMapEntry.getKey().isAssignableFrom(smartViewHolder.getClass())) {
+                mapViewEventWith(smartViewHolder, viewEventListenerMapEntry.getValue());
             }
         }
     }
 
-    private  void mapViewActionWith(@NonNull SmartViewHolder smartViewHolder, SparseArray<SparseArray<OnViewEventListener>> viewIdActionIdMap) {
+    private  void mapViewEventWith(@NonNull SmartViewHolder smartViewHolder, SparseArray<SparseArray<OnViewEventListener>> viewIdActionIdMap) {
         if (viewIdActionIdMap != null) {
             for (int i = 0; i < viewIdActionIdMap.size(); i++) {
                 SparseArray<OnViewEventListener> eventIdAndListener = viewIdActionIdMap.valueAt(i);
