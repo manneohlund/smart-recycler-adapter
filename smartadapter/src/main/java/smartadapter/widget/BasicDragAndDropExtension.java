@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 import smartadapter.listener.OnItemMovedListener;
@@ -29,8 +28,7 @@ public class BasicDragAndDropExtension extends DragAndDropExtension {
     private boolean longPressDragEnabled;
     private int dragFlags;
     private List<Class<? extends SmartViewHolder>> viewHolderTypes = Collections.singletonList(SmartViewHolder.class);
-    protected ItemTouchHelper touchHelper;
-    protected HashSet<RecyclerView.ViewHolder> draggableViews = new HashSet<>();
+    private ItemTouchHelper touchHelper;
     private OnItemMovedListener onItemMovedListener = (oldViewHolder, targetViewHolder) -> {}; // Noop
 
     @Override
@@ -72,6 +70,10 @@ public class BasicDragAndDropExtension extends DragAndDropExtension {
     @Override
     public void setTouchHelper(@NonNull ItemTouchHelper touchHelper) {
         this.touchHelper = touchHelper;
+    }
+
+    public ItemTouchHelper getTouchHelper() {
+        return touchHelper;
     }
 
     @SuppressLint("ClickableViewAccessibility")

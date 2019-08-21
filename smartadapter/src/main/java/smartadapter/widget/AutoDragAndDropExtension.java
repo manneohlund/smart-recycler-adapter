@@ -11,6 +11,8 @@ import android.view.MotionEvent;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.HashSet;
+
 import smartadapter.SmartRecyclerAdapter;
 import smartadapter.viewholder.DraggableViewHolder;
 import smartadapter.viewholder.SmartAdapterHolder;
@@ -24,6 +26,7 @@ import smartadapter.viewholder.SmartAdapterHolder;
 public class AutoDragAndDropExtension extends BasicDragAndDropExtension implements SmartAdapterHolder {
 
     private SmartRecyclerAdapter smartRecyclerAdapter;
+    private HashSet<RecyclerView.ViewHolder> draggableViews = new HashSet<>();
 
     @Override
     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -58,7 +61,7 @@ public class AutoDragAndDropExtension extends BasicDragAndDropExtension implemen
                     ((DraggableViewHolder) viewHolder).getDraggableView()
                             .setOnTouchListener((v, event) -> {
                                 if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                                    touchHelper.startDrag(viewHolder);
+                                    getTouchHelper().startDrag(viewHolder);
                                 }
                                 return false;
                             });
