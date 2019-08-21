@@ -26,14 +26,14 @@ public class LoadMoreViewHolder extends SmartViewHolder {
     public LoadMoreViewHolder(@NonNull View parentView, @LayoutRes int loadingView, boolean isAutoLoadEnabled) {
         super(LayoutInflater.from(parentView.getContext()).inflate(loadingView, (ViewGroup) parentView, false));
         loadingViewRes = loadingView;
-        toggleState(isAutoLoadEnabled);
+        toggleLoading(isAutoLoadEnabled);
     }
 
-    public void toggleState(boolean isAutoLoadEnabled) {
+    public void toggleLoading(boolean isLoading) {
         if (loadingViewRes == R.layout.load_more_view) {
             AppCompatButton loadMoreButton = itemView.findViewById(R.id.loadMoreButton);
             ProgressBar progressBar = itemView.findViewById(R.id.progressBar);
-            if (isAutoLoadEnabled) {
+            if (isLoading) {
                 progressBar.setVisibility(View.VISIBLE);
                 loadMoreButton.setVisibility(View.GONE);
             } else {

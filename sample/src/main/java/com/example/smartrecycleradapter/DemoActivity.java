@@ -194,13 +194,13 @@ public class DemoActivity extends AppCompatActivity {
 
         // Endless pagination
         mainSmartMovieAdapter.setAutoLoadMore(false);
-        mainSmartMovieAdapter.setOnLoadMoreListener(() -> {
+        mainSmartMovieAdapter.setOnLoadMoreListener((loadMoreViewHolder) -> {
             int indexBeforeCopyright = 2;
             new Handler().postDelayed(() -> {
                         mainSmartMovieAdapter.addItem(
                                 mainSmartMovieAdapter.getItemCount() - indexBeforeCopyright,
                                 new MovieBannerModel("More items loaded", MovieDataItems.INSTANCE.getRandomBanner()));
-                        mainSmartMovieAdapter.setEndlessScrollEnabled(true); // TODO notifyAdapterLoadMoreDone();
+                        loadMoreViewHolder.toggleLoading(false);
                     },
                     800);
         });
@@ -225,7 +225,7 @@ public class DemoActivity extends AppCompatActivity {
         comingSoonSmartMovieAdapter.setCustomLoadMoreLayoutResource(R.layout.custom_loadmore_view);
 
         // Pagination ends after 3 loads
-        comingSoonSmartMovieAdapter.setOnLoadMoreListener(() -> {
+        comingSoonSmartMovieAdapter.setOnLoadMoreListener((loadMoreViewHolder) -> {
             Toast.makeText(getApplicationContext(), "LoadMore", Toast.LENGTH_SHORT).show();
 
             new Handler().postDelayed(() -> {

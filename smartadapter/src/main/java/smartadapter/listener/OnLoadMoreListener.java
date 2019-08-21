@@ -8,6 +8,8 @@ package smartadapter.listener;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import smartadapter.viewholder.LoadMoreViewHolder;
+
 /**
  * Callback for {@link smartadapter.SmartEndlessScrollRecyclerAdapter} to intercept when the adapter
  * has scrolled to the last item. The {@link smartadapter.viewholder.LoadMoreViewHolder} will show without any
@@ -18,11 +20,12 @@ public interface OnLoadMoreListener extends OnViewAttachedToWindowListener {
 
     @Override
     default void onViewAttachedToWindow(@NonNull RecyclerView.ViewHolder viewHolder) {
-        onLoadMore();
+        onLoadMore((LoadMoreViewHolder) viewHolder);
     }
 
     /**
      * Called when {@link smartadapter.viewholder.LoadMoreViewHolder} has been attached to the window.
+     * @param loadMoreViewHolder view holder
      */
-    void onLoadMore();
+    void onLoadMore(@NonNull LoadMoreViewHolder loadMoreViewHolder);
 }

@@ -30,7 +30,7 @@ public class SmartEndlessScrollRecyclerAdapter extends SmartRecyclerAdapter impl
     private boolean loading = false;
     private int loadMoreLayoutResource = R.layout.load_more_view;
 
-    SmartEndlessScrollRecyclerAdapter(Object callerEnclosingClass, @NonNull List items) {
+    public SmartEndlessScrollRecyclerAdapter(Object callerEnclosingClass, @NonNull List items) {
         super(callerEnclosingClass, items);
     }
 
@@ -68,12 +68,12 @@ public class SmartEndlessScrollRecyclerAdapter extends SmartRecyclerAdapter impl
         super.onViewAttachedToWindow(holder);
         if (holder instanceof LoadMoreViewHolder) {
             if (autoLoadMoreEnabled) {
-                onLoadMoreListener.onLoadMore();
+                onLoadMoreListener.onLoadMore((LoadMoreViewHolder) holder);
             } else {
-                ((LoadMoreViewHolder)holder).toggleState(false);
+                ((LoadMoreViewHolder)holder).toggleLoading(false);
                 holder.itemView.findViewById(R.id.loadMoreButton).setOnClickListener(v -> {
-                    onLoadMoreListener.onLoadMore();
-                    ((LoadMoreViewHolder)holder).toggleState(true);
+                    onLoadMoreListener.onLoadMore((LoadMoreViewHolder) holder);
+                    ((LoadMoreViewHolder)holder).toggleLoading(true);
                 });
             }
         }
