@@ -89,7 +89,6 @@ class MovieCategoryDetailsActivity : AppCompatActivity() {
                 endlessScrollAdapter.setOnLoadMoreListener {
                     if (!endlessScrollAdapter.isLoading) {
                         endlessScrollAdapter.setIsLoading(true)
-                        Toast.makeText(applicationContext, "LoadMore", Toast.LENGTH_SHORT).show()
 
                         Handler().postDelayed({
                             endlessScrollAdapter.addItems(movieItems)

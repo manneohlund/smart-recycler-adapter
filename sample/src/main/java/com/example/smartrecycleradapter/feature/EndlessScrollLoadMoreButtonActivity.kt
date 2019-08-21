@@ -7,7 +7,6 @@ package com.example.smartrecycleradapter.feature
 
 import android.os.Bundle
 import android.os.Handler
-import android.widget.Toast
 import com.example.smartrecycleradapter.feature.simpleitem.SimpleItemViewHolder
 import kotlinx.android.synthetic.main.activity_simple_item.*
 import smartadapter.SmartEndlessScrollRecyclerAdapter
@@ -29,8 +28,6 @@ class EndlessScrollLoadMoreButtonActivity : BaseSampleActivity() {
 
         smartAdapter.setAutoLoadMore(false)
         smartAdapter.setOnLoadMoreListener {
-            Toast.makeText(applicationContext, "LoadMore", Toast.LENGTH_SHORT).show()
-
             Handler().postDelayed({
                 smartAdapter.addItems((itemCount+1..itemCount+50).toList())
                 itemCount += 50

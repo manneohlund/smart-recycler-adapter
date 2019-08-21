@@ -91,8 +91,6 @@ class NestedSmartRecyclerAdaptersActivity : BaseSampleActivity() {
 
         // Pagination ends after 3 loads
         comingSoonSmartMovieAdapter.setOnLoadMoreListener {
-            Toast.makeText(applicationContext, "LoadMore", Toast.LENGTH_SHORT).show()
-
             Handler().postDelayed({
                 comingSoonSmartMovieAdapter.addItems(
                         comingSoonSmartMovieAdapter.itemCount - 1,

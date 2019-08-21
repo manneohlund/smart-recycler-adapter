@@ -226,8 +226,6 @@ public class DemoActivity extends AppCompatActivity {
 
         // Pagination ends after 3 loads
         comingSoonSmartMovieAdapter.setOnLoadMoreListener((loadMoreViewHolder) -> {
-            Toast.makeText(getApplicationContext(), "LoadMore", Toast.LENGTH_SHORT).show();
-
             new Handler().postDelayed(() -> {
                         comingSoonSmartMovieAdapter.addItems(
                                 comingSoonSmartMovieAdapter.getItemCount() - 1,
