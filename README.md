@@ -54,8 +54,8 @@ SmartRecyclerAdapter myWatchListSmartMovieAdapter = SmartRecyclerAdapter
   .map(MovieModel.class, ThumbViewHolder.class)
   .addViewEventListener(
     ThumbViewHolder.class,
-    R.id.action_on_click,
-    (view, actionId, position) -> playMovie())
+    R.id.event_on_click,
+    (view, eventId, position) -> playMovie())
   .create();
 ````
 
@@ -134,9 +134,9 @@ SmartRecyclerAdapter
   .items(items)
   .map(MovieModel.class, MovieViewHolder.class)
   // You need to define your own view event listeners like onClickListener on a view
-  .addViewEventListener((view, actionId, position) -> handleItemEvent())
+  .addViewEventListener((view, eventId, position) -> handleItemEvent())
   // Adds event listener for MovieViewHolder only
-  .addViewEventListener(MovieViewHolder.class, (view, actionId, position) -> handleItemEvent())
+  .addViewEventListener(MovieViewHolder.class, (view, eventId, position) -> handleItemEvent())
   .into(recyclerView);
 ```
  
@@ -152,7 +152,7 @@ class MovieViewHolder extends SmartEventViewHolder<MovieModel> {
 }
 ```
 
-If you are lazy and want to auto assign a predefined `onClickListener` and `onLongClickListener` with actionIds `R.id.action_on_click` and `R.id.action_on_long_click`,
+If you are lazy and want to auto assign a predefined `onClickListener` and `onLongClickListener` with eventIds `R.id.event_on_click` and `R.id.event_on_long_click`,
 just extend your `ViewHolder` with `SmartAutoEventViewHolder`.
 
 ```java
@@ -165,11 +165,11 @@ And add event listener to `SmartRecyclerAdapter` builder.
 SmartRecyclerAdapter
   .items(items)
   .map(MovieModel.class, MovieViewHolder.class)
-  /// Adds event listener for MovieViewHolder and adds View.OnClickListener with action R.id.action_on_click on view with id R.id.info_button
+  /// Adds event listener for MovieViewHolder and adds View.OnClickListener with action R.id.event_on_click on view with id R.id.info_button
   .addViewEventListener(MovieViewHolder.class,
                         R.id.info_button, 
-                        R.id.action_on_click, 
-                        (view, actionId, position) -> openMovieInfo())
+                        R.id.event_on_click, 
+                        (view, eventId, position) -> openMovieInfo())
   .into(recyclerView);
 ```
 
