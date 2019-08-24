@@ -13,8 +13,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import smartadapter.SmartExtensionBuilder;
 import smartadapter.SmartRecyclerAdapter;
-import smartadapter.SmartRecyclerAdapterExtensionBuilder;
 import smartadapter.listener.OnItemMovedListener;
 import smartadapter.viewholder.SmartAdapterHolder;
 import smartadapter.viewholder.SmartViewHolder;
@@ -22,7 +22,7 @@ import smartadapter.viewholder.SmartViewHolder;
 /**
  * Builder for DragAndDropExtensions. Default constructor sets {@link BasicDragAndDropExtension}.
  */
-public class DragAndDropExtensionBuilder implements SmartRecyclerAdapterExtensionBuilder<DragAndDropExtensionBuilder> {
+public class DragAndDropExtensionBuilder implements SmartExtensionBuilder<DragAndDropExtension, DragAndDropExtensionBuilder> {
 
     private DragAndDropExtension dragAndDropExtension;
     private SmartRecyclerAdapter smartRecyclerAdapter;
@@ -74,7 +74,7 @@ public class DragAndDropExtensionBuilder implements SmartRecyclerAdapterExtensio
     }
 
     @Override
-    public void build() {
+    public DragAndDropExtension build() {
         if (dragAndDropExtension instanceof SmartAdapterHolder) {
             ((SmartAdapterHolder) dragAndDropExtension).setSmartRecyclerAdapter(smartRecyclerAdapter);
         }
@@ -86,5 +86,6 @@ public class DragAndDropExtensionBuilder implements SmartRecyclerAdapterExtensio
         dragAndDropExtension.setTouchHelper(touchHelper);
         touchHelper.attachToRecyclerView(recyclerView);
         dragAndDropExtension.setupDragAndDrop(recyclerView);
+        return dragAndDropExtension;
     }
 }

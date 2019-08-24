@@ -13,8 +13,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import smartadapter.SmartExtensionBuilder;
 import smartadapter.SmartRecyclerAdapter;
-import smartadapter.SmartRecyclerAdapterExtensionBuilder;
 import smartadapter.listener.OnItemSwipedListener;
 import smartadapter.viewholder.SmartAdapterHolder;
 import smartadapter.viewholder.SmartViewHolder;
@@ -22,7 +22,7 @@ import smartadapter.viewholder.SmartViewHolder;
 /**
  * Builder for {@link SwipeExtension} that is build from {@link smartadapter.internal.factory.SmartRecyclerAdapterExtensionFactory}.
  */
-public class SwipeExtensionBuilder implements SmartRecyclerAdapterExtensionBuilder<SwipeExtensionBuilder> {
+public class SwipeExtensionBuilder implements SmartExtensionBuilder<SwipeExtension, SwipeExtensionBuilder> {
 
     private SwipeExtension swipeExtension;
     private int swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
@@ -74,7 +74,7 @@ public class SwipeExtensionBuilder implements SmartRecyclerAdapterExtensionBuild
     }
 
     @Override
-    public void build() {
+    public SwipeExtension build() {
         if (swipeExtension instanceof SmartAdapterHolder) {
             ((SmartAdapterHolder) swipeExtension).setSmartRecyclerAdapter(smartRecyclerAdapter);
         }
@@ -84,5 +84,6 @@ public class SwipeExtensionBuilder implements SmartRecyclerAdapterExtensionBuild
         swipeExtension.setOnItemSwipedListener(onItemSwipedListener);
         ItemTouchHelper touchHelper = new ItemTouchHelper(swipeExtension);
         touchHelper.attachToRecyclerView(recyclerView);
+        return swipeExtension;
     }
 }

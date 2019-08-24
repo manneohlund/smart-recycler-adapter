@@ -85,13 +85,13 @@ public class SmartAdapterBuilder {
     }
 
     /**
-     * Adds {@link SmartRecyclerAdapterExtensionBuilder} to {@link SmartRecyclerAdapterExtensionFactory} that will build and bind
+     * Adds {@link SmartExtensionBuilder} to {@link SmartRecyclerAdapterExtensionFactory} that will build and bind
      * the {@link SmartRecyclerAdapter} and {@link RecyclerView} to the ExtensionBuilder.
      *
      * @param smartExtensionBuilder extension builder
      * @return SmartAdapterBuilder
      */
-    public final SmartAdapterBuilder addExtensionBuilder(@NonNull SmartRecyclerAdapterExtensionBuilder smartExtensionBuilder) {
+    public final SmartAdapterBuilder addExtensionBuilder(@NonNull SmartExtensionBuilder smartExtensionBuilder) {
         smartRecyclerAdapterExtensionFactory.add(smartExtensionBuilder);
         return this;
     }

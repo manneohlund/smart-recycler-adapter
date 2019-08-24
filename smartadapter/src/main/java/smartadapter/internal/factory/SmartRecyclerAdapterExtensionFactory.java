@@ -11,28 +11,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import smartadapter.SmartExtensionBuilder;
 import smartadapter.SmartRecyclerAdapter;
-import smartadapter.SmartRecyclerAdapterExtensionBuilder;
 import smartadapter.widget.BasicDragAndDropExtension;
 import smartadapter.widget.BasicSwipeExtension;
 
 /**
- * Builds {@link SmartRecyclerAdapterExtensionBuilder} extensions.
+ * Builds {@link SmartExtensionBuilder} extensions.
  *
  * @see BasicSwipeExtension
  * @see BasicDragAndDropExtension
  */
 public class SmartRecyclerAdapterExtensionFactory {
 
-    private List<SmartRecyclerAdapterExtensionBuilder> smartRecyclerAdapterExtensions = new ArrayList<>();
+    private List<SmartExtensionBuilder> smartExtensionBuilders = new ArrayList<>();
 
-    public void add(@NonNull SmartRecyclerAdapterExtensionBuilder smartExtensionBuilder) {
-        smartRecyclerAdapterExtensions.add(smartExtensionBuilder);
+    public void add(@NonNull SmartExtensionBuilder smartExtensionBuilder) {
+        smartExtensionBuilders.add(smartExtensionBuilder);
     }
 
     public void build(@NonNull SmartRecyclerAdapter smartRecyclerAdapter, @NonNull RecyclerView recyclerView) {
-        for (SmartRecyclerAdapterExtensionBuilder smartRecyclerAdapterExtension : smartRecyclerAdapterExtensions) {
-            smartRecyclerAdapterExtension
+        for (SmartExtensionBuilder smartExtension : smartExtensionBuilders) {
+            smartExtension
                     .setSmartRecyclerAdapter(smartRecyclerAdapter)
                     .setRecyclerView(recyclerView)
                     .build();
