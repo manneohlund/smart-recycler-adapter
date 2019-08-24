@@ -39,6 +39,7 @@ class MultiSelectCheckBoxItemsActivity : BaseSampleActivity() {
                                 selectionStateHolder.selectedItemsCount,
                                 smartRecyclerAdapter.itemCount),
                         Toast.LENGTH_LONG).show()
+                supportActionBar?.subtitle = "${checkBoxStateHolder.selectedItemsCount} / ${items.size} selected"
 
                 deleteMenuItem?.isVisible = onCheckBoxItemSelectedListener.selectionStateHolder.selectedItemsCount > 0
             }

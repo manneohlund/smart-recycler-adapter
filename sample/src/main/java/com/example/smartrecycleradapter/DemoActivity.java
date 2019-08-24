@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.smartrecycleradapter.data.MovieDataItems;
 import com.example.smartrecycleradapter.extension.PreCachingLinearLayoutManager;
 import com.example.smartrecycleradapter.feature.CustomViewEventActivity;
+import com.example.smartrecycleradapter.feature.DiffUtilActivity;
 import com.example.smartrecycleradapter.feature.DragAndDropHandleItemActivity;
 import com.example.smartrecycleradapter.feature.DragAndDropItemActivity;
 import com.example.smartrecycleradapter.feature.EndlessScrollActivity;
@@ -30,11 +31,13 @@ import com.example.smartrecycleradapter.feature.MultiSelectCheckBoxItemsActivity
 import com.example.smartrecycleradapter.feature.MultiSelectItemsActivity;
 import com.example.smartrecycleradapter.feature.MultiSelectSwitchItemsActivity;
 import com.example.smartrecycleradapter.feature.MultipleEventsAndExtensionsActivity;
+import com.example.smartrecycleradapter.feature.MultipleExpandableItemActivity;
 import com.example.smartrecycleradapter.feature.MultipleViewTypesResolverActivity;
 import com.example.smartrecycleradapter.feature.NestedSmartRecyclerAdaptersActivity;
 import com.example.smartrecycleradapter.feature.SimpleItemActivity;
 import com.example.smartrecycleradapter.feature.SimpleItemOnClickOnLongClickActivity;
-import com.example.smartrecycleradapter.feature.SingleSelectCheckBoxItemsActivity;
+import com.example.smartrecycleradapter.feature.SingleExpandableItemActivity;
+import com.example.smartrecycleradapter.feature.SingleSelectRadioButtonItemActivity;
 import com.example.smartrecycleradapter.feature.SwipeRemoveItemActivity;
 import com.example.smartrecycleradapter.models.ActionMoviesModel;
 import com.example.smartrecycleradapter.models.AdventureMoviesModel;
@@ -326,73 +329,68 @@ public class DemoActivity extends AppCompatActivity {
                 new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_grid_black_24dp, "Grid + Drag & Drop"),
                 new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_list_numbered_black_24dp, "Multiple Types Resolver"),
                 new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_select_all_black_24dp, "Multiple Items Select"),
-                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_check_box_black_24dp, "Single CheckBox Items Select"),
-                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_check_circle_black_24dp, "Multiple CheckBox Items Select"),
-                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_switch_black_24dp, "Multiple Switch Items Select"),
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_radio_button_checked_black_24dp, "Single RadioButton Select"),
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_check_box_black_24dp, "Multiple CheckBox Select"),
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_switch_black_24dp, "Multiple Switch Select"),
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_expand_more_black_24dp, "Multiple Expandable item"),
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_expand_less_black_24dp, "Single Expandable item"),
                 new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_nested_scroll_layers_black_24dp, "Nested Smart Adapter"),
                 new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_endless_scroll_arrow_downward_black_24dp, "Endless Scroll"),
-                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_endless_scroll_load_more_black_24dp, "Endless Scroll Load More")
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_endless_scroll_load_more_black_24dp, "Endless Scroll Load More"),
+                new SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_diff_shuffle_black_24dp, "Diff Util Extension")
         );
 
         dialogAdapter = SmartRecyclerAdapter.items(items)
                 .map(String.class, HeaderViewHolder.class)
                 .map(SampleFabViewHolder.SimpleFabItem.class, SampleFabViewHolder.class)
                 .addViewEventListener((FabOnClickListener) (view, actionId, position) -> {
-                    showToast("Dialog item click");
                     SampleFabViewHolder.SimpleFabItem sfi = (SampleFabViewHolder.SimpleFabItem) dialogAdapter.getItem(position);
                     switch (sfi.getIcon()) {
-                        case R.drawable.ic_sample_list_black_24dp: {
+                        case R.drawable.ic_sample_list_black_24dp:
                             startActivity(SimpleItemActivity.class);
                             break;
-                        }
-                        case R.drawable.ic_sample_touch_app_black_24dp: {
+                        case R.drawable.ic_sample_touch_app_black_24dp:
                             startActivity(SimpleItemOnClickOnLongClickActivity.class);
                             break;
-                        }
-                        case R.drawable.ic_sample_edit_black_24dp: {
+                        case R.drawable.ic_sample_edit_black_24dp:
                             startActivity(CustomViewEventActivity.class);
                             break;
-                        }
-                        case R.drawable.ic_sample_list_numbered_black_24dp: {
+                        case R.drawable.ic_sample_list_numbered_black_24dp:
                             startActivity(MultipleViewTypesResolverActivity.class);
                             break;
-                        }
-                        case R.drawable.ic_sample_drag_drop_swap_vert_black_24dp: {
+                        case R.drawable.ic_sample_drag_drop_swap_vert_black_24dp:
                             startActivity(DragAndDropItemActivity.class);
                             break;
-                        }
-                        case R.drawable.ic_drag_handle_black_24dp: {
+                        case R.drawable.ic_drag_handle_black_24dp:
                             startActivity(DragAndDropHandleItemActivity.class);
                             break;
-                        }
-                        case R.drawable.ic_sample_swipe_black_24dp: {
+                        case R.drawable.ic_sample_swipe_black_24dp:
                             startActivity(SwipeRemoveItemActivity.class);
                             break;
-                        }
-                        case R.drawable.ic_sample_multiple_events_gesture_black_24dp: {
+                        case R.drawable.ic_sample_multiple_events_gesture_black_24dp:
                             startActivity(MultipleEventsAndExtensionsActivity.class);
                             break;
-                        }
-                        case R.drawable.ic_sample_grid_black_24dp: {
+                        case R.drawable.ic_sample_grid_black_24dp:
                             startActivity(GridActivity.class);
                             break;
-                        }
-                        case R.drawable.ic_sample_select_all_black_24dp: {
+                        case R.drawable.ic_sample_select_all_black_24dp:
                             startActivity(MultiSelectItemsActivity.class);
                             break;
-                        }
-                        case R.drawable.ic_sample_check_box_black_24dp: {
-                            startActivity(SingleSelectCheckBoxItemsActivity.class);
+                        case R.drawable.ic_radio_button_checked_black_24dp:
+                            startActivity(SingleSelectRadioButtonItemActivity.class);
                             break;
-                        }
-                        case R.drawable.ic_sample_check_circle_black_24dp: {
+                        case R.drawable.ic_sample_check_box_black_24dp:
                             startActivity(MultiSelectCheckBoxItemsActivity.class);
                             break;
-                        }
-                        case R.drawable.ic_switch_black_24dp: {
+                        case R.drawable.ic_switch_black_24dp:
                             startActivity(MultiSelectSwitchItemsActivity.class);
                             break;
-                        }
+                        case R.drawable.ic_expand_more_black_24dp:
+                            startActivity(MultipleExpandableItemActivity.class);
+                            break;
+                        case R.drawable.ic_expand_less_black_24dp:
+                            startActivity(SingleExpandableItemActivity.class);
+                            break;
                         case R.drawable.ic_sample_nested_scroll_layers_black_24dp:
                             startActivity(NestedSmartRecyclerAdaptersActivity.class);
                             break;
@@ -401,6 +399,9 @@ public class DemoActivity extends AppCompatActivity {
                             break;
                         case R.drawable.ic_endless_scroll_load_more_black_24dp:
                             startActivity(EndlessScrollLoadMoreButtonActivity.class);
+                            break;
+                        case R.drawable.ic_sample_diff_shuffle_black_24dp:
+                            startActivity(DiffUtilActivity.class);
                             break;
                     }
                     //moreSamplesDialog.dismiss();

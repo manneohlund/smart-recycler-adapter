@@ -17,20 +17,20 @@ import smartadapter.listener.OnItemClickListener
 import smartadapter.listener.OnItemSelectedListener
 import smartadapter.state.SingleSelectionStateHolder
 
-class SingleSelectCheckBoxItemsActivity : BaseSampleActivity() {
+class SingleSelectRadioButtonItemActivity : BaseSampleActivity() {
 
     lateinit var smartRecyclerAdapter: SmartRecyclerAdapter;
-    lateinit var onCheckBoxItemSelectedListener: OnSingleCheckBoxItemSelectedListener
+    lateinit var onSingleRadioButtonItemSelectedListener: OnSingleRadioButtonItemSelectedListener
     var deleteMenuItem: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        supportActionBar?.title = "Single CheckBox Select"
+        supportActionBar?.title = "Single RadioButton Select"
 
         val items = (0..100).toList()
 
-        onCheckBoxItemSelectedListener = object : OnSingleCheckBoxItemSelectedListener {
+        onSingleRadioButtonItemSelectedListener = object : OnSingleRadioButtonItemSelectedListener {
             override fun onViewEvent(view: View, actionId: Int, position: Int) {
                 Toast.makeText(applicationContext,
                         String.format("Item click %d\n" +
@@ -40,14 +40,14 @@ class SingleSelectCheckBoxItemsActivity : BaseSampleActivity() {
                                 smartRecyclerAdapter.itemCount),
                         Toast.LENGTH_LONG).show()
 
-                deleteMenuItem?.isVisible = onCheckBoxItemSelectedListener.selectionStateHolder.selectedItemsCount > 0
+                deleteMenuItem?.isVisible = onSingleRadioButtonItemSelectedListener.selectionStateHolder.selectedItemsCount > 0
             }
         }
 
         smartRecyclerAdapter = SmartRecyclerAdapter
                 .items(items)
-                .map(Integer::class.java, SimpleSelectableCheckBoxViewHolder::class.java)
-                .addViewEventListener(onCheckBoxItemSelectedListener)
+                .map(Integer::class.java, SimpleSelectableRadioButtonViewHolder::class.java)
+                .addViewEventListener(onSingleRadioButtonItemSelectedListener)
                 .addViewEventListener(OnItemClickListener {
                     view, actionId, position ->
                         Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT).show()
@@ -64,7 +64,7 @@ class SingleSelectCheckBoxItemsActivity : BaseSampleActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId) {
             R.id.delete -> {
-                onCheckBoxItemSelectedListener.selectionStateHolder.removeSelections()
+                onSingleRadioButtonItemSelectedListener.selectionStateHolder.removeSelections()
                 item.isVisible = false
             }
         }
@@ -72,13 +72,13 @@ class SingleSelectCheckBoxItemsActivity : BaseSampleActivity() {
     }
 }
 
-var singleCheckBoxStateHolder = SingleSelectionStateHolder()
+var singleRadioButtonStateHolder = SingleSelectionStateHolder()
 
-interface OnSingleCheckBoxItemSelectedListener : OnItemSelectedListener {
-
-    @JvmDefault
-    override fun getSelectionStateHolder() = singleCheckBoxStateHolder
+interface OnSingleRadioButtonItemSelectedListener : OnItemSelectedListener {
 
     @JvmDefault
-    override fun getViewId() = R.id.checkBox
+    override fun getSelectionStateHolder() = singleRadioButtonStateHolder
+
+    @JvmDefault
+    override fun getViewId() = R.id.radioButton
 }

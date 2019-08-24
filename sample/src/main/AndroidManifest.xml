@@ -52,7 +52,7 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name=".feature.SingleSelectCheckBoxItemsActivity"
+            android:name=".feature.SingleSelectRadioButtonItemActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
@@ -76,6 +76,18 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
+            android:name=".feature.DiffUtilActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".feature.MultipleExpandableItemActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".feature.SingleExpandableItemActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
             android:name=".MovieCategoryDetailsActivity"
             android:label="@string/title_activity_movie_category_details"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -83,8 +95,8 @@
             android:name=".DemoActivity"
             android:label="SmartRecyclerAdapters">
             <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.RadioButton
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import com.example.smartrecycleradapter.R
@@ -69,5 +70,23 @@ class SimpleSelectableSwitchViewHolder(parentView: View) : SmartViewHolder<Int>(
     override fun bind(index: Int?) {
         textView.text = "Item $index"
         switch.isChecked = selectionStateHolder?.isSelected(adapterPosition) ?: false
+    }
+}
+
+class SimpleSelectableRadioButtonViewHolder(parentView: View) : SmartViewHolder<Int>(
+        LayoutInflater.from(parentView.context)
+                .inflate(R.layout.simple_radiobutton_item, parentView as ViewGroup, false)
+), StatefulViewHolder<SelectionStateHolder> {
+    private var selectionStateHolder: SelectionStateHolder? = null
+    private var textView: TextView = itemView.findViewById(R.id.textView)
+    private var radioButton: RadioButton = itemView.findViewById(R.id.radioButton)
+
+    override fun setStateHolder(selectionStateHolder: SelectionStateHolder) {
+        this.selectionStateHolder = selectionStateHolder
+    }
+
+    override fun bind(index: Int?) {
+        textView.text = "Item $index"
+        radioButton.isChecked = selectionStateHolder?.isSelected(adapterPosition) ?: false
     }
 }
