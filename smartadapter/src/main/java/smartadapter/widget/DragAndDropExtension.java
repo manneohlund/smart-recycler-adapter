@@ -21,6 +21,10 @@ public abstract class DragAndDropExtension extends ItemTouchHelper.Callback {
 
     /**
      * Sets target drag flags.
+     * @see ItemTouchHelper#LEFT
+     * @see ItemTouchHelper#RIGHT
+     * @see ItemTouchHelper#UP
+     * @see ItemTouchHelper#DOWN
      * @param dragFlags target flags
      */
     abstract public void setDragFlags(int dragFlags);
