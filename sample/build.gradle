@@ -5,7 +5,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion TARGET_SDK_VERSION
     defaultConfig {
-        applicationId "com.example.smartrecycleradapter"
+        applicationId "io.github.manneohlund.smartrecycleradapter.sample"
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
         versionCode VERSION_CODE
