@@ -6,9 +6,29 @@
 Never code any boilerplate RecyclerAdapter again!  
 This library will make it easy and painless to map your data item with a target ViewHolder.
 
-<p align="center">
-  <img width="240" height="499" src="https://user-images.githubusercontent.com/11292383/60390746-cc723f00-9add-11e9-8695-65315836a6f8.gif">
-</p>
+<p align="center"><img width="240" height="499" src="https://user-images.githubusercontent.com/11292383/60390746-cc723f00-9add-11e9-8695-65315836a6f8.gif"></p>
+
+# Features
+
+* Smart <b>OnClick</b> / <b>OnLongClickListener</b>  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/rc-3.0.0/sample/src/main/java/io/github/manneohlund/smartrecycleradapter/feature/SimpleItemOnClickOnLongClickActivity.kt" target="_blank">SimpleItemOnClickOnLongClickActivity</a></sup>
+* State holding with <b>OnItemSelectedListener</b>  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/rc-3.0.0/sample/src/main/java/io/github/manneohlund/smartrecycleradapter/feature/MultipleViewTypesResolverActivity.kt" target="_blank">MultipleViewTypesResolverActivity</a></sup>
+* Custom View Events  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/rc-3.0.0/sample/src/main/java/io/github/manneohlund/smartrecycleradapter/feature/CustomViewEventActivity.kt" target="_blank">CustomViewEventActivity</a></sup>
+* Drag & drop  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/rc-3.0.0/sample/src/main/java/io/github/manneohlund/smartrecycleradapter/feature/DragAndDropItemActivity.kt" target="_blank">DragAndDropItemActivity</a></sup>
+* Drag & drop with handle  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/rc-3.0.0/sample/src/main/java/io/github/manneohlund/smartrecycleradapter/feature/DragAndDropHandleItemActivity.kt" target="_blank">DragAndDropHandleItemActivity</a></sup>
+* Swipe to remove item  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/rc-3.0.0/sample/src/main/java/io/github/manneohlund/smartrecycleradapter/feature/SwipeRemoveItemActivity.kt" target="_blank">SwipeRemoveItemActivity</a></sup>
+* Drag & drop, Swipe, View Events  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/rc-3.0.0/sample/src/main/java/io/github/manneohlund/smartrecycleradapter/feature/MultipleEventsAndExtensionsActivity.kt" target="_blank">MultipleEventsAndExtensionsActivity</a></sup>
+* Grid + Drag & drop  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/rc-3.0.0/sample/src/main/java/io/github/manneohlund/smartrecycleradapter/feature/GridActivity.kt" target="_blank">GridActivity</a></sup>
+* Multiple ViewHolder types resolver  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/rc-3.0.0/sample/src/main/java/io/github/manneohlund/smartrecycleradapter/feature/MultipleViewTypesResolverActivity.kt" target="_blank">MultipleViewTypesResolverActivity</a></sup>
+* Multiple items select  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/rc-3.0.0/sample/src/main/java/io/github/manneohlund/smartrecycleradapter/feature/MultiSelectItemsActivity.kt" target="_blank">MultiSelectItemsActivity</a></sup>
+* Single RadioButton select  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/rc-3.0.0/sample/src/main/java/io/github/manneohlund/smartrecycleradapter/feature/SingleSelectRadioButtonItemActivity.kt" target="_blank">SingleSelectRadioButtonItemActivity</a></sup>
+* Multiple CheckBox select  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/rc-3.0.0/sample/src/main/java/io/github/manneohlund/smartrecycleradapter/feature/MultiSelectCheckBoxItemsActivity.kt" target="_blank">MultiSelectCheckBoxItemsActivity</a></sup>
+* Multiple Switch select  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/rc-3.0.0/sample/src/main/java/io/github/manneohlund/smartrecycleradapter/feature/MultiSelectSwitchItemsActivity.kt" target="_blank">MultiSelectSwitchItemsActivity</a></sup>
+* Multiple Expandable items  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/rc-3.0.0/sample/src/main/java/io/github/manneohlund/smartrecycleradapter/feature/MultipleExpandableItemActivity.kt" target="_blank">MultipleExpandableItemActivity</a></sup>
+* Single Expandable item  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/rc-3.0.0/sample/src/main/java/io/github/manneohlund/smartrecycleradapter/feature/SingleExpandableItemActivity.kt" target="_blank">SingleExpandableItemActivity</a></sup>
+* Nested SmartRecyclerAdapter  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/rc-3.0.0/sample/src/main/java/io/github/manneohlund/smartrecycleradapter/feature/NestedSmartRecyclerAdaptersActivity.kt" target="_blank">NestedSmartRecyclerAdaptersActivity</a></sup>
+* Endless scroll  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/rc-3.0.0/sample/src/main/java/io/github/manneohlund/smartrecycleradapter/feature/EndlessScrollActivity.kt" target="_blank">EndlessScrollActivity</a></sup>
+* Endless scroll with load more button  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/rc-3.0.0/sample/src/main/java/io/github/manneohlund/smartrecycleradapter/feature/EndlessScrollLoadMoreButtonActivity.kt" target="_blank">EndlessScrollLoadMoreButtonActivity</a></sup>
+* Diff Util extension  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/rc-3.0.0/sample/src/main/java/io/github/manneohlund/smartrecycleradapter/feature/DiffUtilActivity.kt" target="_blank">DiffUtilActivity</a></sup>
 
 # Gradle  
 #### Step 1. Add the JitPack repository to your build file  
