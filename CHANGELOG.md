@@ -1,0 +1,1 @@
+See all releases in the [Release section](https://github.com/manneohlund/smart-recycler-adapter/releases)
