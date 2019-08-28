@@ -17,13 +17,13 @@ import io.github.manneohlund.smartrecycleradapter.models.MovieModel
 import io.github.manneohlund.smartrecycleradapter.utils.displayHeight
 import io.github.manneohlund.smartrecycleradapter.utils.displayWidth
 import smartadapter.listener.OnViewEventListener
-import smartadapter.viewholder.SmartViewEventListenerHolder
 import smartadapter.viewholder.SmartViewHolder
+import smartadapter.viewholder.ViewEventListenerHolder
 
 class PosterViewHolder(parentView: View) : SmartViewHolder<MovieModel>(
         LayoutInflater.from(parentView.context)
                 .inflate(R.layout.poster_item,  parentView as ViewGroup, false)),
-        SmartViewEventListenerHolder {
+        ViewEventListenerHolder {
 
     private val imageView: ImageView = itemView.findViewById(R.id.imageView)
 

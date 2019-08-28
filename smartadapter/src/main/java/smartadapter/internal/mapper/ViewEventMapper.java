@@ -17,8 +17,8 @@ import java.util.Map;
 import smartadapter.R;
 import smartadapter.SmartRecyclerAdapter;
 import smartadapter.listener.OnViewEventListener;
-import smartadapter.viewholder.SmartViewEventListenerHolder;
 import smartadapter.viewholder.SmartViewHolder;
+import smartadapter.viewholder.ViewEventListenerHolder;
 
 import static smartadapter.internal.utils.ViewEventValidator.isViewEventIdValid;
 
@@ -27,8 +27,8 @@ import static smartadapter.internal.utils.ViewEventValidator.isViewEventIdValid;
  */
 public class ViewEventMapper {
 
-    private HashMap<Class<? extends SmartViewHolder>, SparseArray<SparseArray<OnViewEventListener>>> viewEventListenerMap = new HashMap<>();
-    private ViewEventBinderProvider viewEventListenerMapperProvider = new ViewEventBinderProvider();
+    private final HashMap<Class<? extends SmartViewHolder>, SparseArray<SparseArray<OnViewEventListener>>> viewEventListenerMap = new HashMap<>();
+    private final ViewEventBinderProvider viewEventListenerMapperProvider = new ViewEventBinderProvider();
 
     /**
      * Adds {@link OnViewEventListener} to the {@link SmartRecyclerAdapter}.
@@ -39,7 +39,7 @@ public class ViewEventMapper {
      *
      * @param viewEventListener target OnViewEventListener
      */
-    public final void addViewEventListener(OnViewEventListener viewEventListener) {
+    public final void addViewEventListener(@NonNull OnViewEventListener viewEventListener) {
         if (!isViewEventIdValid(viewEventListener.getViewEventId()))
             throw new RuntimeException(String.format("Invalid view event id (%d) for ViewHolder (%s)", viewEventListener.getViewEventId(), viewEventListener.getViewHolderType()));
 
@@ -82,13 +82,13 @@ public class ViewEventMapper {
 
                     if (viewId == R.id.undefined &&
                             viewEventId == R.id.undefined) {
-                        if (SmartViewEventListenerHolder.class.isAssignableFrom(smartViewHolder.getClass())) {
-                            ((SmartViewEventListenerHolder)smartViewHolder).setOnViewEventListener(viewActionListener);
+                        if (ViewEventListenerHolder.class.isAssignableFrom(smartViewHolder.getClass())) {
+                            ((ViewEventListenerHolder)smartViewHolder).setOnViewEventListener(viewActionListener);
                         } else {
                             Log.e(ViewEventMapper.class.getName(), String.format(
                                     "Don't forget that '%s' needs to implement '%s' in order to receive the events",
                                     smartViewHolder.getClass().getName(),
-                                    SmartViewEventListenerHolder.class.getName()));
+                                    ViewEventListenerHolder.class.getName()));
                         }
                     }
 

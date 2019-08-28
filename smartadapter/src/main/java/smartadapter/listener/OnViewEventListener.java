@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 
 import smartadapter.R;
 import smartadapter.viewholder.SmartViewHolder;
+import smartadapter.viewholder.ViewEventListenerHolder;
 
 /**
  * Callback added in {@link smartadapter.SmartRecyclerAdapter} for view events listening in {@link SmartViewHolder} extensions.
@@ -42,7 +43,7 @@ public interface OnViewEventListener {
     }
 
     /**
-     * Default implementation returns {@link R.id#undefined} and any {@link SmartViewHolder} extensions must implement {@link smartadapter.viewholder.SmartViewEventListenerHolder}.
+     * Default implementation returns {@link R.id#undefined} and any {@link SmartViewHolder} extensions must implement {@link ViewEventListenerHolder}.
      *
      * <p>Can be overridden with predefined view action ids.</p>
      * {@link R.id#event_on_click}

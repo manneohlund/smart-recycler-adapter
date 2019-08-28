@@ -13,7 +13,7 @@ import smartadapter.listener.OnViewEventListener;
  * Lets a view holder handle events with custom event ids.
  * Implement this interface in your {@link SmartViewHolder} extension.
  */
-public interface SmartViewEventListenerHolder {
+public interface ViewEventListenerHolder {
 
     /**
      * Will be called from {@link smartadapter.SmartRecyclerAdapter} and

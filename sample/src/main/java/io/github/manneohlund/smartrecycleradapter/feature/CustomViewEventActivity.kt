@@ -15,8 +15,8 @@ import io.github.manneohlund.smartrecycleradapter.R
 import kotlinx.android.synthetic.main.activity_simple_item.*
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.listener.OnViewEventListener
-import smartadapter.viewholder.SmartViewEventListenerHolder
 import smartadapter.viewholder.SmartViewHolder
+import smartadapter.viewholder.ViewEventListenerHolder
 
 const val CUSTOM_EVENT = R.id.custom_event
 
@@ -43,7 +43,7 @@ class CustomViewEventActivity : BaseSampleActivity() {
     open class SimpleItemViewHolder(parentView: View) : SmartViewHolder<Int>(
             LayoutInflater.from(parentView.context)
                     .inflate(R.layout.simple_item, parentView as ViewGroup, false)),
-            SmartViewEventListenerHolder {
+            ViewEventListenerHolder {
 
         private lateinit var viewEventListener: OnViewEventListener
 
