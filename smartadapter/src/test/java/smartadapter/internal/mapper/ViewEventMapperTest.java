@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import smartadapter.R;
+import io.github.manneohlund.smartrecycleradapter.R;
 import smartadapter.listener.OnItemClickListener;
 import smartadapter.listener.OnItemLongClickListener;
 import smartadapter.listener.OnItemSelectedListener;

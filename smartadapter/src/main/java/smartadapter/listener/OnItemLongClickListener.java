@@ -5,7 +5,7 @@ package smartadapter.listener;
  * Copyright (c) All rights reserved.
  */
 
-import smartadapter.R;
+import io.github.manneohlund.smartrecycleradapter.R;
 
 /**
  * Default implementation of adapter item row long click listener.

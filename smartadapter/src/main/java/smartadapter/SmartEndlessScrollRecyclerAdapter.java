@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.manneohlund.smartrecycleradapter.R;
 import smartadapter.listener.OnLoadMoreListener;
 import smartadapter.viewholder.LoadMoreViewHolder;
 import smartadapter.viewholder.SmartViewHolder;

@@ -9,7 +9,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import smartadapter.R;
+import io.github.manneohlund.smartrecycleradapter.R;
 import smartadapter.viewholder.SmartViewHolder;
 import smartadapter.viewholder.ViewEventListenerHolder;
 

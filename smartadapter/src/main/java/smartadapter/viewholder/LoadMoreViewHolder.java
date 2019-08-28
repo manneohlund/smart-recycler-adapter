@@ -14,7 +14,7 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 
-import smartadapter.R;
+import io.github.manneohlund.smartrecycleradapter.R;
 
 /**
  * Default implementation of load more view holder.

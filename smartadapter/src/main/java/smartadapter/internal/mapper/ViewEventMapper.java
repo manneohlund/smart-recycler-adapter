@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import java.util.HashMap;
 import java.util.Map;
 
-import smartadapter.R;
+import io.github.manneohlund.smartrecycleradapter.R;
 import smartadapter.SmartRecyclerAdapter;
 import smartadapter.listener.OnViewEventListener;
 import smartadapter.viewholder.SmartViewHolder;

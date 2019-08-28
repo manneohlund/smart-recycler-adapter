@@ -8,7 +8,7 @@ package smartadapter.internal.utils;
 import java.util.Arrays;
 import java.util.List;
 
-import smartadapter.R;
+import io.github.manneohlund.smartrecycleradapter.R;
 
 /**
  * Checks if auto view events are of the predefined types provided by the SmartRecyclerAdapter library.
