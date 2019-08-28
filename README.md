@@ -334,13 +334,13 @@ public class MovieViewHolder
 
 # Migrations
 
-### Release overerview
+#### Release overview
 
 * Kotlin + AndroidX [Coming soon]()
 * Java + AndroidX [v3.0.0](https://github.com/manneohlund/smart-recycler-adapter/tree/3.0.0)
 * Java + AppCompat [v2.2.0](https://github.com/manneohlund/smart-recycler-adapter/tree/2.2.0)
 
-#### ViewEvent Migration
+### ViewEvent Migration
 
 ##### Old way before v3.0.0
 
