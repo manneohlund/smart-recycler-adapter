@@ -62,62 +62,10 @@ SmartRecyclerAdapter
   .items(items)
   .map(MoviePosterModel.class, PosterViewHolder.class)
   .map(MovieBannerModel.class, BannerViewHolder.class)
+  .map(MovieModel.class, MovieViewHolder.class)
   .map(TopNewsModel.class, TopNewsViewHolder.class)
   .into(recyclerView);
  ```
-
-# New nested SmartRecyclerAdapter from v2.0.0
-
-New in `SmartRecyclerAdapter` v2.0.0 is support for nested recycler adapter.
-Now you can easily build complex nested adapters without hustle and have full control of the adapter in your view controlling `Fragment` or `Activity`. 
-Use the new `create()` method instead of the `into(recyclerView)` to create just the `SmartRecyclerAdapter` then set the adapter to the recycler view in your `ViewHolder`.
-Just implement the `SmartAdapterHolder` interface in your `ViewHolder` and `SmartRecyclerAdapter` will handle the mapping.
-
-### 1. Create your nested SmartRecyclerAdapter
-
-```java
-SmartRecyclerAdapter myWatchListSmartMovieAdapter = SmartRecyclerAdapter
-  .items(myWatchListItems)
-  .map(MovieModel.class, ThumbViewHolder.class)
-  .addViewEventListener((OnItemClickListener) (view, eventId, position) -> playMovie())
-  .create();
-````
-
-### 2. Map myWatchListSmartMovieAdapter with MyWatchListViewHolder
-
-```java
-SmartRecyclerAdapter
-  .items(items)
-  .map(MoviePosterModel.class, PosterViewHolder.class)
-  .map(MyWatchListModel.class, MyWatchListViewHolder.class)
-  .map(MyWatchListViewHolder.class, myWatchListSmartMovieAdapter)
-  .into(recyclerView);
-```
-
-### 3. Map myWatchListSmartMovieAdapter to MyWatchListViewHolder
-
-```java
-class MyWatchListViewHolder
-    extends SmartViewHolder<MyWatchListModel>
-    implements SmartAdapterHolder {
-    
-  // Constructor here
-    
-  @Override
-  public void setSmartRecyclerAdapter(SmartRecyclerAdapter smartRecyclerAdapter) {
-    recyclerView.setLayoutManager(new LinearLayoutManager(context, HORIZONTAL, false));
-    recyclerView.setAdapter(smartRecyclerAdapter);
-  }
-
-  public void bind(MyWatchListModel myWatchListModel) {
-    // bind model data to views
-  }
-    
-  public void unbind() {
-    // optional unbinding of view data model
-  }
-}
-```
 
 ### SmartViewHolder
 
@@ -138,7 +86,7 @@ public class PosterViewHolder extends SmartViewHolder<MoviePosterModel> {
   @Override 
   public void bind(MoviePosterModel model) {
     Glide.with(imageView)
-      .load(model.icon)
+      .load(model.posterUrl)
       .into(imageView);
   }
   
@@ -149,7 +97,7 @@ public class PosterViewHolder extends SmartViewHolder<MoviePosterModel> {
 } 
 ```
 
-### View Events with OnViewEventListener
+### View Events
   
 You can easily assign events to views and add an `OnViewEventListener` to the SmartRecyclerAdapter for easy event handling.
 
@@ -239,44 +187,75 @@ SmartRecyclerAdapter
   .into(recyclerView);
 ```
 
-#### ViewEvent Migration
-
-###### Old way before v3.0.0
-
-Variable parameter overloading with many different `addViewEventListener` calls.
-
+### Adapter creation with ViewTypeResolver
+  
+If you want to bind one data type with different view holders depending on some attribute you can set a ViewTypeResolver.  
+Note .map() call not needed in this case but you can combine if you want to.
+  
 ```java
-.addViewEventListener(
-    MovieViewHolder.class,
-    R.id.event_on_click,
-    (view, eventId, position) -> playMovie())
+SmartRecyclerAdapter
+  .items(items)
+  .setViewTypeResolver((item, position) -> {
+    if (item instanceof MovieTrailerModel) { 
+      return MovieTrailerViewHolder.class;
+    } else if (item instanceof MovieModel && ((MovieModel)item).isRatedR()) { 
+      return RMovieViewHolder.class; 
+    } return MovieViewHolder.class; // Add default view if needed, else SmartRecyclerAdapter will look at the base `.map` mapping
+  })
+  .into(recyclerView);
 ```
 
+# New nested SmartRecyclerAdapter from v2.0.0
+
+New in `SmartRecyclerAdapter` v2.0.0 is support for nested recycler adapter.
+Now you can easily build complex nested adapters without hustle and have full control of the adapter in your view controlling `Fragment` or `Activity`. 
+Use the new `create()` method instead of the `into(recyclerView)` to create just the `SmartRecyclerAdapter` then set the adapter to the recycler view in your `ViewHolder`.
+Just implement the `SmartAdapterHolder` interface in your `ViewHolder` and `SmartRecyclerAdapter` will handle the mapping.
+
+### 1. Create your nested SmartRecyclerAdapter
+
 ```java
-class MovieViewHolder
-    extends SmartAutoEventViewHolder<MyWatchListModel>
-    implements SmartAdapterHolder {}
+SmartRecyclerAdapter myWatchListSmartMovieAdapter = SmartRecyclerAdapter
+  .items(myWatchListItems)
+  .map(MovieModel.class, ThumbViewHolder.class)
+  .addViewEventListener((OnItemClickListener) (view, eventId, position) -> playMovie())
+  .create();
+````
+
+### 2. Map myWatchListSmartMovieAdapter with MyWatchListViewHolder
+
+```java
+SmartRecyclerAdapter
+  .items(items)
+  .map(MoviePosterModel.class, PosterViewHolder.class)
+  .map(MyWatchListModel.class, MyWatchListViewHolder.class)
+  .map(MyWatchListViewHolder.class, myWatchListSmartMovieAdapter)
+  .into(recyclerView);
 ```
 
-###### New in v3.0.0
-
-Create an `OnItemClickListener` for MovieViewHolder.
-`SmartAutoEvent` implementations has been removed so no need for ex `MovieViewHolder` to extend `SmartAutoEventViewHolder`.
+### 3. Map myWatchListSmartMovieAdapter to MyWatchListViewHolder
 
 ```java
-interface OnMovieItemClickListener extends OnItemClickListener {
-  @NonNull
+class MyWatchListViewHolder
+    extends SmartViewHolder<MyWatchListModel>
+    implements SmartAdapterHolder {
+    
+  // Constructor here
+    
   @Override
-  default Class<? extends SmartViewHolder> getViewHolderType() {
-    return MovieViewHolder.class;
+  public void setSmartRecyclerAdapter(SmartRecyclerAdapter smartRecyclerAdapter) {
+    recyclerView.setLayoutManager(new LinearLayoutManager(context, HORIZONTAL, false));
+    recyclerView.setAdapter(smartRecyclerAdapter);
+  }
+
+  public void bind(MyWatchListModel myWatchListModel) {
+    // bind model data to views
+  }
+    
+  public void unbind() {
+    // optional unbinding of view data model
   }
 }
-```
-
-Add listener to the SmartAdapterBuilder.
-
-```java
-.addViewEventListener((OnMovieItemClickListener) (view, eventId, position) -> playMovie())
 ```
 
 ### SmartEndlessScrollRecyclerAdapter
@@ -310,23 +289,7 @@ Enable/Disable endless scrolling and thus removing the loading view.
 You can also set your custom loading/loadmore view.
 `endlessScrollAdapter.setCustomLoadMoreLayoutResource(R.layout.your_custom_loadmore_view);`
 
-### Adapter creation with ViewTypeResolver
-  
-If you want to bind one data type with different view holders depending on some attribute you can set a ViewTypeResolver.  
-Note .map() call not needed in this case but you can combine if you want to.
-  
-```java
-SmartRecyclerAdapter
-  .items(items)
-  .setViewTypeResolver((item, position) -> {
-    if (item instanceof MovieTrailerModel) { 
-      return MovieTrailerViewHolder.class;
-    } else if (item instanceof MovieModel && ((MovieModel)item).isRatedR()) { 
-      return RMovieViewHolder.class; 
-    } return MovieViewHolder.class; // Add default view if needed, else SmartRecyclerAdapter will look at the base `.map` mapping
-  })
-  .into(recyclerView);
-```
+# More
 
 ### RecyclableViewHolder
 
@@ -367,6 +330,54 @@ public class MovieViewHolder
     // Cache
   }
 }
+```
+
+# Migrations
+
+### Release overerview
+
+* Kotlin + AndroidX [Coming soon]()
+* Java + AndroidX [v3.0.0](https://github.com/manneohlund/smart-recycler-adapter/tree/3.0.0)
+* Java + AppCompat [v2.2.0](https://github.com/manneohlund/smart-recycler-adapter/tree/2.2.0)
+
+#### ViewEvent Migration
+
+##### Old way before v3.0.0
+
+Variable parameter overloading with many different `addViewEventListener` calls.
+
+```java
+.addViewEventListener(
+    MovieViewHolder.class,
+    R.id.event_on_click,
+    (view, eventId, position) -> playMovie())
+```
+
+```java
+class MovieViewHolder
+    extends SmartAutoEventViewHolder<MyWatchListModel>
+    implements SmartAdapterHolder {}
+```
+
+##### New in v3.0.0
+
+Create an `OnItemClickListener` for MovieViewHolder.
+`SmartAutoEvent` implementations has been removed so no need for ex `MovieViewHolder` to extend `SmartAutoEventViewHolder`.
+
+```java
+interface OnMovieItemClickListener extends OnItemClickListener {
+  @NonNull
+  @Override
+  default Class<? extends SmartViewHolder> getViewHolderType() {
+    return MovieViewHolder.class;
+  }
+}
+```
+
+Add listener to the SmartAdapterBuilder.
+
+```java
+.addViewEventListener((OnMovieItemClickListener) (view, eventId, position) -> playMovie())
 ```
 
 ### More SmartRecyclerAdapter features
