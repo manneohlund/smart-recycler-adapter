@@ -4,10 +4,12 @@ import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import smartadapter.internal.mapper.ViewHolderMapper;
 import smartadapter.viewholder.SmartViewHolder;
@@ -16,6 +18,7 @@ import smartadapter.widget.ViewTypeResolver;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.validateMockitoUsage;
 
 /*
  * Created by Manne Öhlund on 2019-07-19.
@@ -23,6 +26,7 @@ import static org.mockito.Mockito.mock;
  */
 
 @RunWith(RobolectricTestRunner.class)
+@Config(manifest= Config.NONE)
 public class ViewHolderMapperTest {
 
     private ViewHolderMapper mapper;
@@ -32,6 +36,12 @@ public class ViewHolderMapperTest {
         mapper = new ViewHolderMapper(null);
         mapper.addMapping(String.class, TestViewHolder.class);
         mapper.addMapping(Integer.class, TestViewHolder2.class);
+    }
+
+    @After
+    public void validate() {
+        mapper = null;
+        validateMockitoUsage();
     }
 
     @Test
