@@ -5,21 +5,23 @@ package smartadapter.listener;
  * Copyright © 2017. All rights reserved.
  */
 
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import smartadapter.viewholder.SmartViewHolder;
 
 /**
  * Listener for when a view created by this adapter has been detached from its window.
  *
- * <p>Invoked from {@link smartadapter.SmartRecyclerAdapterImpl#onViewDetachedFromWindow(SmartViewHolder)} and should be implemented in a {@link SmartViewHolder} extension.</p>
+ * <p>Invoked from {@link smartadapter.SmartRecyclerAdapter#onViewDetachedFromWindow(SmartViewHolder)} and should be implemented in a {@link SmartViewHolder} extension.</p>
  *
- * @see android.support.v7.widget.RecyclerView.Adapter#onViewDetachedFromWindow(RecyclerView.ViewHolder)
+ * @see RecyclerView.Adapter#onViewDetachedFromWindow(RecyclerView.ViewHolder)
  */
 public interface OnViewDetachedFromWindowListener {
 
     /**
      * Called when a view created by the adapter has been detached from its window.
+     * @param viewHolder target ViewHolder
      */
-    void onViewDetachedFromWindow();
+    void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder viewHolder);
 }

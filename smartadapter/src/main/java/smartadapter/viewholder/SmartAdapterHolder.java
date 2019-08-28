@@ -5,7 +5,7 @@ package smartadapter.viewholder;
  * Copyright (c) All rights reserved.
  */
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import smartadapter.SmartRecyclerAdapter;
 

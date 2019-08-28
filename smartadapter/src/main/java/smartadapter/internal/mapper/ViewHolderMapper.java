@@ -13,10 +13,8 @@ import java.util.HashMap;
 
 import smartadapter.SmartRecyclerAdapter;
 import smartadapter.internal.utils.ReflectionUtils;
-import smartadapter.listener.ViewEventListener;
 import smartadapter.viewholder.SmartAdapterHolder;
 import smartadapter.viewholder.SmartViewHolder;
-import smartadapter.viewholder.ViewEventHolder;
 import smartadapter.widget.ViewTypeResolver;
 
 /**
@@ -26,7 +24,10 @@ public class ViewHolderMapper {
 
     private final Object caller;
 
-    private int identifier = 0;
+    private Class<? extends SmartViewHolder> smartViewHolderClass;
+    private Class<? extends SmartViewHolder> viewType;
+    private int smartViewHolderKey;
+    private Constructor constructor;
     private final SparseArray<Class<? extends SmartViewHolder>> viewTypeMapper = new SparseArray<>();
     private final ViewHolderConstructorMapper viewHolderConstructorMapper = new ViewHolderConstructorMapper();
     private HashMap<String, Class<? extends SmartViewHolder>> dataTypeViewHolderMapper = new HashMap<>();
@@ -37,10 +38,10 @@ public class ViewHolderMapper {
     }
 
     /**
-     * Will first check if viewTypeResolver is assigned and contains the viewHolder.
-     * If viewHolder was found, proceed with view id mapping.
+     * Will first check if viewTypeResolver is assigned and contains the smartViewHolderClass.
+     * If smartViewHolderClass was found, proceed with view id mapping.
      * - Add the id if not existing
-     * - Return mapping key
+     * - Return mapping smartViewHolderKey
      *
      * @param viewTypeResolver custom view holder type resolver
      * @param item target item
@@ -49,22 +50,16 @@ public class ViewHolderMapper {
      * @return target view holder type identifier
      */
     public int getItemViewType(ViewTypeResolver viewTypeResolver, Object item, int position) {
-        Class<? extends SmartViewHolder> viewHolder = viewTypeResolver == null ? null : viewTypeResolver.getViewType(item, position);
-        if (viewHolder == null) {
-            viewHolder = dataTypeViewHolderMapper.get(item.getClass().getName());
+        smartViewHolderClass = viewTypeResolver == null ? null : viewTypeResolver.getViewType(item, position);
+        if (smartViewHolderClass == null) {
+            smartViewHolderClass = dataTypeViewHolderMapper.get(item.getClass().getName());
+        } else {
+            viewHolderConstructorMapper.add(smartViewHolderClass);
         }
-
-        if (viewHolder != null) {
-            if (viewTypeMapper.indexOfValue(viewHolder) < 0) {
-                viewTypeMapper.put(identifier++, viewHolder);
-            }
-            Class<? extends SmartViewHolder> viewType;
-            for (int i = 0; i < viewTypeMapper.size(); i++) {
-                viewType = viewTypeMapper.get(i);
-                if (viewType.getName().equals(viewHolder.getName())) {
-                    return viewTypeMapper.keyAt(i);
-                }
-            }
+        if (smartViewHolderClass != null) {
+            smartViewHolderKey = smartViewHolderClass.getName().hashCode();
+            viewTypeMapper.put(smartViewHolderKey, smartViewHolderClass);
+            return smartViewHolderKey;
         }
 
         throw new RuntimeException(String.format("Fatal error! Mapping of ViewHolder to item '%s' does not exist", item.getClass().getName()));
@@ -73,7 +68,6 @@ public class ViewHolderMapper {
     /**
      * Instantiates the target view holder and set view event listeners if specified.
      *
-     * @param viewEventListeners Contains general purpose or view id specific event listeners.
      * @param parent Parent ViewGroup
      * @param viewType View holder type
      * @param <VH> Subtype of SmartViewHolder
@@ -81,12 +75,11 @@ public class ViewHolderMapper {
      */
     @SuppressWarnings("unchecked")
     public <VH extends SmartViewHolder> VH createViewHolder(
-            HashMap<Class<? extends SmartViewHolder>, HashMap<Integer, HashMap<Integer, ViewEventListener>>> viewEventListeners,
             ViewGroup parent,
             int viewType) {
         VH viewHolder;
-        Class<? extends SmartViewHolder> smartViewHolderClass = viewTypeMapper.get(viewType);
-        Constructor constructor = viewHolderConstructorMapper.getConstructor(smartViewHolderClass);
+        smartViewHolderClass = viewTypeMapper.get(viewType);
+        constructor = viewHolderConstructorMapper.getConstructor(smartViewHolderClass);
 
         try {
             viewHolder = (VH) ReflectionUtils.invokeConstructor(constructor,
@@ -96,16 +89,6 @@ public class ViewHolderMapper {
             );
         } catch (Exception e) {
             throw new RuntimeException(String.format("Could not invoke constructor for '%s', '%s'", smartViewHolderClass.toString(), e.getMessage()), e);
-        }
-
-        /*
-         * Set view event listeners.
-         * First check if viewEventListeners has general SmartViewHolder event listener.
-         * Then if viewEventListeners has viewHolder.getClass() event listener, will override smartListener.
-         */
-        if (viewHolder instanceof ViewEventHolder) {
-            ((ViewEventHolder)viewHolder).setViewEventListeners(viewEventListeners.get(SmartViewHolder.class));
-            ((ViewEventHolder)viewHolder).setViewEventListeners(viewEventListeners.get(viewHolder.getClass()));
         }
 
         SmartRecyclerAdapter smartRecyclerAdapter = smartRecyclerAdapterMapper.get(viewHolder.getClass());

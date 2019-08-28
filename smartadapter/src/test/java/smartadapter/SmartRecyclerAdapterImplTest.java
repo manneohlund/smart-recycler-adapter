@@ -1,6 +1,10 @@
 package smartadapter;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +15,7 @@ import smartadapter.viewholders.ViewAttachedToWindowTestViewHolder;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -20,6 +25,7 @@ import static org.mockito.Mockito.verify;
  * Copyright (c) All rights reserved.
  */
 
+@RunWith(RobolectricTestRunner.class)
 public class SmartRecyclerAdapterImplTest {
 
     @Test
@@ -203,7 +209,7 @@ public class SmartRecyclerAdapterImplTest {
         adapter.onViewDetachedFromWindow(viewHolder);
 
         // Then
-        verify(viewHolder, times(1)).onViewAttachedToWindow();
-        verify(viewHolder, times(1)).onViewDetachedFromWindow();
+        verify(viewHolder, times(1)).onViewAttachedToWindow(any(RecyclerView.ViewHolder.class));
+        verify(viewHolder, times(1)).onViewDetachedFromWindow(any(RecyclerView.ViewHolder.class));
     }
 }

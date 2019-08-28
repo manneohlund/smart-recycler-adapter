@@ -25,4 +25,6 @@
 #-renamesourcefileattribute SourceFile
 
 -keep class android.view.ViewGroup { *; }
+-keep class android.view.View { *; }
 -keep class **ViewHolder { *; }
+-keep class **Listener { *; }

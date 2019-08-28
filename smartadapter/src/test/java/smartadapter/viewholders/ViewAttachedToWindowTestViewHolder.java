@@ -7,6 +7,9 @@ package smartadapter.viewholders;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import smartadapter.listener.OnViewAttachedToWindowListener;
 import smartadapter.listener.OnViewDetachedFromWindowListener;
 import smartadapter.viewholder.SmartViewHolder;
@@ -23,12 +26,12 @@ public class ViewAttachedToWindowTestViewHolder extends SmartViewHolder implemen
     }
 
     @Override
-    public void onViewAttachedToWindow() {
+    public void onViewAttachedToWindow(@NonNull RecyclerView.ViewHolder viewHolder) {
 
     }
 
     @Override
-    public void onViewDetachedFromWindow() {
+    public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder viewHolder) {
 
     }
 }

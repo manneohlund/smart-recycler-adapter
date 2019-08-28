@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Custom actions -->
-    <id name="action_on_check_change" />
+    <!-- Custom view events -->
+    <id name="custom_event" />
+    <id name="event_play" />
+    <id name="event_on_check_change" />
 </resources>

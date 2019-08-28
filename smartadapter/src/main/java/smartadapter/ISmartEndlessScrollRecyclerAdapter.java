@@ -5,8 +5,8 @@ package smartadapter;
  * Copyright (c) All rights reserved.
  */
 
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
 
 import smartadapter.listener.OnLoadMoreListener;
 
@@ -33,6 +33,15 @@ public interface ISmartEndlessScrollRecyclerAdapter {
      * @param enabled if true enables endless scrolling.
      */
     void setEndlessScrollEnabled(boolean enabled);
+
+    /**
+     * Enables or disables the auto load more view.
+     *
+     * <li>Enabled state shows and indeterminate spinner.</li>
+     * <li>Disabled state shows an load more button for passive activation.</li>
+     * @param enabled auto load more state
+     */
+    void setAutoLoadMore(boolean enabled);
 
     /**
      * Checks if the {@link SmartEndlessScrollRecyclerAdapter} is in loading state.
