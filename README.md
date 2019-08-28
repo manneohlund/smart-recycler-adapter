@@ -37,6 +37,12 @@ This library will make it easy and painless to map your data item with a target 
 ###### DiffUtil
 * Diff Util extension  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/rc-3.0.0/sample/src/main/java/io/github/manneohlund/smartrecycleradapter/feature/DiffUtilActivity.kt" target="_blank">DiffUtilActivity</a></sup>
 
+#### Release overview
+
+* Kotlin + AndroidX [Coming soon]()
+* Java + AndroidX [v3.0.0](https://github.com/manneohlund/smart-recycler-adapter/tree/3.0.0)
+* Java + AppCompat [v2.2.0](https://github.com/manneohlund/smart-recycler-adapter/tree/2.2.0)
+
 # Gradle  
 #### Step 1. Add the JitPack repository to your build file  
 ```groovy
@@ -291,6 +297,8 @@ You can also set your custom loading/loadmore view.
 
 # More
 
+For more samples test out the sample app and see the [source code](https://github.com/manneohlund/smart-recycler-adapter/tree/master/sample/src/main/java/com/example/smartrecycleradapter).
+
 ### RecyclableViewHolder
 
 Sometimes a ViewHolder created by the Adapter cannot be recycled due to its transient state.
@@ -334,15 +342,11 @@ public class MovieViewHolder
 
 # Migrations
 
-#### Release overview
-
-* Kotlin + AndroidX [Coming soon]()
-* Java + AndroidX [v3.0.0](https://github.com/manneohlund/smart-recycler-adapter/tree/3.0.0)
-* Java + AppCompat [v2.2.0](https://github.com/manneohlund/smart-recycler-adapter/tree/2.2.0)
+More guides coming to the [Wiki Page](https://github.com/manneohlund/smart-recycler-adapter/wiki)
 
 ### ViewEvent Migration
 
-##### Old way before v3.0.0
+#### Old way before v3.0.0
 
 Variable parameter overloading with many different `addViewEventListener` calls.
 
@@ -359,7 +363,7 @@ class MovieViewHolder
     implements SmartAdapterHolder {}
 ```
 
-##### New in v3.0.0
+#### New in v3.0.0
 
 Create an `OnItemClickListener` for MovieViewHolder.
 `SmartAutoEvent` implementations has been removed so no need for ex `MovieViewHolder` to extend `SmartAutoEventViewHolder`.
