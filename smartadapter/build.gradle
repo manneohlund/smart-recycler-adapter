@@ -13,12 +13,24 @@ android {
         versionCode VERSION_CODE
         versionName VERSION_NAME
 
+        archivesBaseName = 'smart-recycler-adapter-' + VERSION_NAME
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    sourceSets {
+        release {
+            java.srcDirs = ['src/java']
+        }
+    }
+
+    lintOptions {
+        abortOnError false
     }
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
