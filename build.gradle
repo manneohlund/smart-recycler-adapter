@@ -40,7 +40,7 @@ allprojects {
             name 'Google'
         }
         maven {
-            url  "https://dl.bintray.com/manneohlund/maven"
+            url "https://dl.bintray.com/manneohlund/maven"
         }
     }
 }
