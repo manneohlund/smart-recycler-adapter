@@ -1,6 +1,6 @@
 # smart-recycler-adapter
 
-[![Release](https://jitpack.io/v/manneohlund/smart-recycler-adapter.svg)](https://jitpack.io/#manneohlund/smart-recycler-adapter)
+[![Download](https://api.bintray.com/packages/manneohlund/maven/smart-recycler-adapter/images/download.svg)](https://bintray.com/manneohlund/maven/smart-recycler-adapter/_latestVersion)
 [![Android Arsenal]( https://img.shields.io/badge/Android%20Arsenal-SmartRecyclerAdapter-green.svg?style=flat )]( https://android-arsenal.com/details/1/7766)
 
 Never code any boilerplate RecyclerAdapter again!  
@@ -43,20 +43,11 @@ This library will make it easy and painless to map your data item with a target 
 * Java + AndroidX [v3.0.0](https://github.com/manneohlund/smart-recycler-adapter/tree/3.0.0)
 * Java + AppCompat [v2.2.0](https://github.com/manneohlund/smart-recycler-adapter/tree/2.2.0)
 
-# Gradle  
-#### Step 1. Add the JitPack repository to your build file  
-```groovy
-allprojects {
-  repositories {
-    maven { url 'https://jitpack.io' }
-  }
-}  
-```
-
-#### Step 2. Add the dependency  
+# Gradle
+Add `jcenter()` or `maven { url  "https://dl.bintray.com/manneohlund/maven" }` to your `build.gradle` under `repositories`
 ```groovy
 dependencies {  
-  implementation 'com.github.manneohlund:smart-recycler-adapter:3.0.0'
+  implementation 'io.github.manneohlund:smart-recycler-adapter:3.0.0'
 }
 ```
 
