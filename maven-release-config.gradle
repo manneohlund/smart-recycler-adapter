@@ -1,0 +1,23 @@
+ext {
+    BINTRAY_REPO = 'maven'
+    BINTRAY_NAME = 'smart-recycler-adapter'
+
+    LIBRARY_NAME = 'SmartRecyclerAdapter'
+    PUBLISHED_GROUP_ID = 'io.github.manneohlund'
+    ARTIFACT_ID = 'smart-recycler-adapter'
+
+    LIBRARY_VERSION = VERSION_NAME
+    LIBRARY_DESCRIPTION = 'Never code any boilerplate RecyclerAdapter again! This library will make it easy and painless to map your data item with a target ViewHolder.'
+
+    SITE_URL = 'https://manneohlund.github.io/smart-recycler-adapter'
+    GIT_URL = 'https://github.com/manneohlund/smart-recycler-adapter'
+
+    DEVELOPER_ID = 'manneohlund'
+    DEVELOPER_NAME = 'Manne Öhlund'
+    DEVELOPER_EMAIL = 'manne.ohlund@gmail.com'
+
+    LICENSE_NAME = 'The Apache Software License, Version 2.0'
+    LICENSE_URL = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    ALL_LICENSES = ["Apache-2.0"]
+}
+

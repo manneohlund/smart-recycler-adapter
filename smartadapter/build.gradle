@@ -1,8 +1,6 @@
 apply plugin: 'com.android.library'
-
 apply plugin: 'com.github.dcendents.android-maven'
-
-group='com.github.manneohlund'
+apply plugin: 'com.jfrog.bintray'
 
 android {
     compileSdkVersion TARGET_SDK_VERSION
@@ -13,14 +11,17 @@ android {
         versionCode VERSION_CODE
         versionName VERSION_NAME
 
-        archivesBaseName = 'smart-recycler-adapter-' + VERSION_NAME
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     sourceSets {
+        main {
+            java.srcDirs = ['src/main/java']
+            res.srcDirs = ['src/main/res']
+        }
         release {
-            java.srcDirs = ['src/java']
+            java.srcDirs = ['src/main/java']
+            res.srcDirs = ['src/main/res']
         }
     }
 
@@ -53,3 +54,6 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
 }
+
+apply from: '../maven-release-config.gradle'
+apply from: '../maven-release-script.gradle'
