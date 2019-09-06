@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
-      <module fileurl="file://$PROJECT_DIR$/smart-recycler-adapter.iml" filepath="$PROJECT_DIR$/smart-recycler-adapter.iml" />
-      <module fileurl="file://$PROJECT_DIR$/smartadapter/smartadapter.iml" filepath="$PROJECT_DIR$/smartadapter/smartadapter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" group="smart-recycler-adapter/sample" />
+      <module fileurl="file://$PROJECT_DIR$/smart-recycler-adapter.iml" filepath="$PROJECT_DIR$/smart-recycler-adapter.iml" group="smart-recycler-adapter" />
+      <module fileurl="file://$PROJECT_DIR$/smartadapter/smartadapter.iml" filepath="$PROJECT_DIR$/smartadapter/smartadapter.iml" group="smart-recycler-adapter/smartadapter" />
     </modules>
   </component>
 </project>

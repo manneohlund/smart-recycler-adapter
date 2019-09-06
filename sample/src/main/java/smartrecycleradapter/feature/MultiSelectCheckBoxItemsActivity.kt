@@ -19,7 +19,7 @@ import smartrecycleradapter.R
 
 class MultiSelectCheckBoxItemsActivity : BaseSampleActivity() {
 
-    lateinit var smartRecyclerAdapter: SmartRecyclerAdapter;
+    lateinit var smartRecyclerAdapter: SmartRecyclerAdapter
     lateinit var onCheckBoxItemSelectedListener: OnCheckBoxItemSelectedListener
     var deleteMenuItem: MenuItem? = null
 
@@ -31,29 +31,37 @@ class MultiSelectCheckBoxItemsActivity : BaseSampleActivity() {
         val items = (0..100).toMutableList()
 
         onCheckBoxItemSelectedListener = object : OnCheckBoxItemSelectedListener {
-            override fun onViewEvent(view: View, actionId: Int, position: Int) {
-                Toast.makeText(applicationContext,
-                        String.format("Item click %d\n" +
-                                "%d of %d selected items",
-                                position,
-                                selectionStateHolder.selectedItemsCount,
-                                smartRecyclerAdapter.itemCount),
-                        Toast.LENGTH_LONG).show()
-                supportActionBar?.subtitle = "${checkBoxStateHolder.selectedItemsCount} / ${items.size} selected"
+            override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                Toast.makeText(
+                    applicationContext,
+                    String.format(
+                        "Item click %d\n" +
+                            "%d of %d selected items",
+                        position,
+                        selectionStateHolder.selectedItemsCount,
+                        smartRecyclerAdapter.itemCount
+                    ),
+                    Toast.LENGTH_LONG
+                ).show()
+                supportActionBar?.subtitle =
+                    "${checkBoxStateHolder.selectedItemsCount} / ${items.size} selected"
 
-                deleteMenuItem?.isVisible = onCheckBoxItemSelectedListener.selectionStateHolder.selectedItemsCount > 0
+                deleteMenuItem?.isVisible =
+                    onCheckBoxItemSelectedListener.selectionStateHolder.selectedItemsCount > 0
             }
         }
 
         smartRecyclerAdapter = SmartRecyclerAdapter
-                .items(items)
-                .map(Integer::class.java, SimpleSelectableCheckBoxViewHolder::class.java)
-                .addViewEventListener(onCheckBoxItemSelectedListener)
-                .addViewEventListener(OnItemClickListener {
-                    view, actionId, position ->
-                        Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT).show()
-                })
-                .into(recyclerView)
+            .items(items)
+            .map(Integer::class, SimpleSelectableCheckBoxViewHolder::class)
+            .addViewEventListener(onCheckBoxItemSelectedListener)
+            .addViewEventListener(object : OnItemClickListener {
+                override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                    Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            })
+            .into(recyclerView)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -63,7 +71,7 @@ class MultiSelectCheckBoxItemsActivity : BaseSampleActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId) {
+        when (item?.itemId) {
             R.id.delete -> {
                 onCheckBoxItemSelectedListener.selectionStateHolder.removeSelections()
                 item.isVisible = false
@@ -77,9 +85,9 @@ var checkBoxStateHolder = SelectionStateHolder()
 
 interface OnCheckBoxItemSelectedListener : OnItemSelectedListener {
 
-    @JvmDefault
-    override fun getSelectionStateHolder() = checkBoxStateHolder
+    override val selectionStateHolder: SelectionStateHolder
+        get() = checkBoxStateHolder
 
-    @JvmDefault
-    override fun getViewId() = R.id.checkBox
+    override val viewId: Int
+        get() = R.id.checkBox
 }

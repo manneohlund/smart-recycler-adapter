@@ -7,6 +7,8 @@ package smartadapter.viewholders;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import smartadapter.viewholder.SmartViewHolder;
 
 public class BindableTestViewHolder extends SmartViewHolder {
@@ -16,7 +18,7 @@ public class BindableTestViewHolder extends SmartViewHolder {
     }
 
     @Override
-    public void bind(Object item) {
+    public void bind(@NonNull Object item) {
 
     }
 

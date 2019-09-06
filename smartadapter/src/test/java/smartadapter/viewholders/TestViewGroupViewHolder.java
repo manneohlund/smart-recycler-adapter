@@ -7,6 +7,8 @@ package smartadapter.viewholders;
 
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+
 import smartadapter.viewholder.SmartViewHolder;
 
 public class TestViewGroupViewHolder extends SmartViewHolder {
@@ -16,7 +18,7 @@ public class TestViewGroupViewHolder extends SmartViewHolder {
     }
 
     @Override
-    public void bind(Object item) {
+    public void bind(@NonNull Object item) {
 
     }
 }

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.activity_movie_category_details.*
 import smartadapter.SmartEndlessScrollRecyclerAdapter
 import smartadapter.SmartRecyclerAdapter
+import smartadapter.listener.onLoadMoreListener
 import smartrecycleradapter.data.MovieDataItems
 import smartrecycleradapter.extension.GridAutoLayoutManager
 import smartrecycleradapter.models.MovieModel
@@ -64,11 +65,11 @@ class MovieCategoryDetailsActivity : AppCompatActivity() {
         when (movieType) {
             MovieType.COMING_SOON, MovieType.MY_WATCH_LIST -> {
                 SmartRecyclerAdapter.items(adapterItems)
-                        .map(String::class.java, HeaderViewHolder::class.java)
-                        .map(MovieModel::class.java, ThumbViewHolder::class.java)
+                        .map(String::class, HeaderViewHolder::class)
+                        .map(MovieModel::class, ThumbViewHolder::class)
                         .setLayoutManager(gridAutoLayoutManager)
                         .addViewEventListener(object : ThumbViewHolder.OnItemClickListener {
-                            override fun onViewEvent(view: View, actionId: Int, position: Int) {
+                            override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
                                 Toast.makeText(applicationContext, "Movie $position", Toast.LENGTH_SHORT).show()
                             }
                         })
@@ -76,30 +77,30 @@ class MovieCategoryDetailsActivity : AppCompatActivity() {
             }
             MovieType.ACTION, MovieType.ADVENTURE, MovieType.ANIMATED, MovieType.SCI_FI -> {
                 val endlessScrollAdapter: SmartEndlessScrollRecyclerAdapter = SmartEndlessScrollRecyclerAdapter.items(adapterItems)
-                        .map(String::class.java, HeaderViewHolder::class.java)
-                        .map(MovieModel::class.java, ThumbViewHolder::class.java)
+                        .map(String::class, HeaderViewHolder::class)
+                        .map(MovieModel::class, ThumbViewHolder::class)
                         .setLayoutManager(gridAutoLayoutManager)
                         .addViewEventListener(object : ThumbViewHolder.OnItemClickListener {
-                            override fun onViewEvent(view: View, actionId: Int, position: Int) {
+                            override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
                                 Toast.makeText(applicationContext, "Movie $position", Toast.LENGTH_SHORT).show()
                             }
                         })
                         .into(recyclerView)
 
-                endlessScrollAdapter.setOnLoadMoreListener {
+                endlessScrollAdapter.setOnLoadMoreListener(onLoadMoreListener {
                     if (!endlessScrollAdapter.isLoading) {
                         endlessScrollAdapter.setIsLoading(true)
 
                         Handler().postDelayed({
                             endlessScrollAdapter.addItems(movieItems)
                             if (endlessScrollCount++ == 3) {
-                                endlessScrollAdapter.setEndlessScrollEnabled(false);
+                                endlessScrollAdapter.isEndlessScrollEnabled = false
                             }
                             endlessScrollAdapter.setIsLoading(false)
                         },
                                 3000)
                     }
-                }
+                })
             }
         }
     }

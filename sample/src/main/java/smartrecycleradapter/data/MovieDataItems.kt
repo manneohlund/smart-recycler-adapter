@@ -8,7 +8,6 @@ package smartrecycleradapter.data
 import smartrecycleradapter.models.MovieModel
 import java.util.*
 import java.util.Arrays.asList
-import kotlin.collections.ArrayList
 
 object MovieDataItems {
 
@@ -17,7 +16,7 @@ object MovieDataItems {
     const val THUMBS_BASE_URL = "https://raw.githubusercontent.com/manneohlund/smart-recycler-adapter-resources/master/thumbs/"
 
     // Coming soon
-    val comingSoonItems: List<MovieModel> = mutableListOf(
+    val comingSoonItems: MutableList<Any> = mutableListOf(
             MovieModel("Fist man", "first_man"),
             MovieModel("Terminator dark fate", "terminator_dark_fate"),
             MovieModel("Murder Mystery", "murder_mystery"),
@@ -41,7 +40,7 @@ object MovieDataItems {
     )
 
     // Load more items
-    val loadMoreItems: List<Any> = asList(
+    val loadMoreItems: MutableList<Any> = asList(
             MovieModel("Terminator dark fate", "terminator_dark_fate"),
             MovieModel("Joker", "joker"),
             MovieModel("Fist man", "first_man"),
@@ -58,7 +57,7 @@ object MovieDataItems {
     )
 
     // My watchlist
-    val myWatchListItems: List<Any> = mutableListOf(
+    val myWatchListItems: MutableList<Any> = mutableListOf(
             MovieModel("Joker", "joker"),
             MovieModel("Terminator dark fate", "terminator_dark_fate"),
             MovieModel("John Wick 3", "john_wick_3"),
@@ -74,7 +73,7 @@ object MovieDataItems {
     )
 
     // Action
-    var nestedActionItems: List<MovieModel> = asList(
+    var nestedActionItems: MutableList<Any> = asList(
             MovieModel("Fury", "fury"),
             MovieModel("Edge of tomorrow", "edge_of_tomorrow"),
             MovieModel("Godzilla king of the monsters", "godzilla_king_of_the_monsters"),
@@ -95,7 +94,7 @@ object MovieDataItems {
     )
 
     // Adventure
-    var nestedAdventureItems: List<MovieModel> = asList(
+    var nestedAdventureItems: MutableList<Any> = asList(
             MovieModel("Hercules", "hercules"),
             MovieModel("Mummy", "mummy"),
             MovieModel("Age of uprising", "age_of_uprising"),
@@ -109,7 +108,7 @@ object MovieDataItems {
     )
 
     // Sci-Fi
-    var nestedSciFiItems: List<MovieModel> = asList(
+    var nestedSciFiItems: MutableList<Any> = asList(
             MovieModel("Godzilla", "interstellar"),
             MovieModel("Matrix", "matrix"),
             MovieModel("Edge of tomorrow", "edge_of_tomorrow"),
@@ -120,7 +119,7 @@ object MovieDataItems {
     )
 
     // Animated
-    var nestedAnimatedItems: List<MovieModel> = asList(
+    var nestedAnimatedItems: MutableList<Any> = asList(
             MovieModel("The Lion king", "lion_king"),
             MovieModel("Dora", "dora"),
             MovieModel("Frozen 2", "frozen2"),
@@ -133,7 +132,7 @@ object MovieDataItems {
             MovieModel("Angry birds 2", "angry_birds_movie_two"))
 
     // Recent viewed items
-    var nestedRecentViewedItems = ArrayList<MovieModel>()
+    var nestedRecentViewedItems = mutableListOf<Any>()
     init {
         nestedRecentViewedItems.addAll(comingSoonItems)
         nestedRecentViewedItems.add(MovieModel("Her", "her"))

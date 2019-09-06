@@ -16,12 +16,12 @@ public class SmartEndlessScrollRecyclerAdapterTest {
 
     @Test
     public void testImplicitInstantiate() {
-        SmartEndlessScrollRecyclerAdapter.empty().create();
+        SmartEndlessScrollRecyclerAdapter.Companion.empty().create();
     }
 
     @Test
     public void testExplicitInstantiate() {
-        SmartEndlessScrollRecyclerAdapter smartRecyclerAdapter = SmartEndlessScrollRecyclerAdapter.empty().create();
+        SmartEndlessScrollRecyclerAdapter smartRecyclerAdapter = SmartEndlessScrollRecyclerAdapter.Companion.empty().create();
         assertNotNull(smartRecyclerAdapter);
     }
 }

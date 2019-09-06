@@ -10,12 +10,12 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_simple_item.*
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.listener.OnItemClickListener
+import smartadapter.listener.onItemClickListener
+import smartadapter.listener.onItemSwipedListener
 import smartadapter.widget.BasicSwipeExtension
 import smartadapter.widget.SwipeExtensionBuilder
 import smartrecycleradapter.R
 import smartrecycleradapter.feature.simpleitem.SimpleItemViewHolder
-
 
 /*
  * Created by Manne Öhlund on 2019-08-11.
@@ -24,7 +24,7 @@ import smartrecycleradapter.feature.simpleitem.SimpleItemViewHolder
 
 class SwipeRemoveItemActivity : BaseSampleActivity() {
 
-    lateinit var smartRecyclerAdapter: SmartRecyclerAdapter
+    private lateinit var smartRecyclerAdapter: SmartRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,17 +35,17 @@ class SwipeRemoveItemActivity : BaseSampleActivity() {
 
         smartRecyclerAdapter = SmartRecyclerAdapter
                 .items(items)
-                .map(Integer::class.java, SimpleItemViewHolder::class.java)
-                .addViewEventListener(OnItemClickListener { view, actionId, position ->
-                    Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT).show()
+                .map(Integer::class, SimpleItemViewHolder::class)
+                .addViewEventListener(onItemClickListener { view, viewEventId, position ->
+                        Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT).show()
                 })
                 .addExtensionBuilder(SwipeExtensionBuilder(SwipeRemoveItemExtension())
                         .setSwipeFlags(ItemTouchHelper.LEFT)
-                        .setOnItemSwipedListener { viewHolder, direction ->
+                        .setOnItemSwipedListener(onItemSwipedListener { viewHolder, direction ->
                             showToast(viewHolder, direction)
                             // Remove item from SmartRecyclerAdapter data set
                             smartRecyclerAdapter.removeItem(viewHolder.adapterPosition)
-                        }
+                        })
                 )
                 .into(recyclerView)
     }
@@ -54,7 +54,7 @@ class SwipeRemoveItemActivity : BaseSampleActivity() {
         Toast.makeText(applicationContext, "onItemSwipeRemove @ ${viewHolder.adapterPosition}", Toast.LENGTH_SHORT).show()
     }
 
-    class SwipeRemoveItemExtension() : BasicSwipeExtension() {
+    class SwipeRemoveItemExtension : BasicSwipeExtension() {
         override fun onChildDraw(canvas: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
             val itemView = viewHolder.itemView
             val icon = ContextCompat.getDrawable(viewHolder.itemView.context, R.drawable.ic_delete_black_24dp)

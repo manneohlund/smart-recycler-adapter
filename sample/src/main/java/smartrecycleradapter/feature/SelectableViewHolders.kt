@@ -14,22 +14,20 @@ import smartadapter.viewholder.StatefulViewHolder
 import smartrecycleradapter.R
 import smartrecycleradapter.feature.simpleitem.SimpleItemViewHolder
 
-
 /*
  * Created by Manne Öhlund on 2019-08-14.
  * Copyright (c) All rights reserved.
  */
 
-class SimpleSelectableItemViewHolder(parentView: View) : SimpleItemViewHolder(parentView), StatefulViewHolder<SelectionStateHolder> {
-    private var selectionStateHolder: SelectionStateHolder? = null
+class SimpleSelectableItemViewHolder(parentView: View) :
+        SimpleItemViewHolder(parentView),
+        StatefulViewHolder<SelectionStateHolder> {
 
-    override fun setStateHolder(selectionStateHolder: SelectionStateHolder) {
-        this.selectionStateHolder = selectionStateHolder
-    }
+    override lateinit var stateHolder: SelectionStateHolder
 
-    override fun bind(index: Int?) {
-        super.bind(index)
-        if (selectionStateHolder?.isSelected(adapterPosition) == true) {
+    override fun bind(item: Int) {
+        super.bind(item)
+        if (stateHolder.isSelected(adapterPosition)) {
             itemView.setBackgroundColor(Color.RED)
         } else {
             itemView.setBackgroundAttribute(R.attr.selectableItemBackground)
@@ -39,54 +37,45 @@ class SimpleSelectableItemViewHolder(parentView: View) : SimpleItemViewHolder(pa
 
 class SimpleSelectableCheckBoxViewHolder(parentView: View) : SmartViewHolder<Int>(
         LayoutInflater.from(parentView.context)
-                .inflate(R.layout.simple_checkbox_item, parentView as ViewGroup, false)
-), StatefulViewHolder<SelectionStateHolder> {
-    private var selectionStateHolder: SelectionStateHolder? = null
+                .inflate(R.layout.simple_checkbox_item, parentView as ViewGroup, false)),
+        StatefulViewHolder<SelectionStateHolder> {
+
+    override lateinit var stateHolder: SelectionStateHolder
     private var textView: TextView = itemView.findViewById(R.id.textView)
     private var checkBox: CheckBox = itemView.findViewById(R.id.checkBox)
 
-    override fun setStateHolder(selectionStateHolder: SelectionStateHolder) {
-        this.selectionStateHolder = selectionStateHolder
-    }
-
-    override fun bind(index: Int?) {
-        textView.text = "Item $index"
-        checkBox.isChecked = selectionStateHolder?.isSelected(adapterPosition) ?: false
+    override fun bind(item: Int) {
+        textView.text = "Item $item"
+        checkBox.isChecked = stateHolder.isSelected(adapterPosition)
     }
 }
 
 class SimpleSelectableSwitchViewHolder(parentView: View) : SmartViewHolder<Int>(
         LayoutInflater.from(parentView.context)
-                .inflate(R.layout.simple_switch_item, parentView as ViewGroup, false)
-), StatefulViewHolder<SelectionStateHolder> {
-    private var selectionStateHolder: SelectionStateHolder? = null
+                .inflate(R.layout.simple_switch_item, parentView as ViewGroup, false)),
+        StatefulViewHolder<SelectionStateHolder> {
+
+    override lateinit var stateHolder: SelectionStateHolder
     private var textView: TextView = itemView.findViewById(R.id.textView)
     private var switch: SwitchCompat = itemView.findViewById(R.id.switchButton)
 
-    override fun setStateHolder(selectionStateHolder: SelectionStateHolder) {
-        this.selectionStateHolder = selectionStateHolder
-    }
-
-    override fun bind(index: Int?) {
-        textView.text = "Item $index"
-        switch.isChecked = selectionStateHolder?.isSelected(adapterPosition) ?: false
+    override fun bind(item: Int) {
+        textView.text = "Item $item"
+        switch.isChecked = stateHolder.isSelected(adapterPosition)
     }
 }
 
 class SimpleSelectableRadioButtonViewHolder(parentView: View) : SmartViewHolder<Int>(
         LayoutInflater.from(parentView.context)
-                .inflate(R.layout.simple_radiobutton_item, parentView as ViewGroup, false)
-), StatefulViewHolder<SelectionStateHolder> {
-    private var selectionStateHolder: SelectionStateHolder? = null
+                .inflate(R.layout.simple_radiobutton_item, parentView as ViewGroup, false)),
+        StatefulViewHolder<SelectionStateHolder> {
+
+    override lateinit var stateHolder: SelectionStateHolder
     private var textView: TextView = itemView.findViewById(R.id.textView)
     private var radioButton: RadioButton = itemView.findViewById(R.id.radioButton)
 
-    override fun setStateHolder(selectionStateHolder: SelectionStateHolder) {
-        this.selectionStateHolder = selectionStateHolder
-    }
-
-    override fun bind(index: Int?) {
-        textView.text = "Item $index"
-        radioButton.isChecked = selectionStateHolder?.isSelected(adapterPosition) ?: false
+    override fun bind(item: Int) {
+        textView.text = "Item $item"
+        radioButton.isChecked = stateHolder.isSelected(adapterPosition)
     }
 }

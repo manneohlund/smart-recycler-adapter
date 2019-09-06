@@ -4,7 +4,6 @@ import smartrecycleradapter.data.MovieDataItems.BANNER_BASE_URL
 import smartrecycleradapter.data.MovieDataItems.POSTER_BASE_URL
 import smartrecycleradapter.data.MovieDataItems.THUMBS_BASE_URL
 
-
 /*
  * Created by Manne Öhlund on 2019-06-22.
  * Copyright (c) All rights reserved.
@@ -31,7 +30,6 @@ open class NestedRecyclerViewModel(var title: String) {
     }
 }
 
-
 class MoviePosterModel(icon: String) : MovieModel("", icon) {
     override val iconUrl: String
         get() = "$POSTER_BASE_URL$icon.jpg"
@@ -47,9 +45,7 @@ open class MovieModel(val title: String, internal val icon: String) {
         get() = "$THUMBS_BASE_URL$icon.jpg"
 }
 
-
 class CopyrightModel(private var summary: String) {
-
     override fun toString(): String {
         return summary
     }

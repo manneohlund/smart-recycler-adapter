@@ -21,7 +21,7 @@ public class ViewAttachedToWindowTestViewHolder extends SmartViewHolder implemen
     }
 
     @Override
-    public void bind(Object item) {
+    public void bind(@NonNull Object item) {
 
     }
 

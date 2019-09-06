@@ -6,6 +6,7 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_simple_item.*
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.listener.OnItemSelectedListener
+import smartadapter.state.SelectionStateHolder
 import smartadapter.state.SingleSelectionStateHolder
 import smartrecycleradapter.R
 
@@ -19,15 +20,15 @@ class SingleExpandableItemActivity : BaseSampleActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        supportActionBar?.title = "Single Expandable Item";
+        supportActionBar?.title = "Single Expandable Item"
 
-        val items = (0..100).toList()
+        val items = (0..100).toMutableList()
 
         SmartRecyclerAdapter
                 .items(items)
-                .map(Integer::class.java, SimpleExpandableItemViewHolder::class.java)
+                .map(Integer::class, SimpleExpandableItemViewHolder::class)
                 .addViewEventListener(object : OnSingleItemExpandedListener {
-                    override fun onViewEvent(view: View, actionId: Int, position: Int) {
+                    override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
                         Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT).show()
                     }
                 })
@@ -39,9 +40,9 @@ var singleExpandedStateHolder = SingleSelectionStateHolder()
 
 interface OnSingleItemExpandedListener : OnItemSelectedListener {
 
-    @JvmDefault
-    override fun getSelectionStateHolder() = singleExpandedStateHolder
+    override val selectionStateHolder: SelectionStateHolder
+        get() = singleExpandedStateHolder
 
-    @JvmDefault
-    override fun getViewId() = R.id.itemTitle
+    override val viewId: Int
+        get() = R.id.itemTitle
 }

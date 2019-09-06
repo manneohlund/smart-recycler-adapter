@@ -6,6 +6,7 @@ package smartrecycleradapter.viewholder
  */
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.TextView
@@ -13,16 +14,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import androidx.recyclerview.widget.RecyclerView
 import smartadapter.SmartRecyclerAdapter
+import smartadapter.listener.OnItemClickListener
+import smartadapter.listener.Position
+import smartadapter.listener.ViewEventId
 import smartadapter.viewholder.SmartAdapterHolder
 import smartadapter.viewholder.SmartViewHolder
 import smartrecycleradapter.R
 import smartrecycleradapter.extension.GridAutoLayoutManager
 import smartrecycleradapter.models.NestedRecyclerViewModel
+import kotlin.reflect.KClass
 
-open class NestedRecyclerViewHolder(parentView: ViewGroup) : SmartViewHolder<NestedRecyclerViewModel>(
+open class NestedRecyclerViewHolder(parentView: ViewGroup) :
+    SmartViewHolder<NestedRecyclerViewModel>(
         LayoutInflater.from(parentView.context)
-                .inflate(R.layout.nested_recycler_view, parentView, false)),
-        SmartAdapterHolder {
+            .inflate(R.layout.nested_recycler_view, parentView, false)
+    ),
+    SmartAdapterHolder {
 
     private val title: TextView = itemView.findViewById(R.id.title)
     protected val recyclerView: RecyclerView = itemView.findViewById(R.id.nested_recycler_view)
@@ -36,64 +43,127 @@ open class NestedRecyclerViewHolder(parentView: ViewGroup) : SmartViewHolder<Nes
         title.text = item.title
     }
 
-    internal interface OnMoreButtonClickListener : smartadapter.listener.OnItemClickListener {
-
-        @JvmDefault
-        override fun getViewId() = R.id.more
+    interface OnMoreButtonClickListener : OnItemClickListener {
+        override val viewId: Int
+            get() = R.id.more
     }
 }
 
 class ComingSoonMoviesViewHolder(parentView: ViewGroup) : NestedRecyclerViewHolder(parentView) {
+    companion object {
+        inline fun onMoreButtonClickListener(
+            crossinline viewEvent: (
+                view: View,
+                viewEventId: ViewEventId,
+                position: Position
+            ) -> Unit
+        ) = object : OnMoreButtonClickListener {
+            override val viewHolderType: KClass<out SmartViewHolder<*>>
+                get() = ComingSoonMoviesViewHolder::class
 
-    internal interface OnMoreButtonClickListener : NestedRecyclerViewHolder.OnMoreButtonClickListener {
-
-        @JvmDefault
-        override fun getViewHolderType(): Class<out SmartViewHolder<*>> = ComingSoonMoviesViewHolder::class.java
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+                viewEvent(view, viewEventId, position)
+            }
+        }
     }
 }
 
 class MyWatchListViewHolder(parentView: ViewGroup) : NestedRecyclerViewHolder(parentView) {
+    companion object {
+        inline fun onMoreButtonClickListener(
+            crossinline viewEvent: (
+                view: View,
+                viewEventId: ViewEventId,
+                position: Position
+            ) -> Unit
+        ) = object : OnMoreButtonClickListener {
+            override val viewHolderType: KClass<out SmartViewHolder<*>>
+                get() = MyWatchListViewHolder::class
 
-    internal interface OnMoreButtonClickListener : NestedRecyclerViewHolder.OnMoreButtonClickListener {
-
-        @JvmDefault
-        override fun getViewHolderType(): Class<out SmartViewHolder<*>> = MyWatchListViewHolder::class.java
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+                viewEvent(view, viewEventId, position)
+            }
+        }
     }
 }
 
 class ActionMoviesViewHolder(parentView: ViewGroup) : NestedRecyclerViewHolder(parentView) {
+    companion object {
+        inline fun onMoreButtonClickListener(
+            crossinline viewEvent: (
+                view: View,
+                viewEventId: ViewEventId,
+                position: Position
+            ) -> Unit
+        ) = object : OnMoreButtonClickListener {
 
-    internal interface OnMoreButtonClickListener : NestedRecyclerViewHolder.OnMoreButtonClickListener {
+            override val viewHolderType: KClass<out SmartViewHolder<*>>
+                get() = ActionMoviesViewHolder::class
 
-        @JvmDefault
-        override fun getViewHolderType(): Class<out SmartViewHolder<*>> = ActionMoviesViewHolder::class.java
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+                viewEvent(view, viewEventId, position)
+            }
+        }
     }
 }
 
 class AdventureMoviesViewHolder(parentView: ViewGroup) : NestedRecyclerViewHolder(parentView) {
+    companion object {
+        inline fun onMoreButtonClickListener(
+            crossinline viewEvent: (
+                view: View,
+                viewEventId: ViewEventId,
+                position: Position
+            ) -> Unit
+        ) = object : OnMoreButtonClickListener {
 
-    internal interface OnMoreButtonClickListener : NestedRecyclerViewHolder.OnMoreButtonClickListener {
+            override val viewHolderType: KClass<out SmartViewHolder<*>>
+                get() = AdventureMoviesViewHolder::class
 
-        @JvmDefault
-        override fun getViewHolderType(): Class<out SmartViewHolder<*>> = AdventureMoviesViewHolder::class.java
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+                viewEvent(view, viewEventId, position)
+            }
+        }
     }
 }
 
 class AnimatedMoviesViewHolder(parentView: ViewGroup) : NestedRecyclerViewHolder(parentView) {
+    companion object {
+        inline fun onMoreButtonClickListener(
+            crossinline viewEvent: (
+                view: View,
+                viewEventId: ViewEventId,
+                position: Position
+            ) -> Unit
+        ) = object : OnMoreButtonClickListener {
 
-    internal interface OnMoreButtonClickListener : NestedRecyclerViewHolder.OnMoreButtonClickListener {
+            override val viewHolderType: KClass<out SmartViewHolder<*>>
+                get() = AnimatedMoviesViewHolder::class
 
-        @JvmDefault
-        override fun getViewHolderType(): Class<out SmartViewHolder<*>> = AnimatedMoviesViewHolder::class.java
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+                viewEvent(view, viewEventId, position)
+            }
+        }
     }
 }
 
 class SciFiMoviesViewHolder(parentView: ViewGroup) : NestedRecyclerViewHolder(parentView) {
+    companion object {
+        inline fun onMoreButtonClickListener(
+            crossinline viewEvent: (
+                view: View,
+                viewEventId: ViewEventId,
+                position: Position
+            ) -> Unit
+        ) = object : OnMoreButtonClickListener {
 
-    internal interface OnMoreButtonClickListener : NestedRecyclerViewHolder.OnMoreButtonClickListener {
+            override val viewHolderType: KClass<out SmartViewHolder<*>>
+                get() = SciFiMoviesViewHolder::class
 
-        @JvmDefault
-        override fun getViewHolderType(): Class<out SmartViewHolder<*>> = SciFiMoviesViewHolder::class.java
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+                viewEvent(view, viewEventId, position)
+            }
+        }
     }
 }
 

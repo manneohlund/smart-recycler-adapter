@@ -10,86 +10,110 @@ import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_simple_item.*
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.listener.OnItemClickListener
+import smartadapter.listener.OnItemLongClickSelectedListener
 import smartadapter.listener.OnItemSelectedListener
 import smartadapter.state.SelectionStateHolder
+import smartadapter.viewholder.SmartViewHolder
+import smartadapter.widget.ViewTypeResolver
 import smartrecycleradapter.R
 import smartrecycleradapter.models.CopyrightModel
 import smartrecycleradapter.viewholder.CopyrightViewHolder
+import kotlin.reflect.KClass
 
 class MultipleViewTypesResolverActivity : BaseSampleActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        supportActionBar?.title = "Multiple Types Resolver";
+        supportActionBar?.title = "Multiple Types Resolver"
 
-        val items = (0..100).toList()
+        val items = (0..100).toMutableList()
 
         val onCheckBoxItemSelectedListener = object : OnSimpleCheckBoxItemSelectedListener {
-            override fun onViewEvent(view: View, actionId: Int, position: Int) {
-                Toast.makeText(applicationContext,
-                        String.format("Checkbox click %d\n" +
+            override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                Toast.makeText(
+                    applicationContext,
+                    String.format(
+                        "Checkbox click %d\n" +
                                 "%d selected items",
-                                position,
-                                selectionStateHolder.selectedItemsCount),
-                        Toast.LENGTH_LONG).show()
+                        position,
+                        selectionStateHolder.selectedItemsCount
+                    ),
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
 
         val onSwitchItemSelectedListener = object : OnSimpleSwitchItemSelectedListener {
-            override fun onViewEvent(view: View, actionId: Int, position: Int) {
-                Toast.makeText(applicationContext,
-                        String.format("Item click %d\n" +
+            override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                Toast.makeText(
+                    applicationContext,
+                    String.format(
+                        "Item click %d\n" +
                                 "%d selected items",
-                                position,
-                                selectionStateHolder.selectedItemsCount),
-                        Toast.LENGTH_LONG).show()
+                        position,
+                        selectionStateHolder.selectedItemsCount
+                    ),
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
 
         SmartRecyclerAdapter
-                .items(items)
-                .map(CopyrightModel::class.java, CopyrightViewHolder::class.java)
-                .addViewEventListener(OnItemClickListener {
-                    view, actionId, position ->
-                        Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT).show()
-                })
-                .addViewEventListener(onCheckBoxItemSelectedListener)
-                .addViewEventListener(onSwitchItemSelectedListener)
-                .setViewTypeResolver { item, position ->
-                    when {
-                        position % 3 == 1 -> SimpleSelectableCheckBoxViewHolder::class.java
-                        position % 3 == 2 -> SimpleSelectableSwitchViewHolder::class.java
-                        else -> SimpleSelectableItemViewHolder::class.java
+            .items(items)
+            .map(CopyrightModel::class, CopyrightViewHolder::class)
+            .addViewEventListener(object : OnSimpleItemSelectedListener {
+                override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                    Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            })
+            .addViewEventListener(onCheckBoxItemSelectedListener)
+            .addViewEventListener(onSwitchItemSelectedListener)
+            .setViewTypeResolver(object : ViewTypeResolver {
+                override fun getViewType(
+                    item: Any,
+                    position: Int
+                ): KClass<out SmartViewHolder<*>>? {
+                    return when {
+                        position % 3 == 1 -> SimpleSelectableCheckBoxViewHolder::class
+                        position % 3 == 2 -> SimpleSelectableSwitchViewHolder::class
+                        else -> SimpleSelectableItemViewHolder::class
                     }
                 }
-                .into<SmartRecyclerAdapter>(recyclerView)
+            })
+            .into<SmartRecyclerAdapter>(recyclerView)
     }
 }
 
-var sharedMultipleTypesStateHolder: SelectionStateHolder = SelectionStateHolder()
+var sharedMultipleTypesStateHolder = SelectionStateHolder()
+
+interface OnSimpleItemSelectedListener : OnItemLongClickSelectedListener {
+    override val selectionStateHolder: SelectionStateHolder
+        get() = sharedMultipleTypesStateHolder
+
+    override val viewHolderType: KClass<out SmartViewHolder<*>>
+        get() = SimpleSelectableItemViewHolder::class
+}
 
 interface OnSimpleCheckBoxItemSelectedListener : OnItemSelectedListener {
+    override val selectionStateHolder: SelectionStateHolder
+        get() = sharedMultipleTypesStateHolder
 
-    @JvmDefault
-    override fun getSelectionStateHolder() = sharedMultipleTypesStateHolder
+    override val viewHolderType: KClass<out SmartViewHolder<*>>
+        get() = SimpleSelectableCheckBoxViewHolder::class
 
-    @JvmDefault
-    override fun getViewHolderType() = SimpleSelectableCheckBoxViewHolder::class.java
-
-    @JvmDefault
-    override fun getViewId() = R.id.checkBox
+    override val viewId: Int
+        get() = R.id.checkBox
 }
 
 interface OnSimpleSwitchItemSelectedListener : OnItemSelectedListener {
+    override val selectionStateHolder: SelectionStateHolder
+        get() = sharedMultipleTypesStateHolder
 
-    @JvmDefault
-    override fun getSelectionStateHolder() = sharedMultipleTypesStateHolder
+    override val viewHolderType: KClass<out SmartViewHolder<*>>
+        get() = SimpleSelectableSwitchViewHolder::class
 
-    @JvmDefault
-    override fun getViewHolderType() = SimpleSelectableSwitchViewHolder::class.java
-
-    @JvmDefault
-    override fun getViewId() = R.id.switchButton
+    override val viewId: Int
+        get() = R.id.switchButton
 }

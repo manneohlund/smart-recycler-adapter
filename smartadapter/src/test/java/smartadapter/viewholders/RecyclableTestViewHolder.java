@@ -7,6 +7,8 @@ package smartadapter.viewholders;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import smartadapter.viewholder.RecyclableViewHolder;
 import smartadapter.viewholder.SmartViewHolder;
 
@@ -17,7 +19,7 @@ public class RecyclableTestViewHolder extends SmartViewHolder implements Recycla
     }
 
     @Override
-    public void bind(Object item) {
+    public void bind(@NonNull Object item) {
 
     }
 

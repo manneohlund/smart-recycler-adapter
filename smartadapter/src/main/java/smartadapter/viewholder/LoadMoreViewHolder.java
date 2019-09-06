@@ -44,7 +44,7 @@ public class LoadMoreViewHolder extends SmartViewHolder {
     }
 
     @Override
-    public void bind(Object item) {
+    public void bind(@NonNull Object item) {
         // Noop
     }
 }

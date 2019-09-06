@@ -24,47 +24,43 @@ class MultipleExpandableItemActivity : BaseSampleActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        supportActionBar?.title = "Multi Expandable Item";
+        supportActionBar?.title = "Multi Expandable Item"
 
-        val items = (0..100).toList()
+        val items = (0..100).toMutableList()
 
         SmartRecyclerAdapter
-                .items(items)
-                .map(Integer::class.java, SimpleExpandableItemViewHolder::class.java)
-                .addViewEventListener(object : OnItemExpandedListener {
-                    override fun onViewEvent(view: View, actionId: Int, position: Int) {
-                        supportActionBar?.subtitle = "${expandedStateHolder.selectedItemsCount} / ${items.size} expanded"
-                    }
-                })
-                .into<SmartRecyclerAdapter>(recyclerView)
+            .items(items)
+            .map(Integer::class, SimpleExpandableItemViewHolder::class)
+            .addViewEventListener(onItemExpandedListener { view, viewEventId, position ->
+                supportActionBar?.subtitle =
+                    "${expandedStateHolder.selectedItemsCount} / ${items.size} expanded"
+            })
+            .into<SmartRecyclerAdapter>(recyclerView)
     }
 }
 
 class SimpleExpandableItemViewHolder(parentView: ViewGroup) : SmartViewHolder<Int>(
-        LayoutInflater.from(parentView.context)
-                .inflate(R.layout.simple_expandable_item, parentView, false)),
-        StatefulViewHolder<SelectionStateHolder> {
+    LayoutInflater.from(parentView.context)
+        .inflate(R.layout.simple_expandable_item, parentView, false)
+),
+    StatefulViewHolder<SelectionStateHolder> {
+
+    override lateinit var stateHolder: SelectionStateHolder
 
     private val title: TextView = itemView.findViewById(R.id.itemTitle)
     private val subItem: LinearLayout = itemView.findViewById(R.id.subItemContainer)
     private val subItemTitle: TextView = itemView.findViewById(R.id.subItemTitle)
 
-    lateinit var selectionStateHolder: SelectionStateHolder
-
-    override fun setStateHolder(selectionStateHolder: SelectionStateHolder) {
-        this.selectionStateHolder = selectionStateHolder
-    }
-
-    override fun bind(item: Int?) {
+    override fun bind(item: Int) {
         title.text = "Item $item"
         subItemTitle.text = "Sub item of '$item'"
-        when(selectionStateHolder.isSelected(adapterPosition)) {
+        when (stateHolder.isSelected(adapterPosition)) {
             true -> {
-                title.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_expand_less_black_24dp,0)
+                title.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_expand_less_black_24dp, 0)
                 subItem.visibility = View.VISIBLE
             }
             false -> {
-                title.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_expand_more_black_24dp,0)
+                title.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_expand_more_black_24dp, 0)
                 subItem.visibility = View.GONE
             }
         }
@@ -74,10 +70,16 @@ class SimpleExpandableItemViewHolder(parentView: ViewGroup) : SmartViewHolder<In
 var expandedStateHolder = SelectionStateHolder()
 
 interface OnItemExpandedListener : OnItemSelectedListener {
+    override val selectionStateHolder: SelectionStateHolder
+        get() = expandedStateHolder
 
-    @JvmDefault
-    override fun getSelectionStateHolder() = expandedStateHolder
-
-    @JvmDefault
-    override fun getViewId() = R.id.itemTitle
+    override val viewId: Int
+        get() = R.id.itemTitle
 }
+
+inline fun onItemExpandedListener(crossinline viewEvent: (view: View, viewEventId: Int, position: Int) -> Unit) =
+    object : OnItemExpandedListener {
+        override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+            viewEvent(view, viewEventId, position)
+        }
+    }

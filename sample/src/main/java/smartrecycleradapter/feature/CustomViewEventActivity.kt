@@ -27,23 +27,30 @@ class CustomViewEventActivity : BaseSampleActivity() {
 
         supportActionBar?.title = "Custom View Event Sample"
 
-        val items = (0..100).toList()
+        val items = (0..100).toMutableList()
 
         SmartRecyclerAdapter
-                .items(items)
-                .map(Integer::class.java, SimpleItemViewHolder::class.java)
-                .addViewEventListener { view, actionId, position ->
-                    if (actionId == CUSTOM_EVENT) {
-                        Toast.makeText(applicationContext, "CUSTOM_EVENT $position", Toast.LENGTH_SHORT).show()
+            .items(items)
+            .map(Integer::class, SimpleItemViewHolder::class)
+            .addViewEventListener(object : OnViewEventListener {
+                override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                    if (viewEventId == CUSTOM_EVENT) {
+                        Toast.makeText(
+                            applicationContext,
+                            "CUSTOM_EVENT $position",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
-                .into<SmartRecyclerAdapter>(recyclerView)
+            })
+            .into<SmartRecyclerAdapter>(recyclerView)
     }
 
     open class SimpleItemViewHolder(parentView: View) : SmartViewHolder<Int>(
-            LayoutInflater.from(parentView.context)
-                    .inflate(R.layout.simple_item, parentView as ViewGroup, false)),
-            ViewEventListenerHolder {
+        LayoutInflater.from(parentView.context)
+            .inflate(R.layout.simple_item, parentView as ViewGroup, false)
+    ),
+        ViewEventListenerHolder {
 
         private lateinit var viewEventListener: OnViewEventListener
 
@@ -52,13 +59,13 @@ class CustomViewEventActivity : BaseSampleActivity() {
         }
 
         init {
-            itemView.setOnClickListener {view ->
+            itemView.setOnClickListener { view ->
                 viewEventListener.onViewEvent(view, CUSTOM_EVENT, adapterPosition)
             }
         }
 
-        override fun bind(index: Int?) {
-            (itemView as TextView).text = "Item $index"
+        override fun bind(item: Int) {
+            (itemView as TextView).text = "Item $item"
         }
     }
 }

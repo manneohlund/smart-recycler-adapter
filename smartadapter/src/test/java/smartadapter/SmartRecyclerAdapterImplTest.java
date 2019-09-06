@@ -30,12 +30,12 @@ public class SmartRecyclerAdapterImplTest {
 
     @Test
     public void testImplicitInstantiate() {
-        SmartRecyclerAdapter.empty().create();
+        SmartRecyclerAdapter.Companion.empty().create();
     }
 
     @Test
     public void testExplicitInstantiate() {
-        SmartRecyclerAdapter smartRecyclerAdapter = SmartRecyclerAdapter.empty().create();
+        SmartRecyclerAdapter smartRecyclerAdapter = SmartRecyclerAdapter.Companion.empty().create();
         assertNotNull(smartRecyclerAdapter);
     }
 
@@ -44,7 +44,7 @@ public class SmartRecyclerAdapterImplTest {
         // Given
         List items = mock(ArrayList.class);
         String testDataItem = "Test";
-        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.items(items).create();
+        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.Companion.items(items).create();
 
         // When
         adapter.addItem(testDataItem, false);
@@ -58,7 +58,7 @@ public class SmartRecyclerAdapterImplTest {
         // Given
         List items = mock(ArrayList.class);
         String testDataItem = "Test";
-        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.items(items).create();
+        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.Companion.items(items).create();
 
         // When
         adapter.addItem(0, testDataItem, false);
@@ -71,7 +71,7 @@ public class SmartRecyclerAdapterImplTest {
     public void testSmartRecyclerAdapterDataList_addItems() {
         // Given
         List items = mock(ArrayList.class);
-        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.items(items).create();
+        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.Companion.items(items).create();
 
         // When
         adapter.addItems(items, false);
@@ -84,7 +84,7 @@ public class SmartRecyclerAdapterImplTest {
     public void testSmartRecyclerAdapterDataList_addItemsAtIndex() {
         // Given
         List items = mock(ArrayList.class);
-        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.items(items).create();
+        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.Companion.items(items).create();
 
         // When
         adapter.addItems(0, items, false);
@@ -98,7 +98,7 @@ public class SmartRecyclerAdapterImplTest {
         // Given
         List<Object> items = new ArrayList<>();
         items.add("Test");
-        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.items(mock(ArrayList.class)).create();
+        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.Companion.items(mock(ArrayList.class)).create();
 
         // When
         adapter.setItems(items, false);
@@ -117,7 +117,7 @@ public class SmartRecyclerAdapterImplTest {
         items.add(testItem2);
 
         // When
-        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.items(items).create();
+        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.Companion.items(items).create();
 
         // Then
         assertEquals(adapter.getItem(1), testItem2);
@@ -130,7 +130,7 @@ public class SmartRecyclerAdapterImplTest {
         items.add("Test");
 
         // When
-        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.items(items).create();
+        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.Companion.items(items).create();
 
         // Then
         assertEquals(adapter.getItems(), items);
@@ -140,7 +140,7 @@ public class SmartRecyclerAdapterImplTest {
     public void testSmartRecyclerAdapterDataList_removeItem() {
         List<Object> items = new ArrayList<>();
         items.add("Test");
-        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.items(items).create();
+        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.Companion.items(items).create();
 
         // Then
         assertEquals(adapter.getItemCount(), 1);
@@ -161,7 +161,7 @@ public class SmartRecyclerAdapterImplTest {
         String replaceItem = "Test2";
 
         // When
-        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.items(items).create();
+        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.Companion.items(items).create();
         adapter.replaceItem(0, replaceItem, false);
 
         // Then
@@ -172,7 +172,7 @@ public class SmartRecyclerAdapterImplTest {
     public void testRecyclableViewHolder() {
         // Given
         RecyclableTestViewHolder viewHolder = mock(RecyclableTestViewHolder.class);
-        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.empty().create();
+        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.Companion.empty().create();
 
         // When
         adapter.onFailedToRecycleView(viewHolder);
@@ -187,7 +187,7 @@ public class SmartRecyclerAdapterImplTest {
         List<Object> items = new ArrayList<>();
         items.add("Test");
         BindableTestViewHolder viewHolder = mock(BindableTestViewHolder.class);
-        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.items(items).create();
+        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.Companion.items(items).create();
 
         // When
         adapter.onBindViewHolder(viewHolder, 0);
@@ -202,7 +202,7 @@ public class SmartRecyclerAdapterImplTest {
     public void testRecyclableViewHolder2() {
         // Given
         ViewAttachedToWindowTestViewHolder viewHolder = mock(ViewAttachedToWindowTestViewHolder.class);
-        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.empty().create();
+        SmartRecyclerAdapter adapter = SmartRecyclerAdapter.Companion.empty().create();
 
         // When
         adapter.onViewAttachedToWindow(viewHolder);
