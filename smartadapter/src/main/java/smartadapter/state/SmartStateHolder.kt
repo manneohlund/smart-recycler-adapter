@@ -1,5 +1,7 @@
 package smartadapter.state
 
+import smartadapter.Position
+
 /*
  * Created by Manne Öhlund on 2019-08-09.
  * Copyright (c) All rights reserved.
@@ -14,19 +16,19 @@ interface SmartStateHolder {
      * Adds the position to the data set.
      * @param position the adapter position
      */
-    fun enable(position: Int)
+    fun enable(position: Position)
 
     /**
      * Removes the position from the data set.
      * @param position the adapter position
      */
-    fun disable(position: Int)
+    fun disable(position: Position)
 
     /**
      * Enables or disables the position in the data set.
      * @param position the adapter position
      */
-    fun toggle(position: Int)
+    fun toggle(position: Position)
 
     /**
      * Clears all the stored states.

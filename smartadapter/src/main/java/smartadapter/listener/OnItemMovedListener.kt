@@ -8,23 +8,6 @@ package smartadapter.listener
 import androidx.recyclerview.widget.RecyclerView
 
 /**
- * Listener for drag and drop callbacks from extensions of [smartadapter.widget.DragAndDropExtension].
+ * Type alias lambda callback listener for drag and drop callbacks from extensions of [smartadapter.widget.DragAndDropExtension].
  */
-interface OnItemMovedListener {
-
-    /**
-     * Notified from [smartadapter.widget.DragAndDropExtension.onMove]
-     * with old and new view holder that should switch places.
-     * @param oldViewHolder from view holder
-     * @param targetViewHolder to view holder
-     */
-    fun onMoved(oldViewHolder: RecyclerView.ViewHolder, targetViewHolder: RecyclerView.ViewHolder)
-}
-
-inline fun onItemMovedListener(crossinline onMoved: (
-        oldViewHolder: RecyclerView.ViewHolder,
-        targetViewHolder: RecyclerView.ViewHolder) -> Unit) = object : OnItemMovedListener {
-    override fun onMoved(oldViewHolder: RecyclerView.ViewHolder, targetViewHolder: RecyclerView.ViewHolder) {
-        onMoved(oldViewHolder, targetViewHolder)
-    }
-}
+typealias OnItemMovedListener = (oldViewHolder: RecyclerView.ViewHolder, targetViewHolder: RecyclerView.ViewHolder) -> Unit

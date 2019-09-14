@@ -2,20 +2,15 @@ package smartadapter.internal
 
 import android.view.View
 import android.view.ViewGroup
-
+import org.junit.Assert.*
 import org.junit.Test
-
+import org.mockito.Mockito.mock
 import smartadapter.internal.exception.ConstructorNotFoundException
 import smartadapter.internal.utils.ReflectionUtils
 import smartadapter.viewholder.SmartViewHolder
 import smartadapter.viewholders.InvalidTestViewHolder
 import smartadapter.viewholders.TestViewGroupViewHolder
 import smartadapter.viewholders.TestViewHolder
-
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
-import org.mockito.Mockito.mock
 
 /*
  * Created by Manne Öhlund on 2019-06-03.
@@ -112,30 +107,18 @@ class ReflectionUtilsTest {
      */
 
     inner class InnerClassViewHolder(view: ViewGroup) : SmartViewHolder<Any>(view) {
-
-        override fun bind(item: Any) {
-
-        }
+        override fun bind(item: Any) { }
     }
 
     class StaticInnerClassViewHolder(view: ViewGroup) : SmartViewHolder<Any>(view) {
-
-        override fun bind(item: Any) {
-
-        }
+        override fun bind(item: Any) { }
     }
 
     inner class InvalidInnerClassTestViewHolder(view: View, invalidParam: Int) : SmartViewHolder<Any>(view) {
-
-        override fun bind(item: Any) {
-
-        }
+        override fun bind(item: Any) { }
     }
 
     class InvalidStaticInnerClassTestViewHolder(view: View, invalidParam: Int) : SmartViewHolder<Any>(view) {
-
-        override fun bind(item: Any) {
-
-        }
+        override fun bind(item: Any) { }
     }
 }

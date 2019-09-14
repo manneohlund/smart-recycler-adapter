@@ -12,35 +12,41 @@ import smartadapter.internal.mapper.ViewHolderMapper
 import smartadapter.listener.OnViewAttachedToWindowListener
 import smartadapter.listener.OnViewDetachedFromWindowListener
 import smartadapter.listener.OnViewEventListener
-import smartadapter.viewholder.SmartViewHolder
 import smartadapter.widget.ViewTypeResolver
 import kotlin.reflect.KClass
 
+/**
+ * Basic definitions of a [SmartRecyclerAdapter] implementation.
+ */
 interface ISmartRecyclerAdapter {
 
     /**
-     * Overrides [RecyclerView.Adapter.getItemCount].
+     * Holder of real item count. Used for async adding items without disrupting adapter state.
      * @see RecyclerView.Adapter.getItemCount
-     * @return data item count
      */
     var smartItemCount: Int
 
     /**
-     * Returns the data item view holder mapper.
-     * @return ViewHolderMapper
+     * Holder of all data to view holder mapping.
+     * @see ViewHolderMapper
      */
     var viewHolderMapper: ViewHolderMapper
 
+    /**
+     * Holder of all view event listeners.
+     * @see OnViewEventListener]
+     */
     var viewEventMapper: ViewEventMapper
 
     /**
-     * Sets [ViewTypeResolver].
-     * @param viewTypeResolver the ViewTypeResolver
+     * Sets custom view type resolver. Used when basic class mapping is not possible.
+     * @see ViewTypeResolver].
      */
     var viewTypeResolver: ViewTypeResolver?
 
     /**
      * Get item count for target class type.
+     * @see RecyclerView.Adapter.getItemCount
      * @param type target class type
      * @param <T> type of class
      * @return item count
@@ -189,7 +195,7 @@ interface ISmartRecyclerAdapter {
      * Calls [.updateItemCount] and [RecyclerView.Adapter.notifyItemChanged]
      * @param position adapter position.
      */
-    fun smartNotifyItemChanged(position: Int)
+    fun smartNotifyItemChanged(position: Position)
 
     /**
      * Notifies the recycler adapter that item range at position has changed.
@@ -204,7 +210,7 @@ interface ISmartRecyclerAdapter {
      * Calls [.updateItemCount] and [RecyclerView.Adapter.notifyItemInserted]
      * @param position item inserted at this position
      */
-    fun smartNotifyItemInserted(position: Int)
+    fun smartNotifyItemInserted(position: Position)
 
     /**
      * Notifies the recycler adapter that item range from position has changed.
@@ -218,7 +224,7 @@ interface ISmartRecyclerAdapter {
      * Notifies the recycler adapter that item at position has been removed.
      * @param position item removed at this position
      */
-    fun smartNotifyItemRemoved(position: Int)
+    fun smartNotifyItemRemoved(position: Position)
 
     /**
      * Notifies the recycler adapter that item range from position has been removed.
@@ -238,14 +244,14 @@ interface ISmartRecyclerAdapter {
      * @param itemType data item type
      * @param viewHolderType view holder type
      */
-    fun map(itemType: KClass<*>, viewHolderType: KClass<out SmartViewHolder<*>>)
+    fun map(itemType: KClass<*>, viewHolderType: SmartViewHolderType)
 
     /**
      * Get ViewEventListeners for target ViewHolder.
      * @param viewHolderType SmartViewHolder type
      * @return map of ViewEventListeners
      */
-    fun getViewEventListenersForViewHolder(viewHolderType: KClass<out SmartViewHolder<*>>): SparseArray<SparseArray<OnViewEventListener>>?
+    fun getViewEventListenersForViewHolder(viewHolderType: SmartViewHolderType): SparseArray<SparseArray<OnViewEventListener>>?
 
     /**
      * Adds an [OnViewAttachedToWindowListener] to the [SmartRecyclerAdapter] that will be called from [SmartRecyclerAdapter.onViewAttachedToWindow].

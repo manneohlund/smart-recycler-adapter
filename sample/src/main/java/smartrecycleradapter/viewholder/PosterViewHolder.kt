@@ -12,6 +12,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import smartadapter.SmartViewHolderType
+import smartadapter.ViewId
 import smartadapter.listener.OnViewEventListener
 import smartadapter.viewholder.SmartViewHolder
 import smartadapter.viewholder.ViewEventListenerHolder
@@ -19,7 +21,6 @@ import smartrecycleradapter.R
 import smartrecycleradapter.models.MovieModel
 import smartrecycleradapter.utils.displayHeight
 import smartrecycleradapter.utils.displayWidth
-import kotlin.reflect.KClass
 
 class PosterViewHolder(parentView: View) : SmartViewHolder<MovieModel>(
     LayoutInflater.from(parentView.context)
@@ -59,22 +60,22 @@ class PosterViewHolder(parentView: View) : SmartViewHolder<MovieModel>(
 
     // Event listeners
     internal interface OnItemClickListener : smartadapter.listener.OnItemClickListener {
-        override val viewHolderType: KClass<out SmartViewHolder<*>>
+        override val viewHolderType: SmartViewHolderType
             get() = PosterViewHolder::class
     }
 
     internal interface OnPlayButtonClickListener : OnItemClickListener {
-        override val viewId: Int
+        override val viewId: ViewId
             get() = R.id.playButton
     }
 
     internal interface OnStarButtonClickListener : OnItemClickListener {
-        override val viewId: Int
+        override val viewId: ViewId
             get() = R.id.starButton
     }
 
     internal interface OnInfoButtonClickListener : OnItemClickListener {
-        override val viewId: Int
+        override val viewId: ViewId
             get() = R.id.infoButton
     }
 }

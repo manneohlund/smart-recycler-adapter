@@ -9,19 +9,19 @@ import android.util.Log
 import android.util.SparseArray
 import io.github.manneohlund.smartrecycleradapter.R
 import smartadapter.SmartRecyclerAdapter
+import smartadapter.SmartViewHolderType
 import smartadapter.internal.utils.ViewEventValidator.isViewEventIdValid
 import smartadapter.listener.OnViewEventListener
 import smartadapter.viewholder.SmartViewHolder
 import smartadapter.viewholder.ViewEventListenerHolder
 import java.util.*
-import kotlin.reflect.KClass
 
 /**
  * Maps and binds view events with view holder target views with [ViewEventBinderProvider].
  */
 class ViewEventMapper {
 
-    val viewEventListenerMap = HashMap<KClass<out SmartViewHolder<*>>, SparseArray<SparseArray<OnViewEventListener>>>()
+    val viewEventListenerMap = HashMap<SmartViewHolderType, SparseArray<SparseArray<OnViewEventListener>>>()
     private val viewEventListenerMapperProvider = ViewEventBinderProvider()
 
     /**

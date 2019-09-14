@@ -8,34 +8,31 @@ package smartadapter
 import android.content.Context
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
-import java.util.HashMap
-
 import smartadapter.internal.factory.SmartRecyclerAdapterExtensionFactory
 import smartadapter.internal.mapper.ViewEventMapper
 import smartadapter.listener.OnItemSelectedListener
 import smartadapter.listener.OnViewEventListener
-import smartadapter.viewholder.SmartViewHolder
 import smartadapter.widget.ViewTypeResolver
+import java.util.*
 import kotlin.reflect.KClass
 
 /**
- * Builder for SmartRecyclerAdapter.
+ * Builder for [SmartRecyclerAdapter].
  */
 class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter: SmartRecyclerAdapter) {
     private var layoutManager: RecyclerView.LayoutManager? = null
     private var viewTypeResolver: ViewTypeResolver? = null
-    private val viewHolderMapper = HashMap<String, KClass<out SmartViewHolder<*>>>()
-    private val smartRecyclerAdapterMapper = HashMap<KClass<out SmartViewHolder<*>>, SmartRecyclerAdapter>()
+    private val viewHolderMapper = HashMap<String, SmartViewHolderType>()
+    private val smartRecyclerAdapterMapper = HashMap<SmartViewHolderType, SmartRecyclerAdapter>()
     private val viewEventMapper = ViewEventMapper()
     private val smartRecyclerAdapterExtensionFactory = SmartRecyclerAdapterExtensionFactory()
 
-    fun map(itemType: KClass<*>, viewHolderType: KClass<out SmartViewHolder<*>>): SmartAdapterBuilder {
+    fun map(itemType: KClass<*>, viewHolderType: SmartViewHolderType): SmartAdapterBuilder {
         viewHolderMapper[itemType.java.name] = viewHolderType
         return this
     }
 
-    fun map(viewHolderType: KClass<out SmartViewHolder<*>>, smartRecyclerAdapter: SmartRecyclerAdapter): SmartAdapterBuilder {
+    fun map(viewHolderType: SmartViewHolderType, smartRecyclerAdapter: SmartRecyclerAdapter): SmartAdapterBuilder {
         smartRecyclerAdapterMapper[viewHolderType] = smartRecyclerAdapter
         return this
     }
@@ -59,10 +56,10 @@ class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter:
 
     /**
      * Adds [OnViewEventListener] to the [SmartRecyclerAdapter].
-     * The adapter will then automatically map the [OnViewEventListener] to the target view holder class with [OnViewEventListener.getViewHolderType],
-     * set the viewActionListener on the right View with viewId using [OnViewEventListener.getViewId].
+     * The adapter will then automatically map the [OnViewEventListener] to the target view holder class with [OnViewEventListener.viewHolderType],
+     * set the viewActionListener on the right View with viewId using [OnViewEventListener.viewId].
      *
-     * @see OnViewEventListener.getViewEventId
+     * @see OnViewEventListener.viewEventId
      * @param viewEventListener target [OnViewEventListener]
      * @return SmartAdapterBuilder
      */
@@ -83,11 +80,12 @@ class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter:
      * @param smartExtensionBuilder extension builder
      * @return SmartAdapterBuilder
      */
-    fun addExtensionBuilder(smartExtensionBuilder: SmartExtensionBuilder<*, *>): SmartAdapterBuilder {
+    fun addExtensionBuilder(smartExtensionBuilder: SmartExtensionBuilder<*>): SmartAdapterBuilder {
         smartRecyclerAdapterExtensionFactory.add(smartExtensionBuilder)
         return this
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun <T> into(recyclerView: RecyclerView): T {
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper)
         smartRecyclerAdapter.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper)
@@ -99,6 +97,7 @@ class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter:
         return smartRecyclerAdapter as T
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun <T> create(): T {
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper)
         smartRecyclerAdapter.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper)

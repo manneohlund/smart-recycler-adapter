@@ -15,7 +15,6 @@ import org.robolectric.annotation.Config
 import smartadapter.internal.mapper.ViewHolderMapper
 import smartadapter.viewholder.SmartViewHolder
 import smartadapter.widget.ViewTypeResolver
-import kotlin.reflect.KClass
 
 /*
  * Created by Manne Öhlund on 2019-07-19.
@@ -43,14 +42,12 @@ class ViewHolderMapperTest {
     @Test
     fun getItemViewTypeResolver() {
         // Given
-        val viewTypeResolver = object : ViewTypeResolver {
-            override fun getViewType(item: Any, position: Int): KClass<out SmartViewHolder<Any>>? {
-                return when (item) {
-                    is Double -> TestViewHolder3::class
-                    is Float -> TestViewHolder4::class
-                    is Int -> TestViewHolder2::class
-                    else -> null
-                }
+        val viewTypeResolver: ViewTypeResolver = { item, _ ->
+            when (item) {
+                is Double -> TestViewHolder3::class
+                is Float -> TestViewHolder4::class
+                is Int -> TestViewHolder2::class
+                else -> null
             }
         }
 
@@ -75,14 +72,18 @@ class ViewHolderMapperTest {
         assertEquals(TestViewHolder4::class.java.name.hashCode(), id5)
     }
 
+    @Test(expected = RuntimeException::class)
+    fun getItemViewType_error() {
+        // When
+        mapper.getItemViewType(null, 1.1f, 0)
+    }
+
     @Test
     fun getItemViewType() {
-        val viewTypeResolver = object : ViewTypeResolver {
-            override fun getViewType(item: Any, position: Int): KClass<out SmartViewHolder<*>>? {
-                return when (item) {
-                    is Int -> TestViewHolder2::class
-                    else -> null // No type, fallback on mapping
-                }
+        val viewTypeResolver: ViewTypeResolver = { item, _ ->
+            when (item) {
+                is Int -> TestViewHolder2::class
+                else -> null // No type, fallback on mapping
             }
         }
 
@@ -108,30 +109,18 @@ class ViewHolderMapperTest {
     }
 
     inner class TestViewHolder(view: ViewGroup) : SmartViewHolder<Any>(view) {
-
-        override fun bind(item: Any) {
-
-        }
+        override fun bind(item: Any) { }
     }
 
     inner class TestViewHolder2(view: ViewGroup) : SmartViewHolder<Any>(view) {
-
-        override fun bind(item: Any) {
-
-        }
+        override fun bind(item: Any) { }
     }
 
     inner class TestViewHolder3(view: ViewGroup) : SmartViewHolder<Any>(view) {
-
-        override fun bind(item: Any) {
-
-        }
+        override fun bind(item: Any) { }
     }
 
     inner class TestViewHolder4(view: ViewGroup) : SmartViewHolder<Any>(view) {
-
-        override fun bind(item: Any) {
-
-        }
+        override fun bind(item: Any) { }
     }
 }

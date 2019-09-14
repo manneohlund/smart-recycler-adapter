@@ -40,10 +40,10 @@ class DiffUtilActivity : BaseSampleActivity() {
             .map(Integer::class, SimpleItemViewHolder::class)
             .into(recyclerView)
 
-        diffUtilExtension = DiffUtilExtensionBuilder()
-            .setSmartRecyclerAdapter(smartAdapter)
-            .setDiffPredicate(predicate)
-            .build()
+        diffUtilExtension = DiffUtilExtensionBuilder().apply {
+            smartRecyclerAdapter = smartAdapter
+            diffPredicate = predicate
+        }.build()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -54,7 +54,7 @@ class DiffUtilActivity : BaseSampleActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.shuffle -> {
-                diffUtilExtension.diffSwapList(items.shuffled())
+                diffUtilExtension.diffSwapList(items.shuffled() as MutableList<*>)
                 recyclerView.scrollToPosition(0)
             }
         }

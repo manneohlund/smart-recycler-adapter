@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_simple_item.*
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.listener.onItemClickListener
-import smartadapter.listener.onItemSwipedListener
 import smartadapter.widget.BasicSwipeExtension
+import smartadapter.widget.Direction
 import smartadapter.widget.SwipeExtensionBuilder
 import smartrecycleradapter.R
 import smartrecycleradapter.feature.simpleitem.SimpleItemViewHolder
@@ -36,21 +36,21 @@ class SwipeRemoveItemActivity : BaseSampleActivity() {
         smartRecyclerAdapter = SmartRecyclerAdapter
                 .items(items)
                 .map(Integer::class, SimpleItemViewHolder::class)
-                .addViewEventListener(onItemClickListener { view, viewEventId, position ->
+                .addViewEventListener(onItemClickListener { _, _, position ->
                         Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT).show()
                 })
-                .addExtensionBuilder(SwipeExtensionBuilder(SwipeRemoveItemExtension())
-                        .setSwipeFlags(ItemTouchHelper.LEFT)
-                        .setOnItemSwipedListener(onItemSwipedListener { viewHolder, direction ->
-                            showToast(viewHolder, direction)
-                            // Remove item from SmartRecyclerAdapter data set
-                            smartRecyclerAdapter.removeItem(viewHolder.adapterPosition)
-                        })
-                )
+                .addExtensionBuilder(SwipeExtensionBuilder(SwipeRemoveItemExtension()).apply {
+                    swipeFlags = ItemTouchHelper.LEFT
+                    onItemSwipedListener = { viewHolder, direction ->
+                        showToast(viewHolder, direction)
+                        // Remove item from SmartRecyclerAdapter data set
+                        smartRecyclerAdapter.removeItem(viewHolder.adapterPosition)
+                    }
+                })
                 .into(recyclerView)
     }
 
-    val showToast = { viewHolder: RecyclerView.ViewHolder, direction: Int ->
+    val showToast = { viewHolder: RecyclerView.ViewHolder, _: Direction ->
         Toast.makeText(applicationContext, "onItemSwipeRemove @ ${viewHolder.adapterPosition}", Toast.LENGTH_SHORT).show()
     }
 

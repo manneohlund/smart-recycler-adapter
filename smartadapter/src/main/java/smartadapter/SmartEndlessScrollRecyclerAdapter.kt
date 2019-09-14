@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import io.github.manneohlund.smartrecycleradapter.R
+import smartadapter.internal.extension.isMutable
 import smartadapter.listener.OnLoadMoreListener
 import smartadapter.viewholder.LoadMoreViewHolder
 import smartadapter.viewholder.SmartViewHolder
@@ -21,25 +22,30 @@ class SmartEndlessScrollRecyclerAdapter(items: MutableList<Any>) : SmartRecycler
 
     private val VIEW_TYPE_LOADING = Integer.MAX_VALUE
 
+    override var isEndlessScrollEnabled: Boolean = true
+        set(value) {
+            field = value
+            smartNotifyItemChanged(itemCount)
+        }
+    override var isLoading: Boolean = false
+    override var endlessScrollOffset: Int = if (isEndlessScrollEnabled) 1 else 0
+    override var autoLoadMoreEnabled: Boolean = false
     private var onLoadMoreListener: OnLoadMoreListener? = null
-    private var endlessScrollEnabled = true
-    private var autoLoadMoreEnabled = true
-    private var loading = false
     private var loadMoreLayoutResource = R.layout.load_more_view
 
-    override fun getItemViewType(position: Int): Int {
+    override fun getItemViewType(position: Position): ViewType {
         return if (isEndlessScrollEnabled && position == itemCount - endlessScrollOffset) {
             VIEW_TYPE_LOADING
         } else super.getItemViewType(position)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SmartViewHolder<Any> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: ViewType): SmartViewHolder<Any> {
         return if (viewType == VIEW_TYPE_LOADING) {
             LoadMoreViewHolder(parent, loadMoreLayoutResource, autoLoadMoreEnabled)
         } else super.onCreateViewHolder(parent, viewType)
     }
 
-    override fun onBindViewHolder(holder: SmartViewHolder<Any>, position: Int) {
+    override fun onBindViewHolder(holder: SmartViewHolder<Any>, position: Position) {
         if (position < itemCount - endlessScrollOffset) {
             super.onBindViewHolder(holder, position)
         }
@@ -53,40 +59,15 @@ class SmartEndlessScrollRecyclerAdapter(items: MutableList<Any>) : SmartRecycler
         super.onViewAttachedToWindow(holder)
         if (holder is LoadMoreViewHolder) {
             if (autoLoadMoreEnabled) {
-                onLoadMoreListener!!.onLoadMore(holder)
+                onLoadMoreListener?.invoke(holder)
             } else {
                 holder.toggleLoading(false)
-                holder.itemView.findViewById<View>(R.id.loadMoreButton).setOnClickListener { v ->
-                    onLoadMoreListener!!.onLoadMore(holder)
+                holder.itemView.findViewById<View>(R.id.loadMoreButton).setOnClickListener {
+                    onLoadMoreListener?.invoke(holder)
                     holder.toggleLoading(true)
                 }
             }
         }
-    }
-
-    override fun getEndlessScrollOffset(): Int {
-        return if (isEndlessScrollEnabled) 1 else 0
-    }
-
-    override fun isEndlessScrollEnabled(): Boolean {
-        return endlessScrollEnabled
-    }
-
-    override fun setEndlessScrollEnabled(enabled: Boolean) {
-        this.endlessScrollEnabled = enabled
-        smartNotifyItemChanged(itemCount)
-    }
-
-    override fun setAutoLoadMore(enabled: Boolean) {
-        this.autoLoadMoreEnabled = enabled
-    }
-
-    override fun isLoading(): Boolean {
-        return loading
-    }
-
-    override fun setIsLoading(loading: Boolean) {
-        this.loading = loading
     }
 
     override fun setOnLoadMoreListener(onLoadMoreListener: OnLoadMoreListener) {
@@ -103,16 +84,16 @@ class SmartEndlessScrollRecyclerAdapter(items: MutableList<Any>) : SmartRecycler
          * Builder of [SmartRecyclerAdapter] for easy implementation.
          * @return SmartAdapterBuilder
          */
-        fun items(items: MutableList<*>): SmartAdapterBuilder {
-            return SmartAdapterBuilder(SmartEndlessScrollRecyclerAdapter(items as MutableList<Any>))
-        }
+        fun items(items: List<*>): SmartAdapterBuilder =
+            SmartAdapterBuilder(SmartEndlessScrollRecyclerAdapter(items.let {
+                (if (it.isMutable()) it else it.toMutableList()) as MutableList<Any>
+            }))
 
         /**
          * Builder of [SmartRecyclerAdapter] for easy implementation.
          * @return SmartAdapterBuilder
          */
-        fun empty(): SmartAdapterBuilder {
-            return SmartAdapterBuilder(SmartEndlessScrollRecyclerAdapter(mutableListOf()))
-        }
+        fun empty(): SmartAdapterBuilder =
+            SmartAdapterBuilder(SmartEndlessScrollRecyclerAdapter(mutableListOf()))
     }
 }

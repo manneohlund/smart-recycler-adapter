@@ -8,6 +8,7 @@ package smartadapter.internal.mapper
 import android.util.SparseArray
 import android.view.View
 import io.github.manneohlund.smartrecycleradapter.R
+import smartadapter.ViewEventId
 import smartadapter.listener.OnItemSelectedListener
 import smartadapter.listener.OnViewEventListener
 import smartadapter.state.SmartStateHolder
@@ -27,7 +28,7 @@ class ViewEventBinderProvider internal constructor() {
         eventBinders.append(R.id.event_on_item_selected, OnItemSelectedListenerBinder())
     }
 
-    fun bind(smartViewHolder: SmartViewHolder<*>, targetView: View, viewEventListener: OnViewEventListener, viewEventId: Int) {
+    fun bind(smartViewHolder: SmartViewHolder<*>, targetView: View, viewEventListener: OnViewEventListener, viewEventId: ViewEventId) {
         if (eventBinders.indexOfKey(viewEventId) >= 0)
             eventBinders.get(viewEventId).bindListener(smartViewHolder, targetView, viewEventListener, viewEventId)
     }
@@ -40,14 +41,14 @@ class ViewEventBinderProvider internal constructor() {
         fun bindListener(smartViewHolder: SmartViewHolder<*>,
                          targetView: View,
                          viewEventListener: OnViewEventListener,
-                         viewEventId: Int)
+                         viewEventId: ViewEventId)
     }
 
     internal class OnClickListenerBinder : ViewEventBinder {
         override fun bindListener(smartViewHolder: SmartViewHolder<*>,
                                   targetView: View,
                                   viewEventListener: OnViewEventListener,
-                                  viewEventId: Int) {
+                                  viewEventId: ViewEventId) {
             targetView.setOnClickListener { v -> viewEventListener.onViewEvent(v, viewEventId, smartViewHolder.adapterPosition) }
         }
     }
@@ -56,7 +57,7 @@ class ViewEventBinderProvider internal constructor() {
         override fun bindListener(smartViewHolder: SmartViewHolder<*>,
                                   targetView: View,
                                   viewEventListener: OnViewEventListener,
-                                  viewEventId: Int) {
+                                  viewEventId: ViewEventId) {
             targetView.setOnLongClickListener { v ->
                 viewEventListener.onViewEvent(v, viewEventId, smartViewHolder.adapterPosition)
                 true
@@ -69,7 +70,7 @@ class ViewEventBinderProvider internal constructor() {
         override fun bindListener(smartViewHolder: SmartViewHolder<*>,
                                   targetView: View,
                                   viewEventListener: OnViewEventListener,
-                                  viewEventId: Int) {
+                                  viewEventId: ViewEventId) {
 
             if (smartViewHolder is StatefulViewHolder<*> && viewEventListener is OnItemSelectedListener) {
                 (smartViewHolder as? StatefulViewHolder<SmartStateHolder>)?.stateHolder = viewEventListener.selectionStateHolder
@@ -86,10 +87,13 @@ class ViewEventBinderProvider internal constructor() {
             }
 
             targetView.setOnClickListener { v ->
-                if (!viewEventListener.enableOnLongClick || viewEventListener.enableOnLongClick && viewEventListener.selectionStateHolder.selectedItemsCount > 0) {
+                if (!viewEventListener.enableOnLongClick
+                    || viewEventListener.enableOnLongClick
+                    && viewEventListener.selectionStateHolder.selectedItemsCount > 0
+                ) {
                     viewEventListener
-                            .selectionStateHolder
-                            .toggle(smartViewHolder.adapterPosition)
+                        .selectionStateHolder
+                        .toggle(smartViewHolder.adapterPosition)
                 }
                 viewEventListener.onViewEvent(v, viewEventId, smartViewHolder.adapterPosition)
             }

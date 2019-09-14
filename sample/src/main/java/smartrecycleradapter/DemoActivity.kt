@@ -16,10 +16,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.RecyclerView
-import smartadapter.SmartEndlessScrollRecyclerAdapter
-import smartadapter.SmartRecyclerAdapter
-import smartadapter.listener.*
-import smartadapter.viewholder.SmartViewHolder
+import smartadapter.*
+import smartadapter.listener.OnItemClickListener
+import smartadapter.listener.OnViewEventListener
+import smartadapter.listener.onItemClickListener
 import smartrecycleradapter.data.MovieDataItems
 import smartrecycleradapter.extension.PreCachingLinearLayoutManager
 import smartrecycleradapter.feature.*
@@ -112,7 +112,7 @@ class DemoActivity : AppCompatActivity() {
 
             // You need to define your own view event listeners like onClickListener on a view
             .addViewEventListener(object : OnViewEventListener {
-                override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                     showToast(getActionName(viewEventId) + " " + position)
                 }
             })
@@ -128,7 +128,7 @@ class DemoActivity : AppCompatActivity() {
             })
 
             .addViewEventListener(object : PosterViewHolder.OnItemClickListener {
-                override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                     mainSmartMovieAdapter.replaceItem(
                         0,
                         MoviePosterModel(MovieDataItems.randomPoster)
@@ -139,13 +139,13 @@ class DemoActivity : AppCompatActivity() {
             // .addViewEventListener((PosterViewHolder.OnPlayButtonClickListener)(view, viewEventId, position) -> showToast("PLAY"))
 
             .addViewEventListener(object : PosterViewHolder.OnStarButtonClickListener {
-                override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                     showToast("ADD to favorites")
                 }
             })
 
             .addViewEventListener(object : PosterViewHolder.OnInfoButtonClickListener {
-                override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                     showToast("INFO")
                 }
             })
@@ -183,8 +183,8 @@ class DemoActivity : AppCompatActivity() {
             .into(recyclerView)
 
         // Endless pagination
-        mainSmartMovieAdapter.setAutoLoadMore(false)
-        mainSmartMovieAdapter.setOnLoadMoreListener(onLoadMoreListener { loadMoreViewHolder ->
+        mainSmartMovieAdapter.autoLoadMoreEnabled = false
+        mainSmartMovieAdapter.setOnLoadMoreListener { loadMoreViewHolder ->
             val indexBeforeCopyright = 2
             Handler().postDelayed({
                 mainSmartMovieAdapter.addItem(
@@ -193,7 +193,7 @@ class DemoActivity : AppCompatActivity() {
                 )
                 loadMoreViewHolder.toggleLoading(false)
             }, 800)
-        })
+        }
     }
 
     private fun initNestedSmartRecyclerAdapters() {
@@ -201,7 +201,7 @@ class DemoActivity : AppCompatActivity() {
             SmartEndlessScrollRecyclerAdapter.items(MovieDataItems.comingSoonItems)
                 .map(MovieModel::class, LargeThumbViewHolder::class)
                 .addViewEventListener(object : LargeThumbViewHolder.OnItemClickListener {
-                    override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                         showToast(
                             "Coming soon \n%s \n%s index: %d",
                             getMovieTitle(comingSoonSmartMovieAdapter, position),
@@ -211,7 +211,7 @@ class DemoActivity : AppCompatActivity() {
                     }
                 })
                 .addViewEventListener(object : LargeThumbViewHolder.OnItemLongClickListener {
-                    override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                         showToast(
                             String.format(
                                 "Add \n%s \nto My watch list",
@@ -226,11 +226,12 @@ class DemoActivity : AppCompatActivity() {
                 })
                 .create()
 
+        comingSoonSmartMovieAdapter.autoLoadMoreEnabled = true
         // Set custom load more view
         comingSoonSmartMovieAdapter.setCustomLoadMoreLayoutResource(R.layout.custom_loadmore_view)
 
         // Pagination ends after 3 loads
-        comingSoonSmartMovieAdapter.setOnLoadMoreListener(onLoadMoreListener { loadMoreViewHolder ->
+        comingSoonSmartMovieAdapter.setOnLoadMoreListener {
             Handler().postDelayed({
                 comingSoonSmartMovieAdapter.addItems(
                     comingSoonSmartMovieAdapter.itemCount - 1,
@@ -239,18 +240,18 @@ class DemoActivity : AppCompatActivity() {
                 if (moreItemsLoadedCount++ == 2)
                     comingSoonSmartMovieAdapter.isEndlessScrollEnabled = false
             }, 1000)
-        })
+        }
 
         myWatchListSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.myWatchListItems)
             .map(MovieModel::class, ThumbViewHolder::class)
             .addViewEventListener(object : ThumbViewHolder.OnItemLongClickListener {
-                override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                     showToast("Remove " + getActionName(viewEventId) + " item: " + position)
                     myWatchListSmartMovieAdapter.removeItem(position)
                 }
             })
             .addViewEventListener(object : ThumbViewHolder.OnItemClickListener {
-                override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                     showToast(
                         "My watch list \n%s \n%s index: %d",
                         getMovieTitle(myWatchListSmartMovieAdapter, position),
@@ -264,7 +265,7 @@ class DemoActivity : AppCompatActivity() {
         actionMoviesSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.nestedActionItems)
             .map(MovieModel::class, ThumbViewHolder::class)
             .addViewEventListener(object : ThumbViewHolder.OnItemClickListener {
-                override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                     showToast(
                         "Action \n%s \n%s index: %d",
                         getMovieTitle(actionMoviesSmartMovieAdapter, position),
@@ -279,7 +280,7 @@ class DemoActivity : AppCompatActivity() {
             SmartRecyclerAdapter.items(MovieDataItems.nestedAdventureItems)
                 .map(MovieModel::class, ThumbViewHolder::class)
                 .addViewEventListener(object : ThumbViewHolder.OnItemClickListener {
-                    override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                         showToast(
                             "Adventure \n%s \n%s index: %d",
                             getMovieTitle(adventuresMoviesSmartMovieAdapter, position),
@@ -294,7 +295,7 @@ class DemoActivity : AppCompatActivity() {
             SmartRecyclerAdapter.items(MovieDataItems.nestedAnimatedItems)
                 .map(MovieModel::class, ThumbViewHolder::class)
                 .addViewEventListener(object : ThumbViewHolder.OnItemClickListener {
-                    override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                         showToast(
                             "Animated \n%s \n%s index: %d",
                             getMovieTitle(animatedMoviesSmartMovieAdapter, position),
@@ -308,7 +309,7 @@ class DemoActivity : AppCompatActivity() {
         sciFiMoviesSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.nestedSciFiItems)
             .map(MovieModel::class, ThumbViewHolder::class)
             .addViewEventListener(object : ThumbViewHolder.OnItemClickListener {
-                override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                     showToast(
                         "Sci-Fi \n%s \n%s index: %d",
                         getMovieTitle(sciFiMoviesSmartMovieAdapter, position),
@@ -323,7 +324,7 @@ class DemoActivity : AppCompatActivity() {
             SmartRecyclerAdapter.items(MovieDataItems.nestedRecentViewedItems)
                 .map(MovieModel::class, SmallThumbViewHolder::class)
                 .addViewEventListener(object : SmallThumbViewHolder.OnItemClickListener {
-                    override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                         showToast("Remove " + getActionName(viewEventId.toInt()) + " item: " + position)
                         recentlyPlayedMoviesSmartMovieAdapter.removeItem(position.toInt())
                     }
@@ -337,10 +338,10 @@ class DemoActivity : AppCompatActivity() {
     }
 
     internal interface OnFabClickListener : OnItemClickListener {
-        override val viewHolderType: KClass<out SmartViewHolder<*>>
+        override val viewHolderType: SmartViewHolderType
             get() = SampleFabViewHolder::class
 
-        override val viewId: Int
+        override val viewId: ViewId
             get() = R.id.fabItem
     }
 
@@ -509,7 +510,7 @@ class DemoActivity : AppCompatActivity() {
         ActivityCompat.startActivity(this, intent, null)
     }
 
-    private fun getMovieTitle(smartRecyclerAdapter: SmartRecyclerAdapter, position: Int): String {
+    private fun getMovieTitle(smartRecyclerAdapter: SmartRecyclerAdapter, position: Position): String {
         val movieModel = smartRecyclerAdapter.getItem(position) as MovieModel
         return movieModel.title
     }
@@ -524,7 +525,7 @@ class DemoActivity : AppCompatActivity() {
 
     companion object {
 
-        fun getActionName(viewEventId: Int): String {
+        fun getActionName(viewEventId: ViewEventId): String {
             return when (viewEventId) {
                 R.id.event_on_click -> "onClick"
                 R.id.event_on_long_click -> "onLongClick"

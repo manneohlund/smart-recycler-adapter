@@ -10,10 +10,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import smartadapter.SmartViewHolderType
 import smartadapter.viewholder.SmartViewHolder
 import smartrecycleradapter.R
 import smartrecycleradapter.models.MovieModel
-import kotlin.reflect.KClass
 
 private val requestOption = RequestOptions()
     .error(R.drawable.ic_broken_image_black_48dp)
@@ -38,12 +38,12 @@ class SmallThumbViewHolder(parentView: ViewGroup) : SmartViewHolder<MovieModel>(
     }
 
     internal interface OnItemClickListener : smartadapter.listener.OnItemClickListener {
-        override val viewHolderType: KClass<out SmartViewHolder<*>>
+        override val viewHolderType: SmartViewHolderType
             get() = SmallThumbViewHolder::class
     }
 
     internal interface OnItemLongClickListener : smartadapter.listener.OnItemLongClickListener {
-        override val viewHolderType: KClass<out SmartViewHolder<*>>
+        override val viewHolderType: SmartViewHolderType
             get() = SmallThumbViewHolder::class
     }
 }
@@ -67,12 +67,12 @@ open class ThumbViewHolder(parentView: ViewGroup) : SmartViewHolder<MovieModel>(
     }
 
     internal interface OnItemClickListener : smartadapter.listener.OnItemClickListener {
-        override val viewHolderType: KClass<out SmartViewHolder<*>>
+        override val viewHolderType: SmartViewHolderType
             get() = ThumbViewHolder::class
     }
 
     internal interface OnItemLongClickListener : smartadapter.listener.OnItemLongClickListener {
-        override val viewHolderType: KClass<out SmartViewHolder<*>>
+        override val viewHolderType: SmartViewHolderType
             get() = ThumbViewHolder::class
     }
 }
@@ -84,9 +84,9 @@ class LargeThumbViewHolder(parentView: ViewGroup) : SmartViewHolder<MovieModel>(
 
     private val imageView: ImageView = itemView as ImageView
 
-    override fun bind(movie: MovieModel) {
+    override fun bind(item: MovieModel) {
         Glide.with(itemView)
-            .load(movie.iconUrl)
+            .load(item.iconUrl)
             .apply(requestOption)
             .into(imageView)
     }
@@ -96,12 +96,12 @@ class LargeThumbViewHolder(parentView: ViewGroup) : SmartViewHolder<MovieModel>(
     }
 
     internal interface OnItemClickListener : smartadapter.listener.OnItemClickListener {
-        override val viewHolderType: KClass<out SmartViewHolder<*>>
+        override val viewHolderType: SmartViewHolderType
             get() = LargeThumbViewHolder::class
     }
 
     internal interface OnItemLongClickListener : smartadapter.listener.OnItemLongClickListener {
-        override val viewHolderType: KClass<out SmartViewHolder<*>>
+        override val viewHolderType: SmartViewHolderType
             get() = LargeThumbViewHolder::class
     }
 }

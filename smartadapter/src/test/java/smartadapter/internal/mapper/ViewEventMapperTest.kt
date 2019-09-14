@@ -12,6 +12,10 @@ import org.mockito.Matchers.any
 import org.mockito.Mockito.*
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import smartadapter.Position
+import smartadapter.SmartViewHolderType
+import smartadapter.ViewEventId
+import smartadapter.ViewId
 import smartadapter.listener.OnItemClickListener
 import smartadapter.listener.OnItemLongClickListener
 import smartadapter.listener.OnItemSelectedListener
@@ -19,7 +23,6 @@ import smartadapter.listener.OnViewEventListener
 import smartadapter.viewholder.SmartViewHolder
 import smartadapter.viewholder.ViewEventListenerHolder
 import smartadapter.viewholders.TestViewHolder
-import kotlin.reflect.KClass
 
 /*
  * Created by Manne Öhlund on 2019-08-27.
@@ -46,19 +49,19 @@ class ViewEventMapperTest {
     fun testAddValidGenericViewEventListener() {
         // Given
         val onViewEventListener1 = object : OnViewEventListener {
-            override fun onViewEvent(view: View, viewEventId: Int, position: Int) {}
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {}
         }
         val onViewEventListener2 = object : OnViewEventListener {
-            override fun onViewEvent(view: View, viewEventId: Int, position: Int) {}
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {}
         }
         val onItemClickListener = object : OnItemClickListener {
-            override fun onViewEvent(view: View, viewEventId: Int, position: Int) {}
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {}
         }
         val onItemLongClickListener = object : OnItemLongClickListener {
-            override fun onViewEvent(view: View, viewEventId: Int, position: Int) {}
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {}
         }
         val onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onViewEvent(view: View, viewEventId: Int, position: Int) {}
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {}
         }
 
         // When
@@ -91,10 +94,10 @@ class ViewEventMapperTest {
     fun testAddInvalidCustomViewEventListener() {
         // Given
         val onViewEventListener1 = object : OnViewEventListener {
-            override val viewEventId: Int
+            override val viewEventId: ViewEventId
                 get() = 123
 
-            override fun onViewEvent(view: View, viewEventId: Int, position: Int) {}
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {}
         }
 
         // When
@@ -106,10 +109,10 @@ class ViewEventMapperTest {
         // Given
         val onViewEventListener1 = object : OnViewEventListener {
 
-            override val viewHolderType: KClass<out SmartViewHolder<*>>
+            override val viewHolderType: SmartViewHolderType
                 get() = TestViewHolder::class
 
-            override fun onViewEvent(view: View, viewEventId: Int, position: Int) {}
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {}
         }
 
         // When
@@ -130,14 +133,14 @@ class ViewEventMapperTest {
     fun testAddMixedGenericAndCustomViewHolderTypeEventListener() {
         // Given
         val onViewEventListener1 = object : OnViewEventListener {
-            override fun onViewEvent(view: View, viewEventId: Int, position: Int) {}
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {}
         }
         val onViewEventListener2 = object : OnItemClickListener {
             override val viewHolderType = TestViewHolder::class
 
             override val viewId = 123
 
-            override fun onViewEvent(view: View, viewEventId: Int, position: Int) {}
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {}
         }
 
         // When
@@ -175,7 +178,7 @@ class ViewEventMapperTest {
         // Given
         val testSmartViewEventListenerViewHolder = spy(TestSmartViewEventListenerViewHolder(mock(ViewGroup::class.java)))
         val onViewEventListener = object : OnViewEventListener {
-            override fun onViewEvent(view: View, viewEventId: Int, position: Int) { }
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) { }
         }
 
         // When
@@ -193,10 +196,10 @@ class ViewEventMapperTest {
         val itemView = mock(ViewGroup::class.java)
         val testViewHolder = spy(TestViewHolder(itemView))
         val onViewEventListener = object : OnViewEventListener {
-            override val viewId: Int
+            override val viewId: ViewId
                 get() = 123
 
-            override fun onViewEvent(view: View, viewEventId: Int, position: Int) {}
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {}
         }
 
         // When

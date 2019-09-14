@@ -8,8 +8,6 @@ import kotlinx.android.synthetic.main.activity_simple_item.*
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.listener.onItemClickListener
 import smartadapter.listener.onItemLongClickListener
-import smartadapter.listener.onItemMovedListener
-import smartadapter.listener.onItemSwipedListener
 import smartadapter.widget.AutoDragAndDropExtension
 import smartadapter.widget.AutoRemoveItemSwipeExtension
 import smartadapter.widget.DragAndDropExtensionBuilder
@@ -43,23 +41,25 @@ class MultipleEventsAndExtensionsActivity : BaseSampleActivity() {
                     .show()
             })
             .addExtensionBuilder(
-                DragAndDropExtensionBuilder(AutoDragAndDropExtension())
-                    .setDragFlags(ItemTouchHelper.UP or ItemTouchHelper.DOWN)
-                    .setLongPressDragEnabled(true)
-                    .setOnItemMovedListener(onItemMovedListener { oldViewHolder, targetViewHolder ->
+                DragAndDropExtensionBuilder(AutoDragAndDropExtension()).apply {
+                    dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
+                    longPressDragEnabled = true
+                    onItemMovedListener = { oldViewHolder, targetViewHolder ->
                         Toast.makeText(
                             applicationContext,
                             "onItemMoved from ${oldViewHolder.adapterPosition} to ${targetViewHolder.adapterPosition}",
                             Toast.LENGTH_SHORT
                         ).show()
-                    })
+                    }
+                }
             )
             .addExtensionBuilder(
-                SwipeExtensionBuilder(AutoRemoveItemSwipeExtension())
-                    .setSwipeFlags(ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
-                    .setOnItemSwipedListener(onItemSwipedListener { viewHolder, direction ->
+                SwipeExtensionBuilder(AutoRemoveItemSwipeExtension()).apply {
+                    swipeFlags = ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+                    onItemSwipedListener = { viewHolder, direction ->
                         showToast(viewHolder, direction)
-                    })
+                    }
+                }
             )
             .into(recyclerView)
     }

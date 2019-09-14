@@ -7,7 +7,9 @@ package smartadapter.internal.mapper
 
 import android.util.SparseArray
 import android.view.ViewGroup
+import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
+import smartadapter.SmartViewHolderType
 import smartadapter.internal.utils.ReflectionUtils
 import smartadapter.viewholder.SmartAdapterHolder
 import smartadapter.viewholder.SmartViewHolder
@@ -21,12 +23,12 @@ import kotlin.reflect.KFunction
  */
 class ViewHolderMapper {
 
-    private var smartViewHolderClass: KClass<out SmartViewHolder<*>>? = null
+    private var smartViewHolderClass: SmartViewHolderType? = null
     private var constructor: KFunction<Any>? = null
-    private val viewTypeMapper = SparseArray<KClass<out SmartViewHolder<*>>>()
+    private val viewTypeMapper = SparseArray<SmartViewHolderType>()
     private val viewHolderConstructorMapper = ViewHolderConstructorMapper()
-    private var dataTypeViewHolderMapper = HashMap<String, KClass<out SmartViewHolder<*>>>()
-    private var smartRecyclerAdapterMapper = HashMap<KClass<out SmartViewHolder<*>>, SmartRecyclerAdapter>()
+    private var dataTypeViewHolderMapper = HashMap<String, SmartViewHolderType>()
+    private var smartRecyclerAdapterMapper = HashMap<SmartViewHolderType, SmartRecyclerAdapter>()
 
     /**
      * Will first check if viewTypeResolver is assigned and contains the smartViewHolderClass.
@@ -40,8 +42,8 @@ class ViewHolderMapper {
      * @throws RuntimeException if mapping/relation of ViewHolder to data item was not found
      * @return target view holder type identifier
      */
-    fun getItemViewType(viewTypeResolver: ViewTypeResolver?, item: Any, position: Int): Int {
-        smartViewHolderClass = viewTypeResolver?.getViewType(item, position)
+    fun getItemViewType(viewTypeResolver: ViewTypeResolver?, item: Any, position: Position): Int {
+        smartViewHolderClass = viewTypeResolver?.invoke(item, position)
         if (smartViewHolderClass == null) {
             smartViewHolderClass = dataTypeViewHolderMapper[item.javaClass.name]
         } else {
@@ -83,28 +85,28 @@ class ViewHolderMapper {
 
         val smartRecyclerAdapter = smartRecyclerAdapterMapper[viewHolder::class]
         if (viewHolder is SmartAdapterHolder && smartRecyclerAdapter != null) {
-            (viewHolder as SmartAdapterHolder).setSmartRecyclerAdapter(smartRecyclerAdapter)
+            (viewHolder as SmartAdapterHolder).smartRecyclerAdapter = smartRecyclerAdapter
         }
 
         return viewHolder
     }
 
-    fun addMapping(itemType: KClass<*>, viewHolderType: KClass<out SmartViewHolder<*>>) {
+    fun addMapping(itemType: KClass<*>, viewHolderType: SmartViewHolderType) {
         dataTypeViewHolderMapper[itemType.java.name] = viewHolderType
         viewHolderConstructorMapper.add(viewHolderType)
     }
 
-    fun setDataTypeViewHolderMapper(dataTypeViewHolderMapper: HashMap<String, KClass<out SmartViewHolder<*>>>) {
+    fun setDataTypeViewHolderMapper(dataTypeViewHolderMapper: HashMap<String, SmartViewHolderType>) {
         this.dataTypeViewHolderMapper = dataTypeViewHolderMapper
         viewHolderConstructorMapper.add(dataTypeViewHolderMapper.values)
     }
 
-    fun setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper: HashMap<KClass<out SmartViewHolder<*>>, SmartRecyclerAdapter>) {
+    fun setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper: HashMap<SmartViewHolderType, SmartRecyclerAdapter>) {
         this.smartRecyclerAdapterMapper = smartRecyclerAdapterMapper
     }
 }
 
-fun <E : KClass<out SmartViewHolder<*>>> SparseArray<E>.put(value: E): Int {
+fun <E : SmartViewHolderType> SparseArray<E>.put(value: E): Int {
     val key = value.java.name.hashCode()
     put(key, value)
     return key

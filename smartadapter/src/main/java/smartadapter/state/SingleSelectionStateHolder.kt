@@ -1,5 +1,7 @@
 package smartadapter.state
 
+import smartadapter.Position
+
 /*
  * Created by Manne Öhlund on 2019-08-15.
  * Copyright (c) All rights reserved.
@@ -14,7 +16,7 @@ class SingleSelectionStateHolder : SelectionStateHolder() {
      * Adds the position to the data set and [.disable]s any old positions.
      * @param position the adapter position
      */
-    override fun enable(position: Int) {
+    override fun enable(position: Position) {
         for (oldPositions in selectedItems) {
             disable(oldPositions)
         }
@@ -26,7 +28,7 @@ class SingleSelectionStateHolder : SelectionStateHolder() {
      * Removes the position from the data set and calls [smartadapter.SmartRecyclerAdapter.smartNotifyItemChanged].
      * @param position the adapter position
      */
-    override fun disable(position: Int) {
+    override fun disable(position: Position) {
         super.disable(position)
         smartRecyclerAdapter.smartNotifyItemChanged(position)
     }

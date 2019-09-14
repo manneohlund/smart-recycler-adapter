@@ -11,7 +11,10 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_simple_item.*
+import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
+import smartadapter.ViewEventId
+import smartadapter.ViewId
 import smartadapter.listener.OnItemClickListener
 import smartadapter.listener.OnItemSelectedListener
 import smartadapter.state.SelectionStateHolder
@@ -32,7 +35,7 @@ class SingleSelectRadioButtonItemActivity : BaseSampleActivity() {
         val items = (0..100).toMutableList()
 
         onSingleRadioButtonItemSelectedListener = object : OnSingleRadioButtonItemSelectedListener {
-            override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                 Toast.makeText(
                     applicationContext,
                     String.format(
@@ -55,7 +58,7 @@ class SingleSelectRadioButtonItemActivity : BaseSampleActivity() {
             .map(Integer::class, SimpleSelectableRadioButtonViewHolder::class)
             .addViewEventListener(onSingleRadioButtonItemSelectedListener)
             .addViewEventListener(object : OnItemClickListener {
-                override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                     Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT)
                         .show()
                 }
@@ -86,6 +89,6 @@ interface OnSingleRadioButtonItemSelectedListener : OnItemSelectedListener {
     override val selectionStateHolder: SelectionStateHolder
         get() = singleRadioButtonStateHolder
 
-    override val viewId: Int
+    override val viewId: ViewId
         get() = R.id.radioButton
 }

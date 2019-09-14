@@ -12,7 +12,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_simple_item.*
+import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
+import smartadapter.ViewEventId
 import smartadapter.listener.OnViewEventListener
 import smartadapter.viewholder.SmartViewHolder
 import smartadapter.viewholder.ViewEventListenerHolder
@@ -33,7 +35,7 @@ class CustomViewEventActivity : BaseSampleActivity() {
             .items(items)
             .map(Integer::class, SimpleItemViewHolder::class)
             .addViewEventListener(object : OnViewEventListener {
-                override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                     if (viewEventId == CUSTOM_EVENT) {
                         Toast.makeText(
                             applicationContext,

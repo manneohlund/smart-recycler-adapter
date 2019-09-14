@@ -9,10 +9,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
 import kotlinx.android.synthetic.main.activity_simple_item.*
+import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
+import smartadapter.ViewEventId
 import smartadapter.listener.OnItemClickListener
 import smartadapter.listener.OnItemLongClickListener
-import smartadapter.listener.onItemMovedListener
 import smartadapter.viewholder.DraggableViewHolder
 import smartadapter.viewholder.SmartViewHolder
 import smartadapter.widget.AutoDragAndDropExtension
@@ -37,20 +38,23 @@ class DragAndDropHandleItemActivity : BaseSampleActivity() {
                 .items(items)
                 .map(Integer::class, SimpleDragHandleItemViewHolder::class)
                 .addViewEventListener(object : OnItemClickListener {
-                    override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                         Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT).show()
                     }
                 })
                 .addViewEventListener(object : OnItemLongClickListener {
-                    override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                         Toast.makeText(applicationContext, "onLongClick $position", Toast.LENGTH_SHORT).show()
                     }
                 })
-                .addExtensionBuilder(DragAndDropExtensionBuilder(AutoDragAndDropExtension())
-                        .setDragFlags(ItemTouchHelper.UP or ItemTouchHelper.DOWN)
-                        .setOnItemMovedListener(onItemMovedListener { oldViewHolder, targetViewHolder ->
-                            Log.i(DragAndDropHandleItemActivity::class.java.name, "onItemMoved from ${oldViewHolder.adapterPosition} to ${targetViewHolder.adapterPosition}")
-                        }))
+                .addExtensionBuilder(DragAndDropExtensionBuilder(AutoDragAndDropExtension()).apply {
+                    dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
+                    onItemMovedListener = { oldViewHolder, targetViewHolder ->
+                        Log.i(DragAndDropHandleItemActivity::class.java.name,
+                            "onItemMoved from ${oldViewHolder.adapterPosition} to ${targetViewHolder.adapterPosition}"
+                        )
+                    }
+                })
                 .into<SmartRecyclerAdapter>(recyclerView)
     }
 
@@ -61,7 +65,7 @@ class DragAndDropHandleItemActivity : BaseSampleActivity() {
         private var textView: TextView = itemView.findViewById(R.id.textView)
         private val dragHandle: View = itemView.findViewById(R.id.dragHandle)
 
-        override fun getDraggableView() = dragHandle
+        override var draggableView = dragHandle
 
         override fun bind(item: Int) {
             textView.text = "Item $item"

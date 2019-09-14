@@ -9,7 +9,6 @@ package smartadapter.listener
  * Default implementation of adapter item row click listener.
  */
 interface OnItemLongClickSelectedListener : OnItemSelectedListener {
-
     override val enableOnLongClick: Boolean
         get() = true
 }

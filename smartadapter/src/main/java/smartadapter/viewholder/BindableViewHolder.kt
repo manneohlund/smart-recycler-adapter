@@ -8,7 +8,7 @@ package smartadapter.viewholder
 import androidx.recyclerview.widget.RecyclerView
 
 /**
- * Contains basic logic methods [.bind] and [.unbind] for the [SmartViewHolder].
+ * Contains basic logic methods [bind] and [unbind] for the [SmartViewHolder].
  * @param <T> Data item
  */
 interface BindableViewHolder<in T : Any> {

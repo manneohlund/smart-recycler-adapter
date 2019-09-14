@@ -5,9 +5,10 @@ package smartadapter.widget
  * Copyright © 2017 All rights reserved.
  */
 
-import smartadapter.viewholder.SmartViewHolder
-import kotlin.reflect.KClass
+import smartadapter.Position
+import smartadapter.SmartViewHolderType
 
-interface ViewTypeResolver {
-    fun getViewType(item: Any, position: Int): KClass<out SmartViewHolder<*>>?
-}
+/**
+ * Type alias custom lambda listener for resolving of view type by source data.
+ */
+typealias ViewTypeResolver = (item: Any, position: Position) -> SmartViewHolderType?

@@ -8,6 +8,7 @@ package smartadapter
 import android.util.SparseArray
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import smartadapter.internal.extension.isMutable
 import smartadapter.internal.mapper.ViewEventMapper
 import smartadapter.internal.mapper.ViewHolderMapper
 import smartadapter.listener.OnViewAttachedToWindowListener
@@ -18,6 +19,36 @@ import smartadapter.viewholder.SmartViewHolder
 import smartadapter.widget.ViewTypeResolver
 import java.util.*
 import kotlin.reflect.KClass
+
+/**
+ * Type alias for SmartViewHolder, Kotlin class type.
+ */
+typealias SmartViewHolderType = KClass<out SmartViewHolder<*>>
+
+/**
+ * Type alias for adapter data items, Kotlin class type.
+ */
+typealias ItemType = KClass<*>
+
+/**
+ * Type alias for view id, ex: R.id.my_id.
+ */
+typealias ViewId = Int
+
+/**
+ * Type alias for event id that is passed on view event invocation.
+ */
+typealias ViewEventId = Int
+
+/**
+ * Type alias for resolved view type in [RecyclerView.Adapter].
+ */
+typealias ViewType = Int
+
+/**
+ * Type alias for position in [RecyclerView.Adapter].
+ */
+typealias Position = Int
 
 /**
  * SmartRecyclerAdapter is the core implementation of the library.
@@ -40,17 +71,17 @@ open class SmartRecyclerAdapter
         updateItemCount()
     }
 
-    override fun getItemViewType(position: Int): Int {
+    override fun getItemViewType(position: Position): ViewType {
         return viewHolderMapper.getItemViewType(viewTypeResolver, items[position], position)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SmartViewHolder<Any> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: ViewType): SmartViewHolder<Any> {
         val smartViewHolder = viewHolderMapper.createViewHolder<SmartViewHolder<Any>>(parent, viewType)
         viewEventMapper.mapViewEventWith(smartViewHolder)
         return smartViewHolder
     }
 
-    override fun onBindViewHolder(holder: SmartViewHolder<Any>, position: Int) {
+    override fun onBindViewHolder(holder: SmartViewHolder<Any>, position: Position) {
         holder.bind(items[position])
     }
 
@@ -67,9 +98,7 @@ open class SmartRecyclerAdapter
 
     override fun onViewAttachedToWindow(holder: SmartViewHolder<Any>) {
         super.onViewAttachedToWindow(holder)
-        if (holder is OnViewAttachedToWindowListener) {
-            (holder as OnViewAttachedToWindowListener).onViewAttachedToWindow(holder)
-        }
+        (holder as? OnViewAttachedToWindowListener)?.onViewAttachedToWindow(holder)
         for (listener in onViewAttachedToWindowListeners) {
             listener.onViewAttachedToWindow(holder)
         }
@@ -77,9 +106,7 @@ open class SmartRecyclerAdapter
 
     override fun onViewDetachedFromWindow(holder: SmartViewHolder<Any>) {
         super.onViewDetachedFromWindow(holder)
-        if (holder is OnViewDetachedFromWindowListener) {
-            (holder as OnViewDetachedFromWindowListener).onViewDetachedFromWindow(holder)
-        }
+        (holder as? OnViewDetachedFromWindowListener)?.onViewDetachedFromWindow(holder)
         for (listener in onViewDetachedFromWindowListeners) {
             listener.onViewDetachedFromWindow(holder)
         }
@@ -92,7 +119,7 @@ open class SmartRecyclerAdapter
     override fun <T : Any> getItemCount(type: KClass<out T>): Int {
         var count = 0
         for (item in items) {
-            if (item.javaClass == type) {
+            if (item::class == type) {
                 count++
             }
         }
@@ -177,7 +204,7 @@ open class SmartRecyclerAdapter
     }
 
     override fun removeItem(index: Int, notifyDataSetChanged: Boolean): Boolean {
-        if (!items.isEmpty()) {
+        if (items.isNotEmpty()) {
             this.items.removeAt(index)
             if (notifyDataSetChanged) {
                 smartNotifyItemRemoved(index)
@@ -192,7 +219,7 @@ open class SmartRecyclerAdapter
     }
 
     override fun replaceItem(index: Int, item: Any, notifyDataSetChanged: Boolean) {
-        this.items.set(index, item)
+        this.items[index] = item
         if (notifyDataSetChanged) {
             smartNotifyItemChanged(index)
         }
@@ -208,7 +235,7 @@ open class SmartRecyclerAdapter
         notifyDataSetChanged()
     }
 
-    override fun smartNotifyItemChanged(position: Int) {
+    override fun smartNotifyItemChanged(position: Position) {
         updateItemCount()
         notifyItemChanged(position)
     }
@@ -218,7 +245,7 @@ open class SmartRecyclerAdapter
         notifyItemRangeChanged(positionStart, itemCount)
     }
 
-    override fun smartNotifyItemInserted(position: Int) {
+    override fun smartNotifyItemInserted(position: Position) {
         updateItemCount()
         notifyItemInserted(position)
     }
@@ -228,7 +255,7 @@ open class SmartRecyclerAdapter
         notifyItemRangeInserted(positionStart, itemCount)
     }
 
-    override fun smartNotifyItemRemoved(position: Int) {
+    override fun smartNotifyItemRemoved(position: Position) {
         updateItemCount()
         notifyItemRemoved(position)
     }
@@ -242,23 +269,24 @@ open class SmartRecyclerAdapter
         smartItemCount = items.size
     }
 
-    override fun map(itemType: KClass<*>, viewHolderType: KClass<out SmartViewHolder<*>>) {
+    override fun map(itemType: ItemType, viewHolderType: SmartViewHolderType) {
         viewHolderMapper.addMapping(itemType, viewHolderType)
     }
 
-    internal fun setDataTypeViewHolderMapper(dataTypeViewHolderMapper: HashMap<String, KClass<out SmartViewHolder<*>>>) {
+    internal fun setDataTypeViewHolderMapper(dataTypeViewHolderMapper: HashMap<String, SmartViewHolderType>) {
         viewHolderMapper.setDataTypeViewHolderMapper(dataTypeViewHolderMapper)
     }
 
-    internal fun setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper: HashMap<KClass<out SmartViewHolder<*>>, SmartRecyclerAdapter>) {
+    internal fun setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper: HashMap<SmartViewHolderType, SmartRecyclerAdapter>) {
         viewHolderMapper.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper)
     }
 
-    /*override fun getViewEventListeners(): HashMap<KClass<out SmartViewHolder<Any>>, SparseArray<SparseArray<OnViewEventListener>>>? {
+    /* TODO Cleanup unused methods!!!
+    override fun getViewEventListeners(): HashMap<KClass<out SmartViewHolder<Any>>, SparseArray<SparseArray<OnViewEventListener>>>? {
         return this.viewEventMapper.viewEventListenerMap
     }*/
 
-    override fun getViewEventListenersForViewHolder(viewHolderType: KClass<out SmartViewHolder<*>>): SparseArray<SparseArray<OnViewEventListener>>? {
+    override fun getViewEventListenersForViewHolder(viewHolderType: SmartViewHolderType): SparseArray<SparseArray<OnViewEventListener>>? {
         return this.viewEventMapper.viewEventListenerMap[viewHolderType]
     }
 
@@ -276,8 +304,10 @@ open class SmartRecyclerAdapter
          * Builder of [SmartRecyclerAdapter] for easy implementation.
          * @return SmartAdapterBuilder
          */
-        fun items(items: MutableList<*>): SmartAdapterBuilder =
-                SmartAdapterBuilder(SmartRecyclerAdapter(items as MutableList<Any>))
+        fun items(items: List<*>): SmartAdapterBuilder =
+            SmartAdapterBuilder(SmartRecyclerAdapter(items.let {
+                (if (it.isMutable()) it else it.toMutableList()) as MutableList<Any>
+            }))
 
         /**
          * Builder of [SmartRecyclerAdapter] for easy implementation.

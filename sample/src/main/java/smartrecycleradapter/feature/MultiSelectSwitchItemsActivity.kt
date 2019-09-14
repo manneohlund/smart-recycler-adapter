@@ -9,7 +9,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_simple_item.*
+import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
+import smartadapter.ViewEventId
+import smartadapter.ViewId
 import smartadapter.listener.OnItemClickListener
 import smartadapter.listener.OnItemSelectedListener
 import smartadapter.state.SelectionStateHolder
@@ -28,7 +31,7 @@ class MultiSelectSwitchItemsActivity : BaseSampleActivity() {
         val items = (0..100).toMutableList()
 
         onSwitchItemSelectedListener = object : OnSwitchItemSelectedListener {
-            override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                 Toast.makeText(
                     applicationContext,
                     String.format(
@@ -47,7 +50,7 @@ class MultiSelectSwitchItemsActivity : BaseSampleActivity() {
             .map(Integer::class, SimpleSelectableSwitchViewHolder::class)
             .addViewEventListener(onSwitchItemSelectedListener)
             .addViewEventListener(object : OnItemClickListener {
-                override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                     Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT).show()
                 }
             })
@@ -61,6 +64,6 @@ interface OnSwitchItemSelectedListener : OnItemSelectedListener {
     override val selectionStateHolder: SelectionStateHolder
         get() = switchStateHolder
 
-    override val viewId: Int
+    override val viewId: ViewId
         get() = R.id.switchButton
 }

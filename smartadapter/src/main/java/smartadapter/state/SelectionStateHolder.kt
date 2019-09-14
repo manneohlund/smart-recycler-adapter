@@ -5,6 +5,7 @@ package smartadapter.state
  * Copyright (c) All rights reserved.
  */
 
+import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
 import java.util.*
 
@@ -14,24 +15,27 @@ import java.util.*
 open class SelectionStateHolder : SmartStateHolder {
 
     /**
+     * The target [SmartRecyclerAdapter].
+     */
+    lateinit var smartRecyclerAdapter: SmartRecyclerAdapter
+
+    /**
      * Provides sorted set of selected positions.
-     * @return TreeSet of selected positions
      */
     var selectedItems = TreeSet<Int>()
         protected set
 
     /**
      * Provides selected item count.
-     * @return selected item count
      */
     val selectedItemsCount: Int
         get() = selectedItems.size
 
-    override fun enable(position: Int) {
+    override fun enable(position: Position) {
         selectedItems.add(position)
     }
 
-    override fun disable(position: Int) {
+    override fun disable(position: Position) {
         selectedItems.remove(position)
     }
 
@@ -39,7 +43,7 @@ open class SelectionStateHolder : SmartStateHolder {
      * Toggles selection of a position in adapter and calls [SmartRecyclerAdapter.smartNotifyItemChanged].
      * @param position the adapter position
      */
-    override fun toggle(position: Int) {
+    override fun toggle(position: Position) {
         if (selectedItems.contains(position))
             disable(position)
         else
@@ -57,15 +61,9 @@ open class SelectionStateHolder : SmartStateHolder {
      * @param position position in adapter
      * @return true if position is contained in the selection set
      */
-    fun isSelected(position: Int): Boolean {
+    fun isSelected(position: Position): Boolean {
         return selectedItems.contains(position)
     }
-
-    /**
-     * Sets the target [SmartRecyclerAdapter].
-     * @param smartRecyclerAdapter the target smart adapter
-     */
-    lateinit var smartRecyclerAdapter: SmartRecyclerAdapter
 
     /**
      * Removes selected items in the adapter with animation then clears the state holder set.

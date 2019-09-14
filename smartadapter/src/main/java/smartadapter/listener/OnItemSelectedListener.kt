@@ -6,7 +6,13 @@ package smartadapter.listener
  */
 
 import io.github.manneohlund.smartrecycleradapter.R
+import smartadapter.ViewEventId
 import smartadapter.state.SelectionStateHolder
+
+/**
+ * Default global state holder that runs in application scope.
+ */
+val defaultGlobalStateHolder = SelectionStateHolder()
 
 /**
  * Default implementation of adapter item row click listener.
@@ -18,15 +24,13 @@ interface OnItemSelectedListener : OnItemClickListener {
 
     /**
      * Default implementation, provides and global static [SelectionStateHolder].
-     * @return selectionStateHolder
      */
     val selectionStateHolder: SelectionStateHolder
-        get() = SelectionStateHolder()
+        get() = defaultGlobalStateHolder
 
     /**
      * Default implementation, decides the logic implementation in [smartadapter.internal.mapper.ViewEventBinderProvider]
      * for the ViewEventBinder OnItemSelectedListenerBinder.
-     * @return default false
      */
     val enableOnLongClick: Boolean
         get() = false

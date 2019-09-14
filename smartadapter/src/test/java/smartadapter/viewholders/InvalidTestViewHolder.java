@@ -18,7 +18,5 @@ public class InvalidTestViewHolder extends SmartViewHolder {
     }
 
     @Override
-    public void bind(@NonNull Object item) {
-
-    }
+    public void bind(@NonNull Object item) { }
 }

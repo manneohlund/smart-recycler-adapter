@@ -7,7 +7,10 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_simple_item.*
+import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
+import smartadapter.ViewEventId
+import smartadapter.ViewId
 import smartadapter.listener.OnItemSelectedListener
 import smartadapter.state.SelectionStateHolder
 import smartadapter.viewholder.SmartViewHolder
@@ -73,13 +76,13 @@ interface OnItemExpandedListener : OnItemSelectedListener {
     override val selectionStateHolder: SelectionStateHolder
         get() = expandedStateHolder
 
-    override val viewId: Int
+    override val viewId: ViewId
         get() = R.id.itemTitle
 }
 
-inline fun onItemExpandedListener(crossinline viewEvent: (view: View, viewEventId: Int, position: Int) -> Unit) =
+inline fun onItemExpandedListener(crossinline viewEvent: (view: View, viewEventId: ViewEventId, position: Position) -> Unit) =
     object : OnItemExpandedListener {
-        override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+        override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
             viewEvent(view, viewEventId, position)
         }
     }

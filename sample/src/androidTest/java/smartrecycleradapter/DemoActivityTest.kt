@@ -16,6 +16,7 @@ import androidx.test.rule.ActivityTestRule
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
+import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
 import smartrecycleradapter.models.*
 import smartrecycleradapter.viewholder.*
@@ -72,7 +73,7 @@ class DemoActivityTest {
                 .check(matchesViewHolderAtPosition(12, CopyrightViewHolder::class))
     }
 
-    private fun matchesViewHolderAtPosition(position: Int, target: KClass<*>): ViewAssertion {
+    private fun matchesViewHolderAtPosition(position: Position, target: KClass<*>): ViewAssertion {
         return ViewAssertion { view: View?, _: NoMatchingViewException? ->
             val recyclerView = view as RecyclerView
             val source = recyclerView.findViewHolderForAdapterPosition(position)!!

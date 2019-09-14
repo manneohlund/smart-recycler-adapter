@@ -12,7 +12,6 @@ import smartadapter.viewholder.SmartViewHolder
 /**
  * Listener for when a view created by this adapter has been detached from its window.
  *
- *
  * Invoked from [smartadapter.SmartRecyclerAdapter.onViewDetachedFromWindow] and should be implemented in a [SmartViewHolder] extension.
  *
  * @see RecyclerView.Adapter.onViewDetachedFromWindow
@@ -25,3 +24,13 @@ interface OnViewDetachedFromWindowListener {
      */
     fun onViewDetachedFromWindow(viewHolder: RecyclerView.ViewHolder)
 }
+
+/**
+ * Helper method to provide lambda call to interface instances of [OnViewDetachedFromWindowListener].
+ */
+inline fun onViewDetachedFromWindowListener(crossinline listener: (viewHolder: RecyclerView.ViewHolder) -> Unit) =
+    object : OnViewDetachedFromWindowListener {
+        override fun onViewDetachedFromWindow(viewHolder: RecyclerView.ViewHolder) {
+            listener(viewHolder)
+        }
+    }

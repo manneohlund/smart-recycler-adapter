@@ -5,9 +5,10 @@ import android.os.Handler
 import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_simple_item.*
+import smartadapter.Position
 import smartadapter.SmartEndlessScrollRecyclerAdapter
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.listener.onLoadMoreListener
+import smartadapter.ViewEventId
 import smartrecycleradapter.BuildConfig
 import smartrecycleradapter.DemoActivity.Companion.getActionName
 import smartrecycleradapter.R
@@ -81,7 +82,7 @@ class NestedSmartRecyclerAdaptersActivity : BaseSampleActivity() {
     private var moreItemsLoadedCount = 0
     private fun initNestedSmartRecyclerAdapters() {
         val onThumbnailClickListener = object : ThumbViewHolder.OnItemClickListener {
-            override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                 showToast(
                     "Coming soon \n%s \n%s index: %d",
                     getMovieTitle(comingSoonSmartMovieAdapter, position),
@@ -101,7 +102,7 @@ class NestedSmartRecyclerAdaptersActivity : BaseSampleActivity() {
         comingSoonSmartMovieAdapter.setCustomLoadMoreLayoutResource(R.layout.custom_loadmore_view)
 
         // Pagination ends after 3 loads
-        comingSoonSmartMovieAdapter.setOnLoadMoreListener(onLoadMoreListener {
+        comingSoonSmartMovieAdapter.setOnLoadMoreListener {
             Handler().postDelayed({
                 comingSoonSmartMovieAdapter.addItems(
                     comingSoonSmartMovieAdapter.itemCount - 1,
@@ -110,7 +111,7 @@ class NestedSmartRecyclerAdaptersActivity : BaseSampleActivity() {
                 if (moreItemsLoadedCount++ == 2)
                     comingSoonSmartMovieAdapter.isEndlessScrollEnabled = false
             }, 1000)
-        })
+        }
 
         myWatchListSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.myWatchListItems)
             .map(MovieModel::class, ThumbViewHolder::class)
@@ -140,7 +141,7 @@ class NestedSmartRecyclerAdaptersActivity : BaseSampleActivity() {
             .create()
     }
 
-    private fun getMovieTitle(smartRecyclerAdapter: SmartRecyclerAdapter, position: Int): String {
+    private fun getMovieTitle(smartRecyclerAdapter: SmartRecyclerAdapter, position: Position): String {
         val movieModel = smartRecyclerAdapter.getItem(position) as MovieModel
         return movieModel.title
     }

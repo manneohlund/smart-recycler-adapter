@@ -11,7 +11,10 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_simple_item.*
+import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
+import smartadapter.ViewEventId
+import smartadapter.ViewId
 import smartadapter.listener.OnItemClickListener
 import smartadapter.listener.OnItemSelectedListener
 import smartadapter.state.SelectionStateHolder
@@ -31,7 +34,7 @@ class MultiSelectCheckBoxItemsActivity : BaseSampleActivity() {
         val items = (0..100).toMutableList()
 
         onCheckBoxItemSelectedListener = object : OnCheckBoxItemSelectedListener {
-            override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                 Toast.makeText(
                     applicationContext,
                     String.format(
@@ -56,7 +59,7 @@ class MultiSelectCheckBoxItemsActivity : BaseSampleActivity() {
             .map(Integer::class, SimpleSelectableCheckBoxViewHolder::class)
             .addViewEventListener(onCheckBoxItemSelectedListener)
             .addViewEventListener(object : OnItemClickListener {
-                override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                     Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT)
                         .show()
                 }
@@ -88,6 +91,6 @@ interface OnCheckBoxItemSelectedListener : OnItemSelectedListener {
     override val selectionStateHolder: SelectionStateHolder
         get() = checkBoxStateHolder
 
-    override val viewId: Int
+    override val viewId: ViewId
         get() = R.id.checkBox
 }

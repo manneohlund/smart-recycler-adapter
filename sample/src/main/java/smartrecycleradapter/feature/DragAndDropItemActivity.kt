@@ -5,9 +5,10 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_simple_item.*
+import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
+import smartadapter.ViewEventId
 import smartadapter.listener.OnItemLongClickListener
-import smartadapter.listener.onItemMovedListener
 import smartadapter.widget.AutoDragAndDropExtension
 import smartadapter.widget.DragAndDropExtensionBuilder
 import smartrecycleradapter.feature.simpleitem.SimpleItemViewHolder
@@ -30,15 +31,16 @@ class DragAndDropItemActivity : BaseSampleActivity() {
                 .items(items)
                 .map(Integer::class, SimpleItemViewHolder::class)
                 .addViewEventListener(object : OnItemLongClickListener {
-                    override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                         Toast.makeText(applicationContext, "onLongClick $position", Toast.LENGTH_SHORT).show()
                     }
                 })
-                .addExtensionBuilder(DragAndDropExtensionBuilder(AutoDragAndDropExtension())
-                        .setLongPressDragEnabled(true)
-                        .setOnItemMovedListener(onItemMovedListener { oldViewHolder, targetViewHolder ->
-                            Log.i(DragAndDropItemActivity::class.java.name, "onItemMoved from ${oldViewHolder.adapterPosition} to ${targetViewHolder.adapterPosition}")
-                        }))
+                .addExtensionBuilder(DragAndDropExtensionBuilder(AutoDragAndDropExtension()).apply {
+                    longPressDragEnabled = true
+                    onItemMovedListener = { oldViewHolder, targetViewHolder ->
+                        Log.i(DragAndDropItemActivity::class.java.name, "onItemMoved from ${oldViewHolder.adapterPosition} to ${targetViewHolder.adapterPosition}")
+                    }
+                })
                 .into<SmartRecyclerAdapter>(recyclerView)
     }
 }

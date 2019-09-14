@@ -13,7 +13,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_simple_item.*
+import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
+import smartadapter.ViewEventId
 import smartadapter.listener.OnItemLongClickSelectedListener
 import smartrecycleradapter.R
 
@@ -38,7 +40,7 @@ class MultiSelectItemsActivity : BaseSampleActivity() {
         val items = (0..100).toMutableList()
 
         onItemSelectedListener = object : OnItemLongClickSelectedListener {
-            override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                 Toast.makeText(
                     applicationContext,
                     String.format(

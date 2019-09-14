@@ -47,6 +47,12 @@ android {
         jvmTarget = '1.8'
         freeCompilerArgs = ['-Xjvm-default=compatibility']
     }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 dependencies {

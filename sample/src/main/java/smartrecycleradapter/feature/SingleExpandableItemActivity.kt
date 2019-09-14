@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_simple_item.*
+import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
+import smartadapter.ViewEventId
+import smartadapter.ViewId
 import smartadapter.listener.OnItemSelectedListener
 import smartadapter.state.SelectionStateHolder
 import smartadapter.state.SingleSelectionStateHolder
@@ -28,7 +31,7 @@ class SingleExpandableItemActivity : BaseSampleActivity() {
                 .items(items)
                 .map(Integer::class, SimpleExpandableItemViewHolder::class)
                 .addViewEventListener(object : OnSingleItemExpandedListener {
-                    override fun onViewEvent(view: View, viewEventId: Int, position: Int) {
+                    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                         Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT).show()
                     }
                 })
@@ -43,6 +46,6 @@ interface OnSingleItemExpandedListener : OnItemSelectedListener {
     override val selectionStateHolder: SelectionStateHolder
         get() = singleExpandedStateHolder
 
-    override val viewId: Int
+    override val viewId: ViewId
         get() = R.id.itemTitle
 }

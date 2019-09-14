@@ -19,9 +19,7 @@ public class RecyclableTestViewHolder extends SmartViewHolder implements Recycla
     }
 
     @Override
-    public void bind(@NonNull Object item) {
-
-    }
+    public void bind(@NonNull Object item) { }
 
     @Override
     public boolean onFailedToRecycleView() {
