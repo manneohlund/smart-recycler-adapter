@@ -2,6 +2,9 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     compileSdkVersion TARGET_SDK_VERSION
 
@@ -13,17 +16,38 @@ android {
         versionName VERSION_NAME
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+
+        setProperty("archivesBaseName", "$ARTIFACT_NAME-$VERSION_NAME")
+    }
+
+    signingConfigs {
+        release {
+            storeFile file(properties['storeFile'])
+            storePassword properties['storePassword']
+            keyAlias properties['keyAlias']
+            keyPassword properties['keyPassword']
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
         debug {
+            applicationIdSuffix ".debug"
+            debuggable true
+            minifyEnabled false
+        }
+        beta {
+            initWith debug
+            applicationIdSuffix ".beta"
             debuggable false
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            matchingFallbacks = ['debug']
         }
     }
 
