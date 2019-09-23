@@ -39,15 +39,15 @@ This library will make it easy and painless to map your data item with a target 
 
 #### Release overview
 
-* Kotlin + AndroidX [Coming soon]()
-* Java + AndroidX [v3.0.0](https://github.com/manneohlund/smart-recycler-adapter/tree/3.0.0)
-* Java + AppCompat [v2.2.0](https://github.com/manneohlund/smart-recycler-adapter/tree/2.2.0)
+* Kotlin + AndroidX (jcenter, jitpack) [v4.0.0](https://github.com/manneohlund/smart-recycler-adapter/tree/4.0.0)
+* Java + AndroidX (jcenter, jitpack) [v3.0.0](https://github.com/manneohlund/smart-recycler-adapter/tree/3.0.0)
+* Java + AppCompat (jitpack) [v2.2.0](https://github.com/manneohlund/smart-recycler-adapter/tree/2.2.0)
 
 # Gradle
 Add `jcenter()` or `maven { url  "https://dl.bintray.com/manneohlund/maven" }` to your `build.gradle` under `repositories`
 ```groovy
-dependencies {  
-  implementation 'io.github.manneohlund:smart-recycler-adapter:3.0.0'
+dependencies {
+  implementation 'io.github.manneohlund:smart-recycler-adapter:4.0.0'
 }
 ```
 
