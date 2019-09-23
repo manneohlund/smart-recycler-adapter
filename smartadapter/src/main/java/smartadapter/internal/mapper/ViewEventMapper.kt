@@ -69,11 +69,11 @@ class ViewEventMapper {
                 for (j in 0 until eventIdAndListener.size()) {
                     val viewId = viewIdviewEventIdMap.keyAt(i)
                     val viewEventId = eventIdAndListener.keyAt(j)
-                    val viewActionListener = eventIdAndListener.valueAt(j)
+                    val viewEventListener = eventIdAndListener.valueAt(j)
 
                     if (viewId == R.id.undefined && viewEventId == R.id.undefined) {
                         if (ViewEventListenerHolder::class.java.isAssignableFrom(smartViewHolder.javaClass)) {
-                            (smartViewHolder as ViewEventListenerHolder).setOnViewEventListener(viewActionListener)
+                            (smartViewHolder as ViewEventListenerHolder).setOnViewEventListener(viewEventListener)
                         } else {
                             Log.e(ViewEventMapper::class.java.name, String.format(
                                     "Don't forget that '%s' needs to implement '%s' in order to receive the events",
@@ -87,7 +87,7 @@ class ViewEventMapper {
                         targetView = smartViewHolder.itemView.findViewById(viewId)
                     }
 
-                    viewEventListenerMapperProvider.bind(smartViewHolder, targetView, viewActionListener, viewEventId)
+                    viewEventListenerMapperProvider.bind(smartViewHolder, targetView, viewEventListener, viewEventId)
                 }
             }
         }

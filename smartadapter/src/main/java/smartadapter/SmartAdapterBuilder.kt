@@ -57,7 +57,7 @@ class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter:
     /**
      * Adds [OnViewEventListener] to the [SmartRecyclerAdapter].
      * The adapter will then automatically map the [OnViewEventListener] to the target view holder class with [OnViewEventListener.viewHolderType],
-     * set the viewActionListener on the right View with viewId using [OnViewEventListener.viewId].
+     * set the viewEventListener on the right View with viewId using [OnViewEventListener.viewId].
      *
      * @see OnViewEventListener.viewEventId
      * @param viewEventListener target [OnViewEventListener]
