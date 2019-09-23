@@ -34,10 +34,12 @@ class AutoDragAndDropExtension : BasicDragAndDropExtension(), SmartAdapterHolder
         if (moved) {
             val oldPosition = viewHolder.adapterPosition
             val newPosition = target.adapterPosition
-            val targetItem = smartRecyclerAdapter!!.getItems()[oldPosition]
-            smartRecyclerAdapter?.getItems()?.removeAt(oldPosition)
-            smartRecyclerAdapter?.getItems()?.add(newPosition, targetItem)
-            smartRecyclerAdapter?.notifyItemMoved(oldPosition, newPosition)
+            with (smartRecyclerAdapter!!) {
+                val targetItem = getItems()[oldPosition]
+                getItems().removeAt(oldPosition)
+                getItems().add(newPosition, targetItem)
+                notifyItemMoved(oldPosition, newPosition)
+            }
         }
         return moved
     }
