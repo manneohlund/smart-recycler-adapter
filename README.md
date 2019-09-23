@@ -54,14 +54,14 @@ dependencies {
 # Basic
 ### Basic adapter creation
 
-```java
+```kotlin
 SmartRecyclerAdapter
   .items(items)
-  .map(MoviePosterModel.class, PosterViewHolder.class)
-  .map(MovieBannerModel.class, BannerViewHolder.class)
-  .map(MovieModel.class, MovieViewHolder.class)
-  .map(TopNewsModel.class, TopNewsViewHolder.class)
-  .into(recyclerView);
+  .map(MoviePosterModel::class, PosterViewHolder::class)
+  .map(MovieBannerModel::class, BannerViewHolder::class)
+  .map(MovieModel::class, MovieViewHolder::class)
+  .map(TopNewsModel::class, TopNewsViewHolder::class)
+  .into<SmartRecyclerAdapter>(recyclerView)
  ```
 
 ### SmartViewHolder
@@ -73,23 +73,19 @@ The method `unbind` has an default implementation and is optional.
 
 ##### Works with Android DataBinding! Just add the DataBinding LayoutInflater in `super` call. 🚀
 
-```java
-public class PosterViewHolder extends SmartViewHolder<MoviePosterModel> {
+```kotlin
+class PosterViewHolder(parentView: ViewGroup) : SmartViewHolder<MovieModel>(
+    LayoutInflater.from(parentView.context).inflate(R.layout.poster_item, parentView, false)
+) {
 
-  public PostViewHolder(ViewGroup parentView) { 
-    super(LayoutInflater.from(parentView.getContext()).inflate(R.layout.poster_view, parentView, false)); 
-  }
-  
-  @Override 
-  public void bind(MoviePosterModel model) {
+  override fun bind(movie: MovieModel) {
     Glide.with(imageView)
       .load(model.posterUrl)
-      .into(imageView);
+      .into(imageView)
   }
   
-  @Override 
-  public void unbind() {
-    Glide.with(imageView).clear(imageView);
+  override fun unbind() {
+    Glide.with(imageView).clear(imageView)
   }
 } 
 ```
@@ -98,41 +94,62 @@ public class PosterViewHolder extends SmartViewHolder<MoviePosterModel> {
   
 You can easily assign events to views and add an `OnViewEventListener` to the SmartRecyclerAdapter for easy event handling.
 
-```java
+```kotlin
 SmartRecyclerAdapter
   .items(items)
-  .map(MovieModel.class, MovieViewHolder.class)
+  .map(MovieModel::class, MovieViewHolder::class)
   // Adds a basic `OnViewEventListener` to any `SmartViewHolder` extension that implements `ViewEventListenerHolder`
-  .addViewEventListener((view, eventId, position) -> handleItemEvent())
-  .into(recyclerView);
+  .addViewEventListener(onViewEventListener { view, viewEventId, position -> handleItemEvent()})
+  .into<SmartRecyclerAdapter>(recyclerView)
 ```
  
 In your view holder, add eg `OnClickListener` to a view and call `onViewEvent` on the `OnViewEventListener`.<br/>
-Your `ViewHolder` must implements `ViewEventListenerHolder` to recieve the `OnViewEventListener`. 
+Your `ViewHolder` must implements `ViewEventListenerHolder` to receive the `OnViewEventListener`. 
   
-```java
-class MovieViewHolder 
-    extends SmartViewHolder<MovieModel>
-    implements SmartViewEventListenerHolder {
+```kotlin
+open class SimpleItemViewHolder(parentView: ViewGroup) : SmartViewHolder<Int>(
+        LayoutInflater.from(parentView.context).inflate(R.layout.simple_item, parentView, false)
+), ViewEventListenerHolder {
 
-  private OnViewEventListener viewEventListener;
+  private lateinit var viewEventListener: OnViewEventListener
 
-  @Override
-  public void setOnViewEventListener(@NonNull OnViewEventListener viewEventListener) {
-    this.viewEventListener = viewEventListener;
+  override fun setOnViewEventListener(viewEventListener: OnViewEventListener) {
+    this.viewEventListener = viewEventListener
   }
-  
-  @Override
-  public void bind(MovieModel movieModel) {
-    imageView.setOnClickListener(view -> 
-        viewEventListener.onViewEvent(view, R.id.action_play_movie, getAdapterPosition()));
+
+  init {
+    itemView.setOnClickListener { view ->
+      viewEventListener.onViewEvent(view, R.id.action_play_movie, adapterPosition)
+    }
+  }
+
+  override fun bind(item: Int) {
+    // Handle binding
   }
 }
 ```
 
+Kotlin has no SAM constructors so instead of writing interface instantiation you can utilize lambda helper methods for all predefined library event listeners ex:
+
+```kotlin
+.addViewEventListener(onViewEventListener { view, viewEventId, position ->
+  // Handle event
+})
+```
+
+is same as
+
+```kotlin
+.addViewEventListener(object : OnViewEventListener {
+  override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+    // Handle event
+    }
+})
+```
+
 #### Predefined Listeners in the lib
 
-If you are lazy and want to auto assign a predefined `onClickListener` and `onLongClickListener` with eventIds `R.id.event_on_click` and `R.id.event_on_long_click`,
+If you are lazy and want to auto assign a predefined `onClickListener` and `onLongClickListener` with viewEventIds `R.id.event_on_click` and `R.id.event_on_long_click`,
 
 ###### Define listeners for MovieViewHolder
 
@@ -140,48 +157,48 @@ Default implemented view event id for `OnItemClickListener` is `R.id.event_on_cl
 Default implemented view id for `OnItemClickListener` is `R.id.undefined`. 
 `R.id.undefined` targets root view of the ViewHolder (ViewHolder.itemView).
 
-```java
-interface OnMovieItemClickListener extends OnItemClickListener {
-  @NonNull
-  @Override
-  default Class<? extends SmartViewHolder> getViewHolderType() {
-    return MovieViewHolder.class;
-  }
+```kotlin
+interface OnMovieItemClickListener : OnItemClickListener {
+  override val viewHolderType: SmartViewHolderType
+    get() = MovieViewHolder::class
 }
 ```
 
 SmartRecyclerAdapter will automatically bind an `View.OnClickListener` to a view with id `R.id.movie_info_button`.
 
-```java
-interface OnMovieInfoButtonClickListener extends OnItemClickListener {
-  @NonNull
-  @Override
-  default Class<? extends SmartViewHolder> getViewHolderType() {
-    return MovieViewHolder.class;
-  }
-  
-  @Override
-  default int getViewId() {
-    return R.id.movie_info_button;
-  }
+```kotlin
+interface OnMovieInfoButtonClickListener : OnItemClickListener {
+  override val viewHolderType: SmartViewHolderType
+    get() = MovieViewHolder::class
+
+  override val viewId: ViewId
+    get() = R.id.movie_info_button
 }
 ```
 
 And add event listener to `SmartRecyclerAdapter` builder.
 
-```java
+```kotlin
 SmartRecyclerAdapter
   .items(items)
-  .map(HeaderModel.class, HeaderViewHolder.class)
-  .map(MovieModel.class, MovieViewHolder.class)
-  .map(MovieTrailerModel.class, MovieTrailerViewHolder.class)
+  .map(HeaderModel::class, HeaderViewHolder::class)
+  .map(MovieModel::class, MovieViewHolder::class)
+  .map(MovieTrailerModel::class, MovieTrailerViewHolder::class)
   // Adds `OnItemClickListener` and auto binds `View.OnClickListener` on all ViewHolders.
-  .addViewEventListener((OnItemClickListener) (view, eventId, position) -> handleEvent(eventId))
+  .addViewEventListener(onItemClickListener { view, viewEventId, position -> handleEvent(viewEventId) })
   // Adds event listener for MovieViewHolder only and overrides any generic `OnItemClickListener`
-  .addViewEventListener((OnMovieItemClickListener) (view, eventId, position) -> playMovie())
+  .addViewEventListener(object : OnMovieItemClickListener {
+    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+      playMovie()
+    }
+  })
   // Adds event listener for MovieViewHolder only and auto binds `View.OnClickListener` on view with id `R.id.movie_info_button`
-  .addViewEventListener((OnMovieInfoButtonClickListener) (view, eventId, position) -> showMovieInfo(position))
-  .into(recyclerView);
+  .addViewEventListener(object : OnMovieInfoButtonClickListener {
+    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+      showMovieInfo(position)
+    }
+  })
+  .into<SmartRecyclerAdapter>(recyclerView)
 ```
 
 ### Adapter creation with ViewTypeResolver
@@ -189,17 +206,17 @@ SmartRecyclerAdapter
 If you want to bind one data type with different view holders depending on some attribute you can set a ViewTypeResolver.  
 Note .map() call not needed in this case but you can combine if you want to.
   
-```java
+```kotlin
 SmartRecyclerAdapter
   .items(items)
-  .setViewTypeResolver((item, position) -> {
-    if (item instanceof MovieTrailerModel) { 
-      return MovieTrailerViewHolder.class;
-    } else if (item instanceof MovieModel && ((MovieModel)item).isRatedR()) { 
-      return RMovieViewHolder.class; 
-    } return MovieViewHolder.class; // Add default view if needed, else SmartRecyclerAdapter will look at the base `.map` mapping
-  })
-  .into(recyclerView);
+  .setViewTypeResolver{ item, position -> {
+    when { 
+      item is MovieTrailerModel -> MovieTrailerViewHolder::class
+      item is MovieModel && item.isRatedR() -> RMovieViewHolder::class
+      else -> MovieViewHolder::class // Add default view if needed, else SmartRecyclerAdapter will look at the base `.map` mapping
+    }
+  }}
+  .into<SmartRecyclerAdapter>(recyclerView)
 ```
 
 # New nested SmartRecyclerAdapter from v2.0.0
@@ -211,45 +228,42 @@ Just implement the `SmartAdapterHolder` interface in your `ViewHolder` and `Smar
 
 ### 1. Create your nested SmartRecyclerAdapter
 
-```java
-SmartRecyclerAdapter myWatchListSmartMovieAdapter = SmartRecyclerAdapter
+```kotlin
+val myWatchListSmartMovieAdapter: SmartRecyclerAdapter = SmartRecyclerAdapter
   .items(myWatchListItems)
-  .map(MovieModel.class, ThumbViewHolder.class)
-  .addViewEventListener((OnItemClickListener) (view, eventId, position) -> playMovie())
-  .create();
+  .map(MovieModel::class, ThumbViewHolder::class)
+  .addViewEventListener(onItemClickListener { view, viewEventId, position -> playMovie() })
+  .create()
 ````
 
 ### 2. Map myWatchListSmartMovieAdapter with MyWatchListViewHolder
 
-```java
+```kotlin
 SmartRecyclerAdapter
   .items(items)
-  .map(MoviePosterModel.class, PosterViewHolder.class)
-  .map(MyWatchListModel.class, MyWatchListViewHolder.class)
-  .map(MyWatchListViewHolder.class, myWatchListSmartMovieAdapter)
-  .into(recyclerView);
+  .map(MoviePosterModel::class, PosterViewHolder::class)
+  .map(MyWatchListModel::class, MyWatchListViewHolder::class)
+  .map(MyWatchListViewHolder::class, myWatchListSmartMovieAdapter)
+  .into<SmartRecyclerAdapter>(recyclerView)
 ```
 
 ### 3. Map myWatchListSmartMovieAdapter to MyWatchListViewHolder
 
-```java
-class MyWatchListViewHolder
-    extends SmartViewHolder<MyWatchListModel>
-    implements SmartAdapterHolder {
+```kotlin
+class MyWatchListViewHolder : SmartViewHolder<MyWatchListModel>, SmartAdapterHolder {
     
-  // Constructor here
-    
-  @Override
-  public void setSmartRecyclerAdapter(SmartRecyclerAdapter smartRecyclerAdapter) {
-    recyclerView.setLayoutManager(new LinearLayoutManager(context, HORIZONTAL, false));
-    recyclerView.setAdapter(smartRecyclerAdapter);
-  }
+  override var smartRecyclerAdapter: SmartRecyclerAdapter? = null
+    set(value) {
+      field = value
+      recyclerView.layoutManager = LinearLayoutManager(recyclerView.context, HORIZONTAL, false)
+      recyclerView.adapter = value
+    }
 
-  public void bind(MyWatchListModel myWatchListModel) {
+  override fun bind(myWatchListModel: MyWatchListModel) {
     // bind model data to views
   }
     
-  public void unbind() {
+  override fun unbind() {
     // optional unbinding of view data model
   }
 }
@@ -261,27 +275,27 @@ A popular feature in apps is to have endless scrolling with pagination, in other
 With SmartEndlessScrollRecyclerAdapter you can achieve this.
 
 #### 1. Create adapter
-```java
-SmartEndlessScrollRecyclerAdapter endlessScrollAdapter = SmartEndlessScrollRecyclerAdapter
+```kotlin
+val endlessScrollAdapter: SmartEndlessScrollRecyclerAdapter = SmartEndlessScrollRecyclerAdapter
   .items(items)
-  .map(MovieModel.class, MovieViewHolder.class)
-  .into(recyclerView);
+  .map(MovieModel::class, MovieViewHolder::class)
+  .into(recyclerView)
 ```
 
 #### 2. Set OnLoadMoreListener to your SmartEndlessScrollRecyclerAdapter
 
 Called when scrolled to the last item and loading view is visible.
 
-```java
-endlessScrollAdapter.setOnLoadMoreListener(() -> {
-  endlessScrollAdapter.addItems(moreItems);
-});
+```kotlin
+endlessScrollAdapter.setOnLoadMoreListener{
+  endlessScrollAdapter.addItems(moreItems)
+}
 ```
 
 #### More SmartEndlessScrollRecyclerAdapter features
 
 Enable/Disable endless scrolling and thus removing the loading view.
-`endlessScrollAdapter.setEndlessScrollEnabled(false);`
+`endlessScrollAdapter.isEndlessScrollEnabled = false`
 
 You can also set your custom loading/loadmore view.
 `endlessScrollAdapter.setCustomLoadMoreLayoutResource(R.layout.your_custom_loadmore_view);`
@@ -293,18 +307,12 @@ For more samples test out the sample app and see the [source code](https://githu
 ### RecyclableViewHolder
 
 Sometimes a ViewHolder created by the Adapter cannot be recycled due to its transient state.
-In order to fix this is to implement `Re` in your `SmartViewHolder` extension so that upon receiving this callback, 
+In order to fix this is to implement `RecyclableViewHolder` in your `SmartViewHolder` extension so that upon receiving this callback, 
 Adapter can clear the animation(s) that effect the View's transient state and return <code>true</code> so that the View can be recycled.
 
-```java
-class MovieViewHolder 
-    extends SmartViewHolder
-    implements RecyclableViewHolder {
-  @Override
-  public boolean onFailedToRecycleView() {
-    // Clear animations or other stuff
-    return true; 
-  }
+```kotlin
+class MovieViewHolder : SmartViewHolder, RecyclableViewHolder {
+  override fun onFailedToRecycleView(): Boolean = true
 }
 ```
 
@@ -313,19 +321,16 @@ class MovieViewHolder
 If you want to catch when the view is attached and detached from the window in your ViewHolder you can implement `OnViewAttachedToWindowListener` and `OnViewDetachedFromWindowListener` in your `SmartViewHolder` extension.
 Becoming detached from the window is not necessarily a permanent condition the consumer of an Adapter's views may choose to cache views offscreen while they are not visible, attaching and detaching them as appropriate.
 
-```java
-public class MovieViewHolder 
-    extends SmartViewHolder 
-    implements OnViewAttachedToWindowListener, 
-               OnViewDetachedFromWindowListener { 
+```kotlin
+class MovieViewHolder : SmartViewHolder, 
+    OnViewAttachedToWindowListener, 
+    OnViewDetachedFromWindowListener { 
 
-  @Override
-  public void onViewAttachedToWindow() {
+  override fun onViewAttachedToWindow(viewHolder: RecyclerView.ViewHolder) {
     // Restore
   }
 
-  @Override
-  public void onViewDetachedFromWindow() {
+  override fun onViewDetachedFromWindow(viewHolder: RecyclerView.ViewHolder) {
     // Cache
   }
 }
@@ -345,7 +350,7 @@ Variable parameter overloading with many different `addViewEventListener` calls.
 .addViewEventListener(
     MovieViewHolder.class,
     R.id.event_on_click,
-    (view, eventId, position) -> playMovie())
+    (view, viewEventId, position) -> playMovie())
 ```
 
 ```java
@@ -372,41 +377,82 @@ interface OnMovieItemClickListener extends OnItemClickListener {
 Add listener to the SmartAdapterBuilder.
 
 ```java
-.addViewEventListener((OnMovieItemClickListener) (view, eventId, position) -> playMovie())
+.addViewEventListener((OnMovieItemClickListener) (view, viewEventId, position) -> playMovie())
+```
+
+
+### New in v4.0.0 (Kotlin)
+
+In Kotlin the interface properties are overridden instead of default methods as in java.
+`SmartViewHolderType` is a *typealias* of `KClass<out SmartViewHolder<*>>`.
+
+```kotlin
+interface OnMovieItemClickListener : OnItemClickListener {
+  override val viewHolderType: SmartViewHolderType
+    get() = MovieViewHolder::class
+}
+```
+
+```kotlin
+.addViewEventListener(object : OnMovieItemClickListener {
+  override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+    playMovie()
+  }
+})
+```
+
+----
+
+Kotlin has no SAM constructor for interface as java so lambda resolving is not working yet.
+However you can do lambda call to eg `OnItemClickListener` extensions like this:
+
+```kotlin
+inline fun onMovieItemClickListener(crossinline viewEvent: (
+        view: View,
+        viewEventId: ViewEventId,
+        position: Position) -> Unit) = object : OnItemClickListener {
+    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+        viewEvent(view, viewEventId, position)
+    }
+}
+```
+
+```kotlin
+.addViewEventListener(onMovieItemClickListener { view, viewEventId, position -> playMovie() })
 ```
 
 ### More SmartRecyclerAdapter features
 
-```java
-SmartRecyclerAdapter adapter = SmartRecyclerAdapter
+```kotlin
+val adapter: SmartRecyclerAdapter = SmartRecyclerAdapter
     .items(items)
-    .map(MovieModel.class, MovieViewHolder.class)
-    .into(recyclerView);
+    .map(MovieModel::class, MovieViewHolder::class)
+    .into(recyclerView)
 
 // We can add more data
-adapter.addItems(items);
+adapter.addItems(items)
 
 // Add data at index with animation
-adapter.addItem(0, item);
+adapter.addItem(0, item)
 
 // Add data at index without animation
-adapter.addItem(0, item, false);
+adapter.addItem(0, item, false)
 
 // Remove item at index with animation
-adapter.removeItem(0);
+adapter.removeItem(0)
 
 // Remove item at index without animation
-adapter.removeItem(0, false);
+adapter.removeItem(0, false)
 
 // Replace item at index with animation
-adapter.replaceItem(0, item);
+adapter.replaceItem(0, item)
 
 // Replace item at index without animation
-adapter.replaceItem(0, item, false);
+adapter.replaceItem(0, item, false)
 
 // Get items by type
-adapter.getItems(MovieModel.class);
+adapter.getItems(MovieModel::class)
 
 // Delete all items in the list
-adapter.clear();
+adapter.clear()
 ```
