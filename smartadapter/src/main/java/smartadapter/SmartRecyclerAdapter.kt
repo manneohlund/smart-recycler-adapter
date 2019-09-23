@@ -92,7 +92,7 @@ open class SmartRecyclerAdapter
 
     override fun onFailedToRecycleView(holder: SmartViewHolder<Any>): Boolean {
         return if (holder is RecyclableViewHolder) {
-            (holder as RecyclableViewHolder).onFailedToRecycleView()
+            holder.onFailedToRecycleView()
         } else super.onFailedToRecycleView(holder)
     }
 
