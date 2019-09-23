@@ -55,3 +55,15 @@ interface OnViewEventListener {
      */
     fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position)
 }
+
+/**
+ * Helper method to provide lambda call to interface instances of [OnViewEventListener].
+ */
+inline fun onViewEventListener(crossinline viewEvent: (
+    view: View,
+    viewEventId: ViewEventId,
+    position: Position) -> Unit) = object : OnViewEventListener {
+    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+        viewEvent(view, viewEventId, position)
+    }
+}
