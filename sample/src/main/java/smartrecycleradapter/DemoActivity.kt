@@ -18,8 +18,8 @@ import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.RecyclerView
 import smartadapter.*
 import smartadapter.listener.OnItemClickListener
-import smartadapter.listener.OnViewEventListener
 import smartadapter.listener.onItemClickListener
+import smartadapter.listener.onViewEventListener
 import smartrecycleradapter.data.MovieDataItems
 import smartrecycleradapter.extension.PreCachingLinearLayoutManager
 import smartrecycleradapter.feature.*
@@ -57,26 +57,22 @@ class DemoActivity : AppCompatActivity() {
     }
 
     private fun initSmartRecyclerAdapter() {
-        val items = ArrayList<Any>()
-
-        items.add(MoviePosterModel(MovieDataItems.randomPoster))
-        items.add(
+        val items = mutableListOf(
+            MoviePosterModel(MovieDataItems.randomPoster),
             SampleFabViewHolder.SimpleFabItem(
                 R.drawable.ic_widgets_black_24dp,
                 "More samples"
-            )
-        )
-        items.add(ComingSoonMoviesModel("Coming soon"))
-        items.add(MyWatchListModel("My watch list"))
-        items.add(MovieBannerModel("Recommended", MovieDataItems.randomBanner))
-        items.add(ActionMoviesModel("Action"))
-        items.add(AdventureMoviesModel("Adventure"))
-        items.add(MovieBannerModel("Trending", MovieDataItems.randomBanner))
-        items.add(AnimatedMoviesModel("Animated"))
-        items.add(SciFiMoviesModel("Sci-Fi"))
-        items.add(MovieBannerModel("Promotion", MovieDataItems.randomBanner))
-        items.add(RecentlyPlayedMoviesModel("Recently played"))
-        items.add(
+            ),
+            ComingSoonMoviesModel("Coming soon"),
+            MyWatchListModel("My watch list"),
+            MovieBannerModel("Recommended", MovieDataItems.randomBanner),
+            ActionMoviesModel("Action"),
+            AdventureMoviesModel("Adventure"),
+            MovieBannerModel("Trending", MovieDataItems.randomBanner),
+            AnimatedMoviesModel("Animated"),
+            SciFiMoviesModel("Sci-Fi"),
+            MovieBannerModel("Promotion", MovieDataItems.randomBanner),
+            RecentlyPlayedMoviesModel("Recently played"),
             CopyrightModel(
                 String.format(
                     "SmartRecyclerAdapter v%s\n\nDeveloped by Manne Öhlund",
@@ -111,22 +107,17 @@ class DemoActivity : AppCompatActivity() {
             .setLayoutManager(PreCachingLinearLayoutManager.getInstance(this))
 
             // You need to define your own view event listeners like onClickListener on a view
-            .addViewEventListener(object : OnViewEventListener {
-                override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
-                    showToast(getActionName(viewEventId) + " " + position)
-                }
+            .addViewEventListener(onViewEventListener { view, viewEventId, position ->
+                showToast(getActionName(viewEventId) + " " + position)
             })
-
             /** Adds event listener and also automatically adds row item [View.OnClickListener] on all items root view  */
             .addViewEventListener(onItemClickListener { view, viewEventId, position ->
                 showToast(getActionName(viewEventId) + " " + position)
             })
-
             /** Adds event listener and also automatically adds row item [View.OnLongClickListener] on all items root view  */
             .addViewEventListener(onItemClickListener { view, viewEventId, position ->
                 showToast(getActionName(viewEventId) + " " + position)
             })
-
             .addViewEventListener(object : PosterViewHolder.OnItemClickListener {
                 override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                     mainSmartMovieAdapter.replaceItem(
@@ -135,49 +126,36 @@ class DemoActivity : AppCompatActivity() {
                     )
                 }
             })
-
             // .addViewEventListener((PosterViewHolder.OnPlayButtonClickListener)(view, viewEventId, position) -> showToast("PLAY"))
-
             .addViewEventListener(object : PosterViewHolder.OnStarButtonClickListener {
                 override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                     showToast("ADD to favorites")
                 }
             })
-
             .addViewEventListener(object : PosterViewHolder.OnInfoButtonClickListener {
                 override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                     showToast("INFO")
                 }
             })
-
             .addViewEventListener(ComingSoonMoviesViewHolder.onMoreButtonClickListener { _, _, _ ->
                 startMovieCategoryDetailsActivity(MovieType.COMING_SOON)
             })
-
             .addViewEventListener(MyWatchListViewHolder.onMoreButtonClickListener { _, _, _ ->
                 startMovieCategoryDetailsActivity(MovieType.MY_WATCH_LIST)
             })
-
             .addViewEventListener(ActionMoviesViewHolder.onMoreButtonClickListener { _, _, _ ->
                 startMovieCategoryDetailsActivity(MovieType.ACTION)
             })
-
             .addViewEventListener(AdventureMoviesViewHolder.onMoreButtonClickListener { _, _, _ ->
                 startMovieCategoryDetailsActivity(MovieType.ADVENTURE)
             })
-
             .addViewEventListener(AnimatedMoviesViewHolder.onMoreButtonClickListener { _, _, _ ->
                 startMovieCategoryDetailsActivity(MovieType.ANIMATED)
             })
-
             .addViewEventListener(SciFiMoviesViewHolder.onMoreButtonClickListener { _, _, _ ->
                 startMovieCategoryDetailsActivity(MovieType.SCI_FI)
             })
-
             .addViewEventListener(onFabClickListener { _, _, _ ->
-                moreSamplesDialog.show()
-            })
-            .addViewEventListener(onItemClickListener { _, _, _ ->
                 moreSamplesDialog.show()
             })
             .into(recyclerView)
@@ -367,7 +345,10 @@ class DemoActivity : AppCompatActivity() {
 
         val items = mutableListOf(
             "More Samples",
-            SampleFabViewHolder.SimpleFabItem(R.drawable.ic_sample_list_black_24dp, "Simple Item"),
+            SampleFabViewHolder.SimpleFabItem(
+                R.drawable.ic_sample_list_black_24dp,
+                "Simple Item"
+            ),
             SampleFabViewHolder.SimpleFabItem(
                 R.drawable.ic_sample_touch_app_black_24dp,
                 "Smart onClick/onLongClick"
@@ -448,51 +429,44 @@ class DemoActivity : AppCompatActivity() {
             .addViewEventListener(onFabClickListener { view, viewEventId, position ->
                 val sfi = dialogAdapter.getItem(position) as SampleFabViewHolder.SimpleFabItem
                 when (sfi.icon) {
-                    R.drawable.ic_sample_list_black_24dp -> startActivity(SimpleItemActivity::class)
-                    R.drawable.ic_sample_touch_app_black_24dp -> startActivity(
-                        SimpleItemOnClickOnLongClickActivity::class
-                    )
-                    R.drawable.ic_sample_edit_black_24dp -> startActivity(CustomViewEventActivity::class)
-                    R.drawable.ic_sample_list_numbered_black_24dp -> startActivity(
-                        MultipleViewTypesResolverActivity::class
-                    )
-                    R.drawable.ic_sample_drag_drop_swap_vert_black_24dp -> startActivity(
-                        DragAndDropItemActivity::class
-                    )
-                    R.drawable.ic_drag_handle_black_24dp -> startActivity(
-                        DragAndDropHandleItemActivity::class
-                    )
-                    R.drawable.ic_sample_swipe_black_24dp -> startActivity(SwipeRemoveItemActivity::class)
-                    R.drawable.ic_sample_multiple_events_gesture_black_24dp -> startActivity(
-                        MultipleEventsAndExtensionsActivity::class
-                    )
-                    R.drawable.ic_sample_grid_black_24dp -> startActivity(GridActivity::class)
-                    R.drawable.ic_sample_select_all_black_24dp -> startActivity(
-                        MultiSelectItemsActivity::class
-                    )
-                    R.drawable.ic_radio_button_checked_black_24dp -> startActivity(
-                        SingleSelectRadioButtonItemActivity::class
-                    )
-                    R.drawable.ic_sample_check_box_black_24dp -> startActivity(
-                        MultiSelectCheckBoxItemsActivity::class
-                    )
-                    R.drawable.ic_switch_black_24dp -> startActivity(MultiSelectSwitchItemsActivity::class)
-                    R.drawable.ic_expand_more_black_24dp -> startActivity(
-                        MultipleExpandableItemActivity::class
-                    )
-                    R.drawable.ic_expand_less_black_24dp -> startActivity(
-                        SingleExpandableItemActivity::class
-                    )
-                    R.drawable.ic_sample_nested_scroll_layers_black_24dp -> startActivity(
-                        NestedSmartRecyclerAdaptersActivity::class
-                    )
-                    R.drawable.ic_sample_endless_scroll_arrow_downward_black_24dp -> startActivity(
-                        EndlessScrollActivity::class
-                    )
-                    R.drawable.ic_endless_scroll_load_more_black_24dp -> startActivity(
-                        EndlessScrollLoadMoreButtonActivity::class
-                    )
-                    R.drawable.ic_sample_diff_shuffle_black_24dp -> startActivity(DiffUtilActivity::class)
+                    R.drawable.ic_sample_list_black_24dp ->
+                        startActivity(SimpleItemActivity::class)
+                    R.drawable.ic_sample_touch_app_black_24dp ->
+                        startActivity(SimpleItemOnClickOnLongClickActivity::class)
+                    R.drawable.ic_sample_edit_black_24dp ->
+                        startActivity(CustomViewEventActivity::class)
+                    R.drawable.ic_sample_list_numbered_black_24dp ->
+                        startActivity(MultipleViewTypesResolverActivity::class)
+                    R.drawable.ic_sample_drag_drop_swap_vert_black_24dp ->
+                        startActivity(DragAndDropItemActivity::class)
+                    R.drawable.ic_drag_handle_black_24dp ->
+                        startActivity(DragAndDropHandleItemActivity::class)
+                    R.drawable.ic_sample_swipe_black_24dp ->
+                        startActivity(SwipeRemoveItemActivity::class)
+                    R.drawable.ic_sample_multiple_events_gesture_black_24dp ->
+                        startActivity(MultipleEventsAndExtensionsActivity::class)
+                    R.drawable.ic_sample_grid_black_24dp ->
+                        startActivity(GridActivity::class)
+                    R.drawable.ic_sample_select_all_black_24dp ->
+                        startActivity(MultiSelectItemsActivity::class)
+                    R.drawable.ic_radio_button_checked_black_24dp ->
+                        startActivity(SingleSelectRadioButtonItemActivity::class)
+                    R.drawable.ic_sample_check_box_black_24dp ->
+                        startActivity(MultiSelectCheckBoxItemsActivity::class)
+                    R.drawable.ic_switch_black_24dp ->
+                        startActivity(MultiSelectSwitchItemsActivity::class)
+                    R.drawable.ic_expand_more_black_24dp ->
+                        startActivity(MultipleExpandableItemActivity::class)
+                    R.drawable.ic_expand_less_black_24dp ->
+                        startActivity(SingleExpandableItemActivity::class)
+                    R.drawable.ic_sample_nested_scroll_layers_black_24dp ->
+                        startActivity(NestedSmartRecyclerAdaptersActivity::class)
+                    R.drawable.ic_sample_endless_scroll_arrow_downward_black_24dp ->
+                        startActivity(EndlessScrollActivity::class)
+                    R.drawable.ic_endless_scroll_load_more_black_24dp ->
+                        startActivity(EndlessScrollLoadMoreButtonActivity::class)
+                    R.drawable.ic_sample_diff_shuffle_black_24dp ->
+                        startActivity(DiffUtilActivity::class)
                 }
                 // moreSamplesDialog.dismiss();
             })

@@ -52,9 +52,10 @@ class MovieCategoryDetailsActivity : AppCompatActivity() {
             MovieType.SCI_FI -> MovieDataItems.nestedSciFiItems
         }
 
-        val adapterItems: ArrayList<Any> = ArrayList()
-        adapterItems.add(movieType.title)
-        adapterItems.addAll(movieItems)
+        val adapterItems = mutableListOf(
+            movieType.title,
+            *movieItems.toTypedArray()
+        )
 
         val gridAutoLayoutManager = GridAutoLayoutManager(this, 100)
         gridAutoLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {

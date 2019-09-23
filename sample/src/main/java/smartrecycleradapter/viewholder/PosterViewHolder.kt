@@ -5,9 +5,7 @@ package smartrecycleradapter.viewholder
  * Copyright © 2019. All rights reserved.
  */
 
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
@@ -22,22 +20,20 @@ import smartrecycleradapter.models.MovieModel
 import smartrecycleradapter.utils.displayHeight
 import smartrecycleradapter.utils.displayWidth
 
-class PosterViewHolder(parentView: View) : SmartViewHolder<MovieModel>(
-    LayoutInflater.from(parentView.context)
-        .inflate(R.layout.poster_item, parentView as ViewGroup, false)),
-    ViewEventListenerHolder {
+class PosterViewHolder(parentView: ViewGroup) : SmartViewHolder<MovieModel>(
+    LayoutInflater.from(parentView.context).inflate(R.layout.poster_item, parentView, false)
+), ViewEventListenerHolder {
 
     private val imageView: ImageView = itemView.findViewById(R.id.imageView)
 
     private val playButton: ImageView = itemView.findViewById(R.id.playButton)
-    private var viewActionListener: OnViewEventListener? = null
+    private var viewEventListener: OnViewEventListener? = null
 
-    override fun setOnViewEventListener(viewActionListener: OnViewEventListener) {
-        Log.e("PosterViewHolder", "::::::::::::::::::::::::::: setOnViewEventListener")
-        this.viewActionListener = viewActionListener
+    override fun setOnViewEventListener(viewEventListener: OnViewEventListener) {
+        this.viewEventListener = viewEventListener
 
         playButton.setOnClickListener { playButton ->
-            viewActionListener.onViewEvent(playButton, R.id.event_play, adapterPosition)
+            viewEventListener.onViewEvent(playButton, R.id.event_play, adapterPosition)
         }
     }
 

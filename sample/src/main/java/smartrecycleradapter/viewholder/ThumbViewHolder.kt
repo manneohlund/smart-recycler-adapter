@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import smartadapter.SmartViewHolderType
 import smartadapter.viewholder.SmartViewHolder
@@ -17,7 +19,7 @@ import smartrecycleradapter.models.MovieModel
 
 private val requestOption = RequestOptions()
     .error(R.drawable.ic_broken_image_black_48dp)
-    .centerInside()
+    .transform(CenterCrop(), RoundedCorners(8))
 
 class SmallThumbViewHolder(parentView: ViewGroup) : SmartViewHolder<MovieModel>(
     LayoutInflater.from(parentView.context)

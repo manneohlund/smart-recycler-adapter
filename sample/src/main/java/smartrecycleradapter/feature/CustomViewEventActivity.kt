@@ -48,11 +48,9 @@ class CustomViewEventActivity : BaseSampleActivity() {
             .into<SmartRecyclerAdapter>(recyclerView)
     }
 
-    open class SimpleItemViewHolder(parentView: View) : SmartViewHolder<Int>(
-        LayoutInflater.from(parentView.context)
-            .inflate(R.layout.simple_item, parentView as ViewGroup, false)
-    ),
-        ViewEventListenerHolder {
+    open class SimpleItemViewHolder(parentView: ViewGroup) : SmartViewHolder<Int>(
+        LayoutInflater.from(parentView.context).inflate(R.layout.simple_item, parentView, false)
+    ), ViewEventListenerHolder {
 
         private lateinit var viewEventListener: OnViewEventListener
 

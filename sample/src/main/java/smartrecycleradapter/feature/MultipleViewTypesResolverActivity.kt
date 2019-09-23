@@ -67,7 +67,7 @@ class MultipleViewTypesResolverActivity : BaseSampleActivity() {
             })
             .addViewEventListener(onCheckBoxItemSelectedListener)
             .addViewEventListener(onSwitchItemSelectedListener)
-            .setViewTypeResolver { _, position ->
+            .setViewTypeResolver { item, position ->
                 when {
                         position % 3 == 1 -> SimpleSelectableCheckBoxViewHolder::class
                         position % 3 == 2 -> SimpleSelectableSwitchViewHolder::class
