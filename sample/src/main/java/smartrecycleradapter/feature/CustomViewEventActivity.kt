@@ -52,11 +52,7 @@ class CustomViewEventActivity : BaseSampleActivity() {
         LayoutInflater.from(parentView.context).inflate(R.layout.simple_item, parentView, false)
     ), ViewEventListenerHolder {
 
-        private lateinit var viewEventListener: OnViewEventListener
-
-        override fun setOnViewEventListener(viewEventListener: OnViewEventListener) {
-            this.viewEventListener = viewEventListener
-        }
+        override lateinit var viewEventListener: OnViewEventListener
 
         init {
             itemView.setOnClickListener { view ->

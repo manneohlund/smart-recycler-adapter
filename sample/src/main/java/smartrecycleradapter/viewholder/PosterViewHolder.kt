@@ -25,13 +25,10 @@ class PosterViewHolder(parentView: ViewGroup) : SmartViewHolder<MovieModel>(
 ), ViewEventListenerHolder {
 
     private val imageView: ImageView = itemView.findViewById(R.id.imageView)
-
     private val playButton: ImageView = itemView.findViewById(R.id.playButton)
-    private var viewEventListener: OnViewEventListener? = null
+    override lateinit var viewEventListener: OnViewEventListener
 
-    override fun setOnViewEventListener(viewEventListener: OnViewEventListener) {
-        this.viewEventListener = viewEventListener
-
+    init {
         playButton.setOnClickListener { playButton ->
             viewEventListener.onViewEvent(playButton, R.id.event_play, adapterPosition)
         }

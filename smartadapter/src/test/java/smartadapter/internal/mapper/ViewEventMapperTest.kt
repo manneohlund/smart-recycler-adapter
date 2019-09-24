@@ -170,7 +170,7 @@ class ViewEventMapperTest {
     fun testSmartViewHolder_implViewEventListenerHolder_setOnViewEventListenerIsCalled() {
         open class TestSmartViewEventListenerViewHolder(view: ViewGroup) : SmartViewHolder<Any>(view), ViewEventListenerHolder {
 
-            override fun setOnViewEventListener(viewEventListener: OnViewEventListener) {}
+            override lateinit var viewEventListener: OnViewEventListener
 
             override fun bind(item: Any) {}
         }
@@ -187,7 +187,7 @@ class ViewEventMapperTest {
         viewEventMapper!!.mapViewEventWith(testSmartViewEventListenerViewHolder)
 
         // Then
-        verify(testSmartViewEventListenerViewHolder, times(1)).setOnViewEventListener(onViewEventListener)
+        assertEquals(onViewEventListener, testSmartViewEventListenerViewHolder.viewEventListener)
     }
 
     @Test

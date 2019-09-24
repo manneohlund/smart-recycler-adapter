@@ -14,13 +14,11 @@ import smartadapter.listener.OnViewEventListener
 interface ViewEventListenerHolder {
 
     /**
-     * Will be called from [smartadapter.SmartRecyclerAdapter] and
-     * will set [OnViewEventListener] if a default global listener is added to the adapter or
-     * target view holder is defined by [OnViewEventListener.getViewHolderType].
+     * Will be set from [smartadapter.SmartRecyclerAdapter]
+     * if a default global listener has been added to the adapter
+     * or target view holder is defined by [OnViewEventListener.getViewHolderType].
      *
      * @see OnViewEventListener
-     *
-     * @param viewEventListener listener for view events
      */
-    fun setOnViewEventListener(viewEventListener: OnViewEventListener)
+    var viewEventListener: OnViewEventListener
 }

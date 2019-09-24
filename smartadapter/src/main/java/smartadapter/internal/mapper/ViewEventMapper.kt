@@ -5,7 +5,6 @@ package smartadapter.internal.mapper
  * Copyright (c) All rights reserved.
  */
 
-import android.util.Log
 import android.util.SparseArray
 import io.github.manneohlund.smartrecycleradapter.R
 import smartadapter.SmartRecyclerAdapter
@@ -72,13 +71,8 @@ class ViewEventMapper {
                     val viewEventListener = eventIdAndListener.valueAt(j)
 
                     if (viewId == R.id.undefined && viewEventId == R.id.undefined) {
-                        if (ViewEventListenerHolder::class.java.isAssignableFrom(smartViewHolder.javaClass)) {
-                            (smartViewHolder as ViewEventListenerHolder).setOnViewEventListener(viewEventListener)
-                        } else {
-                            Log.e(ViewEventMapper::class.java.name, String.format(
-                                    "Don't forget that '%s' needs to implement '%s' in order to receive the events",
-                                    smartViewHolder.javaClass.name,
-                                    ViewEventListenerHolder::class.java.name))
+                        (smartViewHolder as? ViewEventListenerHolder)?.let {
+                            it.viewEventListener = viewEventListener
                         }
                     }
 
