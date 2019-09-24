@@ -12,5 +12,5 @@ import androidx.recyclerview.widget.RecyclerView
 /**
  * Extension of [RecyclerView.ViewHolder] containing data item binding method.
  * @param <T> Data item type
-</T> */
+ */
 abstract class SmartViewHolder<T : Any>(view: View) : RecyclerView.ViewHolder(view), BindableViewHolder<T>
