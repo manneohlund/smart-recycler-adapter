@@ -26,6 +26,8 @@ class EndlessScrollActivity : BaseSampleActivity() {
             .map(Integer::class, SimpleItemViewHolder::class)
             .into(recyclerView)
 
+        smartAdapter.autoLoadMoreEnabled = true
+
         smartAdapter.setOnLoadMoreListener {
             Handler().postDelayed({
                 smartAdapter.addItems((itemCount + 1..itemCount + 50).toList())

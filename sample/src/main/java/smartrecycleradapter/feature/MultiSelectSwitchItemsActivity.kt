@@ -42,6 +42,9 @@ class MultiSelectSwitchItemsActivity : BaseSampleActivity() {
                         smartRecyclerAdapter.itemCount
                     ), Toast.LENGTH_LONG
                 ).show()
+
+                supportActionBar?.subtitle =
+                    "${switchStateHolder.selectedItemsCount} / ${items.size} selected"
             }
         }
 

@@ -53,6 +53,9 @@ class MultiSelectItemsActivity : BaseSampleActivity() {
                     Toast.LENGTH_LONG
                 ).show()
 
+                supportActionBar?.subtitle =
+                    "${onItemSelectedListener.selectionStateHolder.selectedItemsCount} / ${items.size} selected"
+
                 deleteMenuItem?.isVisible =
                     onItemSelectedListener.selectionStateHolder.selectedItemsCount > 0
 
@@ -77,6 +80,8 @@ class MultiSelectItemsActivity : BaseSampleActivity() {
         when (item?.itemId) {
             R.id.delete -> {
                 onItemSelectedListener.selectionStateHolder.removeSelections()
+                supportActionBar?.subtitle =
+                    "${onItemSelectedListener.selectionStateHolder.selectedItemsCount} / ${smartRecyclerAdapter.itemCount} selected"
                 item.isVisible = false
             }
         }
