@@ -12,7 +12,7 @@ import smartadapter.state.SmartStateHolder
  * @see smartadapter.state.SelectionStateHolder
  *
  * @param <T> [SmartStateHolder] extension such as [smartadapter.state.SelectionStateHolder]
-</T> */
+ */
 interface StatefulViewHolder<T : SmartStateHolder> {
 
     /**
