@@ -4,14 +4,22 @@ android:
   components:
     # Uncomment the lines below if you want to
     # use the latest revision of Android SDK Tools
-    # - tools
-    # - platform-tools
+    - tools
+    - platform-tools
+    - extra-android-support
     - build-tools-29.0.2
+    - build-tools-28.0.3
     - android-28
-    - sys-img-armeabi-v7a-android-18
+    - android-22
+    - sys-img-armeabi-v7a-android-22
+  licenses:
+    - 'android-sdk-preview-license-52d11cd2'
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
 before_install:
   - yes | sdkmanager "platforms;android-28"
   - yes | sdkmanager "build-tools;29.0.2"
+  - yes | sdkmanager "build-tools;28.0.3"
 jdk:
   - oraclejdk8
 # Emulator Management: Create, Start and Wait
