@@ -281,11 +281,6 @@ open class SmartRecyclerAdapter
         viewHolderMapper.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper)
     }
 
-    /* TODO Cleanup unused methods!!!
-    override fun getViewEventListeners(): HashMap<KClass<out SmartViewHolder<Any>>, SparseArray<SparseArray<OnViewEventListener>>>? {
-        return this.viewEventMapper.viewEventListenerMap
-    }*/
-
     override fun getViewEventListenersForViewHolder(viewHolderType: SmartViewHolderType): SparseArray<SparseArray<OnViewEventListener>>? {
         return this.viewEventMapper.viewEventListenerMap[viewHolderType]
     }
