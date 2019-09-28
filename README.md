@@ -2,6 +2,7 @@
 
 [![Download](https://api.bintray.com/packages/manneohlund/maven/smart-recycler-adapter/images/download.svg)](https://bintray.com/manneohlund/maven/smart-recycler-adapter/_latestVersion)
 [![Android Arsenal]( https://img.shields.io/badge/Android%20Arsenal-SmartRecyclerAdapter-green.svg?style=flat )]( https://android-arsenal.com/details/1/7766)
+[![Build Status](https://travis-ci.org/manneohlund/smart-recycler-adapter.svg?branch=master)](https://travis-ci.org/manneohlund/smart-recycler-adapter)
 
 Never code any boilerplate RecyclerAdapter again!  
 This library will make it easy and painless to map your data item with a target ViewHolder.
