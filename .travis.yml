@@ -21,8 +21,14 @@ before_install:
   - yes | sdkmanager "build-tools;28.0.3"
 jdk:
   - oraclejdk8
+before_script:
+  - touch local.properties
+  - echo "storeFile=/\n" >> local.properties
+  - echo "storePassword=a\n" >> local.properties
+  - echo "keyAlias=b\n" >> local.properties
+  - echo "keyPassword=c\n" >> local.properties
 script:
-  - ./gradlew clean test
+  - ./gradlew clean testDebugUnitTest
 notifications:
   email: false
 before_cache:
