@@ -13,7 +13,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_simple_item.*
+import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
+import smartadapter.ViewEventId
 import smartadapter.listener.OnItemLongClickSelectedListener
 import smartrecycleradapter.R
 
@@ -26,7 +28,7 @@ fun View.setBackgroundAttribute(attribute: Int) {
 
 class MultiSelectItemsActivity : BaseSampleActivity() {
 
-    lateinit var smartRecyclerAdapter: SmartRecyclerAdapter;
+    lateinit var smartRecyclerAdapter: SmartRecyclerAdapter
     lateinit var onItemSelectedListener: OnItemLongClickSelectedListener
     var deleteMenuItem: MenuItem? = null
 
@@ -35,29 +37,37 @@ class MultiSelectItemsActivity : BaseSampleActivity() {
 
         supportActionBar?.title = "Multiple Items Select"
 
-        val items = (0..100).toList()
+        val items = (0..100).toMutableList()
 
         onItemSelectedListener = object : OnItemLongClickSelectedListener {
-            override fun onViewEvent(view: View, actionId: Int, position: Int) {
-                Toast.makeText(applicationContext,
-                        String.format("Item click %d\n" +
-                                "%d of %d selected items",
-                                position,
-                                selectionStateHolder.selectedItemsCount,
-                                smartRecyclerAdapter.itemCount),
-                        Toast.LENGTH_LONG).show()
+            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+                Toast.makeText(
+                    applicationContext,
+                    String.format(
+                        "Item click %d\n" +
+                            "%d of %d selected items",
+                        position,
+                        selectionStateHolder.selectedItemsCount,
+                        smartRecyclerAdapter.itemCount
+                    ),
+                    Toast.LENGTH_LONG
+                ).show()
 
-                deleteMenuItem?.isVisible = onItemSelectedListener.selectionStateHolder.selectedItemsCount > 0
+                supportActionBar?.subtitle =
+                    "${onItemSelectedListener.selectionStateHolder.selectedItemsCount} / ${items.size} selected"
+
+                deleteMenuItem?.isVisible =
+                    onItemSelectedListener.selectionStateHolder.selectedItemsCount > 0
 
                 smartRecyclerAdapter.smartNotifyItemChanged(position)
             }
         }
 
         smartRecyclerAdapter = SmartRecyclerAdapter
-                .items(items)
-                .map(Integer::class.java, SimpleSelectableItemViewHolder::class.java)
-                .addViewEventListener(onItemSelectedListener)
-                .into(recyclerView)
+            .items(items)
+            .map(Integer::class, SimpleSelectableItemViewHolder::class)
+            .addViewEventListener(onItemSelectedListener)
+            .into(recyclerView)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -67,9 +77,11 @@ class MultiSelectItemsActivity : BaseSampleActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId) {
+        when (item?.itemId) {
             R.id.delete -> {
                 onItemSelectedListener.selectionStateHolder.removeSelections()
+                supportActionBar?.subtitle =
+                    "${onItemSelectedListener.selectionStateHolder.selectedItemsCount} / ${smartRecyclerAdapter.itemCount} selected"
                 item.isVisible = false
             }
         }

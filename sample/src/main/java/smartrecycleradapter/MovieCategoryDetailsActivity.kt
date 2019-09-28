@@ -7,8 +7,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.activity_movie_category_details.*
+import smartadapter.Position
 import smartadapter.SmartEndlessScrollRecyclerAdapter
 import smartadapter.SmartRecyclerAdapter
+import smartadapter.ViewEventId
 import smartrecycleradapter.data.MovieDataItems
 import smartrecycleradapter.extension.GridAutoLayoutManager
 import smartrecycleradapter.models.MovieModel
@@ -50,13 +52,14 @@ class MovieCategoryDetailsActivity : AppCompatActivity() {
             MovieType.SCI_FI -> MovieDataItems.nestedSciFiItems
         }
 
-        val adapterItems: ArrayList<Any> = ArrayList()
-        adapterItems.add(movieType.title)
-        adapterItems.addAll(movieItems)
+        val adapterItems = mutableListOf(
+            movieType.title,
+            *movieItems.toTypedArray()
+        )
 
         val gridAutoLayoutManager = GridAutoLayoutManager(this, 100)
         gridAutoLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
+            override fun getSpanSize(position: Position): Int {
                 return if (position == 0) gridAutoLayoutManager.spanCount else 1
             }
         }
@@ -64,11 +67,11 @@ class MovieCategoryDetailsActivity : AppCompatActivity() {
         when (movieType) {
             MovieType.COMING_SOON, MovieType.MY_WATCH_LIST -> {
                 SmartRecyclerAdapter.items(adapterItems)
-                        .map(String::class.java, HeaderViewHolder::class.java)
-                        .map(MovieModel::class.java, ThumbViewHolder::class.java)
+                        .map(String::class, HeaderViewHolder::class)
+                        .map(MovieModel::class, ThumbViewHolder::class)
                         .setLayoutManager(gridAutoLayoutManager)
                         .addViewEventListener(object : ThumbViewHolder.OnItemClickListener {
-                            override fun onViewEvent(view: View, actionId: Int, position: Int) {
+                            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                                 Toast.makeText(applicationContext, "Movie $position", Toast.LENGTH_SHORT).show()
                             }
                         })
@@ -76,28 +79,29 @@ class MovieCategoryDetailsActivity : AppCompatActivity() {
             }
             MovieType.ACTION, MovieType.ADVENTURE, MovieType.ANIMATED, MovieType.SCI_FI -> {
                 val endlessScrollAdapter: SmartEndlessScrollRecyclerAdapter = SmartEndlessScrollRecyclerAdapter.items(adapterItems)
-                        .map(String::class.java, HeaderViewHolder::class.java)
-                        .map(MovieModel::class.java, ThumbViewHolder::class.java)
+                        .map(String::class, HeaderViewHolder::class)
+                        .map(MovieModel::class, ThumbViewHolder::class)
                         .setLayoutManager(gridAutoLayoutManager)
                         .addViewEventListener(object : ThumbViewHolder.OnItemClickListener {
-                            override fun onViewEvent(view: View, actionId: Int, position: Int) {
+                            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
                                 Toast.makeText(applicationContext, "Movie $position", Toast.LENGTH_SHORT).show()
                             }
                         })
                         .into(recyclerView)
 
+                endlessScrollAdapter.autoLoadMoreEnabled = true
                 endlessScrollAdapter.setOnLoadMoreListener {
                     if (!endlessScrollAdapter.isLoading) {
-                        endlessScrollAdapter.setIsLoading(true)
+                        endlessScrollAdapter.isLoading = true
 
                         Handler().postDelayed({
                             endlessScrollAdapter.addItems(movieItems)
                             if (endlessScrollCount++ == 3) {
-                                endlessScrollAdapter.setEndlessScrollEnabled(false);
+                                endlessScrollAdapter.isEndlessScrollEnabled = false
                             }
-                            endlessScrollAdapter.setIsLoading(false)
+                            endlessScrollAdapter.isLoading = false
                         },
-                                3000)
+                            3000)
                     }
                 }
             }

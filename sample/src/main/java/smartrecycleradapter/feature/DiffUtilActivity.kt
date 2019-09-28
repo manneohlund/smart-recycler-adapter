@@ -17,8 +17,8 @@ import smartrecycleradapter.feature.simpleitem.SimpleItemViewHolder
 
 class DiffUtilActivity : BaseSampleActivity() {
 
-    val items = (0..15).toList()
-    lateinit var diffUtilExtension: DiffUtilExtension
+    val items = (0..15).toMutableList()
+    private lateinit var diffUtilExtension: DiffUtilExtension
 
     private val predicate = object : DiffUtilExtension.DiffPredicate<Int> {
         override fun areItemsTheSame(oldItem: Int, newItem: Int): Boolean {
@@ -33,17 +33,17 @@ class DiffUtilActivity : BaseSampleActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        supportActionBar?.title = "Diff Util Sample";
+        supportActionBar?.title = "Diff Util Sample"
 
         val smartAdapter: SmartRecyclerAdapter = SmartRecyclerAdapter
-                .items(items)
-                .map(Integer::class.java, SimpleItemViewHolder::class.java)
-                .into(recyclerView)
+            .items(items)
+            .map(Integer::class, SimpleItemViewHolder::class)
+            .into(recyclerView)
 
-        diffUtilExtension = DiffUtilExtensionBuilder()
-                .setSmartRecyclerAdapter(smartAdapter)
-                .setDiffPredicate(predicate)
-                .build()
+        diffUtilExtension = DiffUtilExtensionBuilder().apply {
+            smartRecyclerAdapter = smartAdapter
+            diffPredicate = predicate
+        }.build()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -52,9 +52,9 @@ class DiffUtilActivity : BaseSampleActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId) {
+        when (item?.itemId) {
             R.id.shuffle -> {
-                diffUtilExtension.diffSwapList(items.shuffled())
+                diffUtilExtension.diffSwapList(items.shuffled() as MutableList<*>)
                 recyclerView.scrollToPosition(0)
             }
         }

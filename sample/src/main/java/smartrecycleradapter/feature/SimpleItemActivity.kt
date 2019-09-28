@@ -15,13 +15,13 @@ class SimpleItemActivity : BaseSampleActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        supportActionBar?.title = "Simple Item Sample";
+        supportActionBar?.title = "Simple Item Sample"
 
-        val items = (0..100).toList()
+        val items = (0..100).toMutableList()
 
         SmartRecyclerAdapter
                 .items(items)
-                .map(Integer::class.java, SimpleItemViewHolder::class.java)
+                .map(Integer::class, SimpleItemViewHolder::class)
                 .into<SmartRecyclerAdapter>(recyclerView)
     }
 }

@@ -5,12 +5,14 @@ package smartrecycleradapter.feature
  * Copyright (c) All rights reserved.
  */
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_simple_item.*
 import smartrecycleradapter.R
 
+@SuppressLint("Registered")
 open class BaseSampleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +24,7 @@ open class BaseSampleActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId) {
+        when (item?.itemId) {
             android.R.id.home -> finish()
         }
         return super.onOptionsItemSelected(item)

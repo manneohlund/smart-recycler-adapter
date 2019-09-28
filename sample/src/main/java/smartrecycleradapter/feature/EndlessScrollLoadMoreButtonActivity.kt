@@ -16,20 +16,20 @@ class EndlessScrollLoadMoreButtonActivity : BaseSampleActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        supportActionBar?.title = "Endless Scroll Load More";
+        supportActionBar?.title = "Endless Scroll Load More"
 
         var itemCount = 50
-        val items: List<Int> = (0..itemCount).toList()
+        val items = (0..itemCount).toMutableList()
 
         val smartAdapter: SmartEndlessScrollRecyclerAdapter = SmartEndlessScrollRecyclerAdapter
-                .items(items)
-                .map(Integer::class.java, SimpleItemViewHolder::class.java)
-                .into(recyclerView)
+            .items(items)
+            .map(Integer::class, SimpleItemViewHolder::class)
+            .into(recyclerView)
 
-        smartAdapter.setAutoLoadMore(false)
+        smartAdapter.autoLoadMoreEnabled = false
         smartAdapter.setOnLoadMoreListener {
             Handler().postDelayed({
-                smartAdapter.addItems((itemCount+1..itemCount+50).toList())
+                smartAdapter.addItems((itemCount + 1..itemCount + 50).toList())
                 itemCount += 50
             }, 800)
         }

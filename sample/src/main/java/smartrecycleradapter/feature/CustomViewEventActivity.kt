@@ -12,7 +12,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_simple_item.*
+import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
+import smartadapter.ViewEventId
 import smartadapter.listener.OnViewEventListener
 import smartadapter.viewholder.SmartViewHolder
 import smartadapter.viewholder.ViewEventListenerHolder
@@ -27,38 +29,39 @@ class CustomViewEventActivity : BaseSampleActivity() {
 
         supportActionBar?.title = "Custom View Event Sample"
 
-        val items = (0..100).toList()
+        val items = (0..100).toMutableList()
 
         SmartRecyclerAdapter
-                .items(items)
-                .map(Integer::class.java, SimpleItemViewHolder::class.java)
-                .addViewEventListener { view, actionId, position ->
-                    if (actionId == CUSTOM_EVENT) {
-                        Toast.makeText(applicationContext, "CUSTOM_EVENT $position", Toast.LENGTH_SHORT).show()
+            .items(items)
+            .map(Integer::class, SimpleItemViewHolder::class)
+            .addViewEventListener(object : OnViewEventListener {
+                override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+                    if (viewEventId == CUSTOM_EVENT) {
+                        Toast.makeText(
+                            applicationContext,
+                            "CUSTOM_EVENT $position",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
-                .into<SmartRecyclerAdapter>(recyclerView)
+            })
+            .into<SmartRecyclerAdapter>(recyclerView)
     }
 
-    open class SimpleItemViewHolder(parentView: View) : SmartViewHolder<Int>(
-            LayoutInflater.from(parentView.context)
-                    .inflate(R.layout.simple_item, parentView as ViewGroup, false)),
-            ViewEventListenerHolder {
+    open class SimpleItemViewHolder(parentView: ViewGroup) : SmartViewHolder<Int>(
+        LayoutInflater.from(parentView.context).inflate(R.layout.simple_item, parentView, false)
+    ), ViewEventListenerHolder {
 
-        private lateinit var viewEventListener: OnViewEventListener
-
-        override fun setOnViewEventListener(viewEventListener: OnViewEventListener) {
-            this.viewEventListener = viewEventListener
-        }
+        override lateinit var viewEventListener: OnViewEventListener
 
         init {
-            itemView.setOnClickListener {view ->
+            itemView.setOnClickListener { view ->
                 viewEventListener.onViewEvent(view, CUSTOM_EVENT, adapterPosition)
             }
         }
 
-        override fun bind(index: Int?) {
-            (itemView as TextView).text = "Item $index"
+        override fun bind(item: Int) {
+            (itemView as TextView).text = "Item $item"
         }
     }
 }
