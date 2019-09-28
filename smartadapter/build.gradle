@@ -55,5 +55,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
 }
 
-apply from: '../maven-release-config.gradle'
-apply from: '../maven-release-script.gradle'
+if (project.rootProject.file('local.properties').exists()) {
+    apply from: '../maven-release-config.gradle'
+    apply from: '../maven-release-script.gradle'
+}
