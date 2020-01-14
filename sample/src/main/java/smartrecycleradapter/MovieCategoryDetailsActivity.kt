@@ -90,7 +90,7 @@ class MovieCategoryDetailsActivity : AppCompatActivity() {
                         .into(recyclerView)
 
                 endlessScrollAdapter.autoLoadMoreEnabled = true
-                endlessScrollAdapter.setOnLoadMoreListener {
+                endlessScrollAdapter.onLoadMoreListener = {
                     if (!endlessScrollAdapter.isLoading) {
                         endlessScrollAdapter.isLoading = true
 

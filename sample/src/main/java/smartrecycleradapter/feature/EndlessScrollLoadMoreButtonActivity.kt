@@ -6,10 +6,10 @@ package smartrecycleradapter.feature
  */
 
 import android.os.Bundle
-import android.os.Handler
 import kotlinx.android.synthetic.main.activity_simple_item.*
 import smartadapter.SmartEndlessScrollRecyclerAdapter
 import smartrecycleradapter.feature.simpleitem.SimpleItemViewHolder
+import smartrecycleradapter.utils.runDelayed
 
 class EndlessScrollLoadMoreButtonActivity : BaseSampleActivity() {
 
@@ -27,11 +27,12 @@ class EndlessScrollLoadMoreButtonActivity : BaseSampleActivity() {
             .into(recyclerView)
 
         smartAdapter.autoLoadMoreEnabled = false
-        smartAdapter.setOnLoadMoreListener {
-            Handler().postDelayed({
-                smartAdapter.addItems((itemCount + 1..itemCount + 50).toList())
-                itemCount += 50
-            }, 800)
+
+        smartAdapter.onLoadMoreListener = {
+            runDelayed {
+                smartAdapter.addItems((itemCount + 1..itemCount + 20).toList())
+                itemCount += 20
+            }
         }
     }
 }

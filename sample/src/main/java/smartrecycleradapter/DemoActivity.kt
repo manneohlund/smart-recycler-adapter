@@ -16,16 +16,63 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.RecyclerView
-import smartadapter.*
+import smartadapter.Position
+import smartadapter.SmartEndlessScrollRecyclerAdapter
+import smartadapter.SmartRecyclerAdapter
+import smartadapter.SmartViewHolderType
+import smartadapter.ViewEventId
+import smartadapter.ViewId
 import smartadapter.listener.OnItemClickListener
 import smartadapter.listener.onItemClickListener
 import smartadapter.listener.onViewEventListener
 import smartrecycleradapter.data.MovieDataItems
 import smartrecycleradapter.extension.PreCachingLinearLayoutManager
-import smartrecycleradapter.feature.*
-import smartrecycleradapter.models.*
-import smartrecycleradapter.viewholder.*
-import java.util.*
+import smartrecycleradapter.feature.CustomViewEventActivity
+import smartrecycleradapter.feature.DiffUtilActivity
+import smartrecycleradapter.feature.DragAndDropHandleItemActivity
+import smartrecycleradapter.feature.DragAndDropItemActivity
+import smartrecycleradapter.feature.EndlessScrollActivity
+import smartrecycleradapter.feature.EndlessScrollLoadMoreButtonActivity
+import smartrecycleradapter.feature.GridActivity
+import smartrecycleradapter.feature.MultiSelectCheckBoxItemsActivity
+import smartrecycleradapter.feature.MultiSelectItemsActivity
+import smartrecycleradapter.feature.MultiSelectSwitchItemsActivity
+import smartrecycleradapter.feature.MultipleEventsAndExtensionsActivity
+import smartrecycleradapter.feature.MultipleExpandableItemActivity
+import smartrecycleradapter.feature.MultipleViewTypesResolverActivity
+import smartrecycleradapter.feature.NestedSmartRecyclerAdaptersActivity
+import smartrecycleradapter.feature.SimpleItemActivity
+import smartrecycleradapter.feature.SimpleItemOnClickOnLongClickActivity
+import smartrecycleradapter.feature.SingleExpandableItemActivity
+import smartrecycleradapter.feature.SingleSelectRadioButtonItemActivity
+import smartrecycleradapter.feature.SwipeRemoveItemActivity
+import smartrecycleradapter.models.ActionMoviesModel
+import smartrecycleradapter.models.AdventureMoviesModel
+import smartrecycleradapter.models.AnimatedMoviesModel
+import smartrecycleradapter.models.ComingSoonMoviesModel
+import smartrecycleradapter.models.CopyrightModel
+import smartrecycleradapter.models.MovieBannerModel
+import smartrecycleradapter.models.MovieModel
+import smartrecycleradapter.models.MoviePosterModel
+import smartrecycleradapter.models.MyWatchListModel
+import smartrecycleradapter.models.RecentlyPlayedMoviesModel
+import smartrecycleradapter.models.SciFiMoviesModel
+import smartrecycleradapter.viewholder.ActionMoviesViewHolder
+import smartrecycleradapter.viewholder.AdventureMoviesViewHolder
+import smartrecycleradapter.viewholder.AnimatedMoviesViewHolder
+import smartrecycleradapter.viewholder.BannerViewHolder
+import smartrecycleradapter.viewholder.ComingSoonMoviesViewHolder
+import smartrecycleradapter.viewholder.CopyrightViewHolder
+import smartrecycleradapter.viewholder.HeaderViewHolder
+import smartrecycleradapter.viewholder.LargeThumbViewHolder
+import smartrecycleradapter.viewholder.MyWatchListViewHolder
+import smartrecycleradapter.viewholder.PosterViewHolder
+import smartrecycleradapter.viewholder.RecentlyPlayedMoviesViewHolder
+import smartrecycleradapter.viewholder.SampleFabViewHolder
+import smartrecycleradapter.viewholder.SciFiMoviesViewHolder
+import smartrecycleradapter.viewholder.SmallThumbViewHolder
+import smartrecycleradapter.viewholder.ThumbViewHolder
+import java.util.Locale
 import kotlin.reflect.KClass
 
 class DemoActivity : AppCompatActivity() {
@@ -162,7 +209,7 @@ class DemoActivity : AppCompatActivity() {
 
         // Endless pagination
         mainSmartMovieAdapter.autoLoadMoreEnabled = false
-        mainSmartMovieAdapter.setOnLoadMoreListener { loadMoreViewHolder ->
+        mainSmartMovieAdapter.onLoadMoreListener = { loadMoreViewHolder ->
             val indexBeforeCopyright = 2
             Handler().postDelayed({
                 mainSmartMovieAdapter.addItem(
@@ -206,10 +253,10 @@ class DemoActivity : AppCompatActivity() {
 
         comingSoonSmartMovieAdapter.autoLoadMoreEnabled = true
         // Set custom load more view
-        comingSoonSmartMovieAdapter.setCustomLoadMoreLayoutResource(R.layout.custom_loadmore_view)
+        comingSoonSmartMovieAdapter.loadMoreLayoutResource = R.layout.custom_loadmore_view
 
         // Pagination ends after 3 loads
-        comingSoonSmartMovieAdapter.setOnLoadMoreListener {
+        comingSoonSmartMovieAdapter.onLoadMoreListener = {
             Handler().postDelayed({
                 comingSoonSmartMovieAdapter.addItems(
                     comingSoonSmartMovieAdapter.itemCount - 1,

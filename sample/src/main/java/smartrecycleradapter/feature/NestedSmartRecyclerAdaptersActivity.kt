@@ -13,9 +13,28 @@ import smartrecycleradapter.BuildConfig
 import smartrecycleradapter.DemoActivity.Companion.getActionName
 import smartrecycleradapter.R
 import smartrecycleradapter.data.MovieDataItems
-import smartrecycleradapter.models.*
-import smartrecycleradapter.viewholder.*
-import java.util.*
+import smartrecycleradapter.models.ActionMoviesModel
+import smartrecycleradapter.models.AdventureMoviesModel
+import smartrecycleradapter.models.AnimatedMoviesModel
+import smartrecycleradapter.models.ComingSoonMoviesModel
+import smartrecycleradapter.models.CopyrightModel
+import smartrecycleradapter.models.MovieModel
+import smartrecycleradapter.models.MoviePosterModel
+import smartrecycleradapter.models.MyWatchListModel
+import smartrecycleradapter.models.RecentlyPlayedMoviesModel
+import smartrecycleradapter.models.SciFiMoviesModel
+import smartrecycleradapter.viewholder.ActionMoviesViewHolder
+import smartrecycleradapter.viewholder.AdventureMoviesViewHolder
+import smartrecycleradapter.viewholder.AnimatedMoviesViewHolder
+import smartrecycleradapter.viewholder.ComingSoonMoviesViewHolder
+import smartrecycleradapter.viewholder.CopyrightViewHolder
+import smartrecycleradapter.viewholder.LargeThumbViewHolder
+import smartrecycleradapter.viewholder.MyWatchListViewHolder
+import smartrecycleradapter.viewholder.PosterViewHolder
+import smartrecycleradapter.viewholder.RecentlyPlayedMoviesViewHolder
+import smartrecycleradapter.viewholder.SciFiMoviesViewHolder
+import smartrecycleradapter.viewholder.ThumbViewHolder
+import java.util.Locale
 
 /*
  * Created by Manne Öhlund on 2019-08-14.
@@ -98,11 +117,13 @@ class NestedSmartRecyclerAdaptersActivity : BaseSampleActivity() {
                 .addViewEventListener(onThumbnailClickListener)
                 .create()
 
+        comingSoonSmartMovieAdapter.autoLoadMoreEnabled = true
+
         // Set custom load more view
-        comingSoonSmartMovieAdapter.setCustomLoadMoreLayoutResource(R.layout.custom_loadmore_view)
+        comingSoonSmartMovieAdapter.loadMoreLayoutResource = R.layout.custom_loadmore_view
 
         // Pagination ends after 3 loads
-        comingSoonSmartMovieAdapter.setOnLoadMoreListener {
+        comingSoonSmartMovieAdapter.onLoadMoreListener = {
             Handler().postDelayed({
                 comingSoonSmartMovieAdapter.addItems(
                     comingSoonSmartMovieAdapter.itemCount - 1,
