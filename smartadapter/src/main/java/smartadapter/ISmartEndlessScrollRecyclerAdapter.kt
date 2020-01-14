@@ -5,7 +5,6 @@ package smartadapter
  * Copyright (c) All rights reserved.
  */
 
-import androidx.annotation.LayoutRes
 import smartadapter.listener.OnLoadMoreListener
 
 /**
@@ -25,12 +24,6 @@ interface ISmartEndlessScrollRecyclerAdapter {
     var isLoading: Boolean
 
     /**
-     * Used to determine if loading view should show or not.
-     * If [.isEndlessScrollEnabled] returns true this returns 1.
-     */
-    var endlessScrollOffset: Int
-
-    /**
      * Enables or disables the auto load more view.
      *
      *  * Enabled state shows and indeterminate spinner.
@@ -39,15 +32,13 @@ interface ISmartEndlessScrollRecyclerAdapter {
     var autoLoadMoreEnabled: Boolean
 
     /**
-     * Setter for [OnLoadMoreListener] callback for listening on when the [SmartEndlessScrollRecyclerAdapter]
+     * [OnLoadMoreListener] callback for listening on when the [SmartEndlessScrollRecyclerAdapter]
      * is showing the [smartadapter.viewholder.LoadMoreViewHolder].
-     * @param onLoadMoreListener load more callback
      */
-    fun setOnLoadMoreListener(onLoadMoreListener: OnLoadMoreListener)
+    val onLoadMoreListener: OnLoadMoreListener?
 
     /**
      * Enables customization of the layout for the [smartadapter.viewholder.LoadMoreViewHolder].
-     * @param loadMoreLayoutResource layout resource
      */
-    fun setCustomLoadMoreLayoutResource(@LayoutRes loadMoreLayoutResource: Int)
+    val loadMoreLayoutResource: Int
 }

@@ -19,31 +19,32 @@ import io.github.manneohlund.smartrecycleradapter.R
  * Default implementation of load more view holder.
  */
 class LoadMoreViewHolder(
-    parentView: View, @param:LayoutRes private val loadingViewRes: Int,
+    parentView: View,
+    @param:LayoutRes private val loadingViewRes: Int,
     isAutoLoadEnabled: Boolean
 ) : SmartViewHolder<Any>(
-    LayoutInflater.from(parentView.context).inflate(
-        loadingViewRes,
-        parentView as ViewGroup,
-        false
-    )
+    LayoutInflater.from(parentView.context)
+        .inflate(
+            loadingViewRes,
+            parentView as ViewGroup,
+            false
+        )
 ) {
+
+    val loadMoreButton: AppCompatButton? = itemView.findViewById(R.id.loadMoreButton)
+    val progressBar: ProgressBar? = itemView.findViewById(R.id.progressBar)
 
     init {
         toggleLoading(isAutoLoadEnabled)
     }
 
     fun toggleLoading(isLoading: Boolean) {
-        if (loadingViewRes == R.layout.load_more_view) {
-            val loadMoreButton = itemView.findViewById<AppCompatButton>(R.id.loadMoreButton)
-            val progressBar = itemView.findViewById<ProgressBar>(R.id.progressBar)
-            if (isLoading) {
-                progressBar.visibility = View.VISIBLE
-                loadMoreButton.visibility = View.GONE
-            } else {
-                progressBar.visibility = View.INVISIBLE
-                loadMoreButton.visibility = View.VISIBLE
-            }
+        if (isLoading) {
+            progressBar?.visibility = View.VISIBLE
+            loadMoreButton?.visibility = View.GONE
+        } else {
+            progressBar?.visibility = View.INVISIBLE
+            loadMoreButton?.visibility = View.VISIBLE
         }
     }
 
