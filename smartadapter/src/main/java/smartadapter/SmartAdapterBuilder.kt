@@ -8,12 +8,13 @@ package smartadapter
 import android.content.Context
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import smartadapter.internal.extension.name
 import smartadapter.internal.factory.SmartRecyclerAdapterExtensionFactory
 import smartadapter.internal.mapper.ViewEventMapper
 import smartadapter.listener.OnItemSelectedListener
 import smartadapter.listener.OnViewEventListener
 import smartadapter.widget.ViewTypeResolver
-import java.util.*
+import java.util.HashMap
 import kotlin.reflect.KClass
 
 /**
@@ -28,7 +29,7 @@ class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter:
     private val smartRecyclerAdapterExtensionFactory = SmartRecyclerAdapterExtensionFactory()
 
     fun map(itemType: KClass<*>, viewHolderType: SmartViewHolderType): SmartAdapterBuilder {
-        viewHolderMapper[itemType.java.name] = viewHolderType
+        viewHolderMapper[itemType.name] = viewHolderType
         return this
     }
 
