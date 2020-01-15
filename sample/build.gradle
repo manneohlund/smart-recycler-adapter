@@ -36,11 +36,13 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+            resValue "string", "app_name", "SmartAdapter"
         }
         debug {
             applicationIdSuffix ".debug"
             debuggable true
             minifyEnabled false
+            resValue "string", "app_name", "Debug"
         }
         beta {
             initWith debug
@@ -50,6 +52,7 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             matchingFallbacks = ['debug']
+            resValue "string", "app_name", "Beta"
         }
     }
 

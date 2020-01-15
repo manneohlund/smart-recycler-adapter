@@ -92,8 +92,7 @@
             android:label="@string/title_activity_movie_category_details"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".DemoActivity"
-            android:label="SmartRecyclerAdapters">
+            android:name=".DemoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
