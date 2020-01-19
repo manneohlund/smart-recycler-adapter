@@ -5,7 +5,6 @@ package smartadapter
  * Copyright (c) All rights reserved.
  */
 
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import io.github.manneohlund.smartrecycleradapter.R
@@ -22,16 +21,19 @@ class SmartEndlessScrollRecyclerAdapter(items: MutableList<Any>) : SmartRecycler
 
     private val VIEW_TYPE_LOADING = Integer.MAX_VALUE
 
+    private val endlessScrollOffset: Int
+        get() = if (isEndlessScrollEnabled) 1 else 0
+
     override var isEndlessScrollEnabled: Boolean = true
-        set(value) {
-            field = value
+        set(enable) {
+            field = enable
             smartNotifyItemChanged(itemCount)
         }
     override var isLoading: Boolean = false
-    override var endlessScrollOffset: Int = if (isEndlessScrollEnabled) 1 else 0
     override var autoLoadMoreEnabled: Boolean = false
-    private var onLoadMoreListener: OnLoadMoreListener? = null
-    private var loadMoreLayoutResource = R.layout.load_more_view
+    override var onLoadMoreListener: OnLoadMoreListener? = null
+    @LayoutRes
+    override var loadMoreLayoutResource = R.layout.load_more_view
 
     override fun getItemViewType(position: Position): ViewType {
         return if (isEndlessScrollEnabled && position == itemCount - endlessScrollOffset) {
@@ -59,23 +61,19 @@ class SmartEndlessScrollRecyclerAdapter(items: MutableList<Any>) : SmartRecycler
         super.onViewAttachedToWindow(holder)
         if (holder is LoadMoreViewHolder) {
             if (autoLoadMoreEnabled) {
-                onLoadMoreListener?.invoke(holder)
+                holder.itemView.post {
+                    onLoadMoreListener?.invoke(holder)
+                }
             } else {
                 holder.toggleLoading(false)
-                holder.itemView.findViewById<View>(R.id.loadMoreButton).setOnClickListener {
-                    onLoadMoreListener?.invoke(holder)
-                    holder.toggleLoading(true)
+                holder.loadMoreButton?.setOnClickListener {
+                    holder.itemView.post {
+                        onLoadMoreListener?.invoke(holder)
+                        holder.toggleLoading(true)
+                    }
                 }
             }
         }
-    }
-
-    override fun setOnLoadMoreListener(onLoadMoreListener: OnLoadMoreListener) {
-        this.onLoadMoreListener = onLoadMoreListener
-    }
-
-    override fun setCustomLoadMoreLayoutResource(@LayoutRes loadMoreLayoutResource: Int) {
-        this.loadMoreLayoutResource = loadMoreLayoutResource
     }
 
     companion object {

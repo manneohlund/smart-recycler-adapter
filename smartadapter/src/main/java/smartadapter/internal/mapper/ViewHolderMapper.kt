@@ -10,11 +10,12 @@ import android.view.ViewGroup
 import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.SmartViewHolderType
+import smartadapter.internal.extension.name
 import smartadapter.internal.utils.ReflectionUtils
 import smartadapter.viewholder.SmartAdapterHolder
 import smartadapter.viewholder.SmartViewHolder
 import smartadapter.widget.ViewTypeResolver
-import java.util.*
+import java.util.HashMap
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 
@@ -45,7 +46,7 @@ class ViewHolderMapper {
     fun getItemViewType(viewTypeResolver: ViewTypeResolver?, item: Any, position: Position): Int {
         smartViewHolderClass = viewTypeResolver?.invoke(item, position)
         if (smartViewHolderClass == null) {
-            smartViewHolderClass = dataTypeViewHolderMapper[item.javaClass.name]
+            smartViewHolderClass = dataTypeViewHolderMapper[item::class.name]
         } else {
             viewHolderConstructorMapper.add(smartViewHolderClass!!)
         }
@@ -53,7 +54,7 @@ class ViewHolderMapper {
             return viewTypeMapper.put(smartViewHolderClass!!)
         }
 
-        throw RuntimeException(String.format("Fatal error! Mapping of ViewHolder to item '%s' does not exist", item.javaClass.name))
+        throw RuntimeException(String.format("Fatal error! Mapping of ViewHolder to item '%s' does not exist", item::class.name))
     }
 
     /**
@@ -92,7 +93,7 @@ class ViewHolderMapper {
     }
 
     fun addMapping(itemType: KClass<*>, viewHolderType: SmartViewHolderType) {
-        dataTypeViewHolderMapper[itemType.java.name] = viewHolderType
+        dataTypeViewHolderMapper[itemType.name] = viewHolderType
         viewHolderConstructorMapper.add(viewHolderType)
     }
 
@@ -106,8 +107,8 @@ class ViewHolderMapper {
     }
 }
 
-fun <E : SmartViewHolderType> SparseArray<E>.put(value: E): Int {
-    val key = value.java.name.hashCode()
+private fun <E : SmartViewHolderType> SparseArray<E>.put(value: E): Int {
+    val key = value.name.hashCode()
     put(key, value)
     return key
 }

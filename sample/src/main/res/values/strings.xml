@@ -1,4 +1,3 @@
 <resources>
-    <string name="app_name">smart-recycler-adapter</string>
     <string name="title_activity_movie_category_details">MovieCategoryDetails</string>
 </resources>
