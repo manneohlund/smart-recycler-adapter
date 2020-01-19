@@ -13,7 +13,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import androidx.recyclerview.widget.RecyclerView
-import smartadapter.*
+import smartadapter.Position
+import smartadapter.SmartRecyclerAdapter
+import smartadapter.SmartViewHolderType
+import smartadapter.ViewEventId
+import smartadapter.ViewId
 import smartadapter.listener.OnItemClickListener
 import smartadapter.viewholder.SmartAdapterHolder
 import smartadapter.viewholder.SmartViewHolder
@@ -35,6 +39,8 @@ open class NestedRecyclerViewHolder(parentView: ViewGroup) :
             field = value
             recyclerView.layoutManager = LinearLayoutManager(recyclerView.context, HORIZONTAL, false)
             recyclerView.adapter = value
+            recyclerView.isNestedScrollingEnabled = false
+            recyclerView.setHasFixedSize(true)
         }
 
     private val title: TextView = itemView.findViewById(R.id.title)
