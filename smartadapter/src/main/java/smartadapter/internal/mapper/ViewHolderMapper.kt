@@ -30,6 +30,7 @@ class ViewHolderMapper {
     private val viewHolderConstructorMapper = ViewHolderConstructorMapper()
     private var dataTypeViewHolderMapper = HashMap<String, SmartViewHolderType>()
     private var smartRecyclerAdapterMapper = HashMap<SmartViewHolderType, SmartRecyclerAdapter>()
+    internal lateinit var smartRecyclerAdapter: SmartRecyclerAdapter
 
     /**
      * Will first check if viewTypeResolver is assigned and contains the smartViewHolderClass.
@@ -84,9 +85,10 @@ class ViewHolderMapper {
             throw RuntimeException(String.format("Could not invoke constructor for '%s', '%s'", smartViewHolderClass!!.toString(), e.message), e)
         }
 
-        val smartRecyclerAdapter = smartRecyclerAdapterMapper[viewHolder::class]
-        if (viewHolder is SmartAdapterHolder && smartRecyclerAdapter != null) {
-            (viewHolder as SmartAdapterHolder).smartRecyclerAdapter = smartRecyclerAdapter
+        val smartRecyclerAdapter = smartRecyclerAdapterMapper[viewHolder::class] ?: smartRecyclerAdapter
+        if (viewHolder is SmartAdapterHolder) {
+            viewHolder.smartRecyclerAdapter = smartRecyclerAdapter
+            viewHolder.initAdapter()
         }
 
         return viewHolder

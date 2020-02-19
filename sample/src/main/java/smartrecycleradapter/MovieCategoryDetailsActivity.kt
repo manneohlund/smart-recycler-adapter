@@ -2,7 +2,6 @@ package smartrecycleradapter
 
 import android.os.Bundle
 import android.os.Handler
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -10,7 +9,6 @@ import kotlinx.android.synthetic.main.activity_movie_category_details.*
 import smartadapter.Position
 import smartadapter.SmartEndlessScrollRecyclerAdapter
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.ViewEventId
 import smartrecycleradapter.data.MovieDataItems
 import smartrecycleradapter.extension.GridAutoLayoutManager
 import smartrecycleradapter.models.MovieModel
@@ -70,22 +68,18 @@ class MovieCategoryDetailsActivity : AppCompatActivity() {
                         .map(String::class, HeaderViewHolder::class)
                         .map(MovieModel::class, ThumbViewHolder::class)
                         .setLayoutManager(gridAutoLayoutManager)
-                        .addViewEventListener(object : ThumbViewHolder.OnItemClickListener {
-                            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
-                                Toast.makeText(applicationContext, "Movie $position", Toast.LENGTH_SHORT).show()
-                            }
+                        .addViewEventListener(ThumbViewHolder.OnItemClickListener { view, smartRecyclerAdapter, position ->
+                            Toast.makeText(applicationContext, "Movie $position", Toast.LENGTH_SHORT).show()
                         })
-                        .into(recyclerView)
+                        .into<SmartRecyclerAdapter>(recyclerView)
             }
             MovieType.ACTION, MovieType.ADVENTURE, MovieType.ANIMATED, MovieType.SCI_FI -> {
                 val endlessScrollAdapter: SmartEndlessScrollRecyclerAdapter = SmartEndlessScrollRecyclerAdapter.items(adapterItems)
                         .map(String::class, HeaderViewHolder::class)
                         .map(MovieModel::class, ThumbViewHolder::class)
                         .setLayoutManager(gridAutoLayoutManager)
-                        .addViewEventListener(object : ThumbViewHolder.OnItemClickListener {
-                            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
-                                Toast.makeText(applicationContext, "Movie $position", Toast.LENGTH_SHORT).show()
-                            }
+                        .addViewEventListener(ThumbViewHolder.OnItemClickListener { view, smartRecyclerAdapter, position ->
+                            Toast.makeText(applicationContext, "Movie $position", Toast.LENGTH_SHORT).show()
                         })
                         .into(recyclerView)
 

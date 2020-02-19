@@ -1,14 +1,12 @@
 package smartrecycleradapter.feature
 
 import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.activity_simple_item.*
 import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.ViewEventId
 import smartadapter.widget.AutoDragAndDropExtension
 import smartadapter.widget.DragAndDropExtensionBuilder
 import smartrecycleradapter.data.MovieDataItems
@@ -43,10 +41,8 @@ class GridActivity : BaseSampleActivity() {
             .map(AnimatedMovieModel::class, AnimateThumbViewHolder::class)
             .map(SciFiMovieModel::class, SciFiThumbViewHolder::class)
             .setLayoutManager(gridAutoLayoutManager)
-            .addViewEventListener(object : ThumbViewHolder.OnItemClickListener {
-                override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
-                    Toast.makeText(applicationContext, "Movie $position", Toast.LENGTH_SHORT).show()
-                }
+            .addViewEventListener(ThumbViewHolder.OnItemClickListener { view, smartRecyclerAdapter, position ->
+                Toast.makeText(applicationContext, "Movie $position", Toast.LENGTH_SHORT).show()
             })
             .addExtensionBuilder(
                 DragAndDropExtensionBuilder(AutoDragAndDropExtension()).apply {

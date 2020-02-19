@@ -13,6 +13,8 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import smartadapter.SmartViewHolderType
+import smartadapter.listener.OnClick
+import smartadapter.listener.OnLongClick
 import smartadapter.viewholder.SmartViewHolder
 import smartrecycleradapter.R
 import smartrecycleradapter.models.MovieModel
@@ -68,15 +70,15 @@ open class ThumbViewHolder(parentView: ViewGroup) : SmartViewHolder<MovieModel>(
         Glide.with(itemView).clear(itemView)
     }
 
-    internal interface OnItemClickListener : smartadapter.listener.OnItemClickListener {
-        override val viewHolderType: SmartViewHolderType
-            get() = ThumbViewHolder::class
-    }
+    class OnItemClickListener(
+        override val viewHolderType: SmartViewHolderType = ThumbViewHolder::class,
+        override val listener: OnClick
+    ) : smartadapter.listener.OnItemClickListener
 
-    internal interface OnItemLongClickListener : smartadapter.listener.OnItemLongClickListener {
-        override val viewHolderType: SmartViewHolderType
-            get() = ThumbViewHolder::class
-    }
+    class OnItemLongClickListener(
+        override val viewHolderType: SmartViewHolderType = ThumbViewHolder::class,
+        override val listener: OnLongClick
+    ) : smartadapter.listener.OnItemLongClickListener
 }
 
 class LargeThumbViewHolder(parentView: ViewGroup) : SmartViewHolder<MovieModel>(
@@ -97,13 +99,13 @@ class LargeThumbViewHolder(parentView: ViewGroup) : SmartViewHolder<MovieModel>(
         Glide.with(itemView).clear(itemView)
     }
 
-    internal interface OnItemClickListener : smartadapter.listener.OnItemClickListener {
-        override val viewHolderType: SmartViewHolderType
-            get() = LargeThumbViewHolder::class
-    }
+    class OnItemClickListener(
+        override val viewHolderType: SmartViewHolderType = LargeThumbViewHolder::class,
+        override val listener: OnClick
+    ) : smartadapter.listener.OnItemClickListener
 
-    internal interface OnItemLongClickListener : smartadapter.listener.OnItemLongClickListener {
-        override val viewHolderType: SmartViewHolderType
-            get() = LargeThumbViewHolder::class
-    }
+    class OnItemLongClickListener(
+        override val viewHolderType: SmartViewHolderType = LargeThumbViewHolder::class,
+        override val listener: OnLongClick
+    ) : smartadapter.listener.OnItemLongClickListener
 }

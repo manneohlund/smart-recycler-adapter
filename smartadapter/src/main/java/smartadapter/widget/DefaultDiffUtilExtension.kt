@@ -12,7 +12,7 @@ import smartadapter.SmartRecyclerAdapter
 @Suppress("UNCHECKED_CAST")
 class DefaultDiffUtilExtension : DiffUtilExtension() {
 
-    override var smartRecyclerAdapter: SmartRecyclerAdapter? = null
+    override lateinit var smartRecyclerAdapter: SmartRecyclerAdapter
     private lateinit var diffPredicate: DiffPredicate<Any>
     private lateinit var oldList: List<Any>
     private lateinit var newList: List<Any>
@@ -44,12 +44,12 @@ class DefaultDiffUtilExtension : DiffUtilExtension() {
     }
 
     override fun diffSwapList(newList: MutableList<*>) {
-        smartRecyclerAdapter?.let { smartRecyclerAdapter ->
+        smartRecyclerAdapter.let { smartRecyclerAdapter ->
             this.oldList = smartRecyclerAdapter.getItems()
             this.newList = newList as MutableList<Any>
             val diffResult = DiffUtil.calculateDiff(this)
             diffResult.dispatchUpdatesTo(smartRecyclerAdapter)
             smartRecyclerAdapter.setItems(newList, false)
-        } ?: throw RuntimeException("SmartRecyclerAdapter is not set")
+        }
     }
 }

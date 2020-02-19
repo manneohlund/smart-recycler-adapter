@@ -7,15 +7,14 @@ package smartrecycleradapter.feature
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_simple_item.*
-import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.ViewEventId
+import smartadapter.listener.OnSmartViewEvent
 import smartadapter.listener.OnViewEventListener
+import smartadapter.viewholder.SmartAdapterHolder
 import smartadapter.viewholder.SmartViewHolder
 import smartadapter.viewholder.ViewEventListenerHolder
 import smartrecycleradapter.R
@@ -34,8 +33,8 @@ class CustomViewEventActivity : BaseSampleActivity() {
         SmartRecyclerAdapter
             .items(items)
             .map(Integer::class, SimpleItemViewHolder::class)
-            .addViewEventListener(object : OnViewEventListener {
-                override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+            .addViewEventListener(object : OnViewEventListener<OnSmartViewEvent> {
+                override val listener: OnSmartViewEvent = OnSmartViewEvent { view, viewEventId, adapter, position ->
                     if (viewEventId == CUSTOM_EVENT) {
                         Toast.makeText(
                             applicationContext,
@@ -50,13 +49,14 @@ class CustomViewEventActivity : BaseSampleActivity() {
 
     open class SimpleItemViewHolder(parentView: ViewGroup) : SmartViewHolder<Int>(
         LayoutInflater.from(parentView.context).inflate(R.layout.simple_item, parentView, false)
-    ), ViewEventListenerHolder {
+    ), ViewEventListenerHolder<OnSmartViewEvent>, SmartAdapterHolder {
 
-        override lateinit var viewEventListener: OnViewEventListener
+        override var viewEventListener: OnSmartViewEvent? = null
+        override lateinit var smartRecyclerAdapter: SmartRecyclerAdapter
 
         init {
             itemView.setOnClickListener { view ->
-                viewEventListener.onViewEvent(view, CUSTOM_EVENT, adapterPosition)
+                viewEventListener?.event?.invoke(view, CUSTOM_EVENT, smartRecyclerAdapter, adapterPosition)
             }
         }
 

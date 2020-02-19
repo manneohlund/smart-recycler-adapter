@@ -12,6 +12,7 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.validateMockitoUsage
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import smartadapter.SmartRecyclerAdapter
 import smartadapter.internal.extension.name
 import smartadapter.internal.mapper.ViewHolderMapper
 import smartadapter.viewholder.SmartViewHolder
@@ -32,6 +33,7 @@ class ViewHolderMapperTest {
     @Before
     fun setUp() {
         mapper = ViewHolderMapper()
+        mapper.smartRecyclerAdapter = mock(SmartRecyclerAdapter::class.java)
         mapper.addMapping(Float::class, JavaTestViewHolder::class)
         mapper.addMapping(String::class, TestViewHolder::class)
         mapper.addMapping(Int::class, TestViewHolder2::class)

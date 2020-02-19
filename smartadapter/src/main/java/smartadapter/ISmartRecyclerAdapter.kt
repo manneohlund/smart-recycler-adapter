@@ -251,7 +251,7 @@ interface ISmartRecyclerAdapter {
      * @param viewHolderType SmartViewHolder type
      * @return map of ViewEventListeners
      */
-    fun getViewEventListenersForViewHolder(viewHolderType: SmartViewHolderType): SparseArray<SparseArray<OnViewEventListener>>?
+    fun getViewEventListenersForViewHolder(viewHolderType: SmartViewHolderType): SparseArray<SparseArray<OnViewEventListener<*>>>?
 
     /**
      * Adds an [OnViewAttachedToWindowListener] to the [SmartRecyclerAdapter] that will be called from [SmartRecyclerAdapter.onViewAttachedToWindow].

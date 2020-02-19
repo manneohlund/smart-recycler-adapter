@@ -7,10 +7,9 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_simple_item.*
-import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.ViewEventId
 import smartadapter.ViewId
+import smartadapter.listener.OnClick
 import smartadapter.listener.OnItemSelectedListener
 import smartadapter.state.SelectionStateHolder
 import smartadapter.viewholder.SmartViewHolder
@@ -34,7 +33,7 @@ class MultipleExpandableItemActivity : BaseSampleActivity() {
         SmartRecyclerAdapter
             .items(items)
             .map(Integer::class, SimpleExpandableItemViewHolder::class)
-            .addViewEventListener(onItemExpandedListener { view, viewEventId, position ->
+            .addViewEventListener(OnItemExpandedListener { view, viewEventId, position ->
                 supportActionBar?.subtitle =
                     "${expandedStateHolder.selectedItemsCount} / ${items.size} expanded"
             })
@@ -72,17 +71,9 @@ class SimpleExpandableItemViewHolder(parentView: ViewGroup) : SmartViewHolder<In
 
 var expandedStateHolder = SelectionStateHolder()
 
-interface OnItemExpandedListener : OnItemSelectedListener {
-    override val selectionStateHolder: SelectionStateHolder
-        get() = expandedStateHolder
+class OnItemExpandedListener(
+    override val viewId: ViewId = R.id.itemTitle,
+    override val selectionStateHolder: SelectionStateHolder = expandedStateHolder,
+    override val listener: OnClick
+) : OnItemSelectedListener
 
-    override val viewId: ViewId
-        get() = R.id.itemTitle
-}
-
-inline fun onItemExpandedListener(crossinline viewEvent: (view: View, viewEventId: ViewEventId, position: Position) -> Unit) =
-    object : OnItemExpandedListener {
-        override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
-            viewEvent(view, viewEventId, position)
-        }
-    }

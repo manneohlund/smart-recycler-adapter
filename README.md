@@ -138,7 +138,7 @@ is same as
 
 ```kotlin
 .addViewEventListener(object : OnViewEventListener {
-  override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+  override fun onViewEvent(view: View, adapter: SmartRecyclerAdapter, position: Position) {
     // Handle event
     }
 })
@@ -185,13 +185,13 @@ SmartRecyclerAdapter
   .addViewEventListener(onItemClickListener { view, viewEventId, position -> handleEvent(viewEventId) })
   // Adds event listener for MovieViewHolder only and overrides any generic `OnItemClickListener`
   .addViewEventListener(object : OnMovieItemClickListener {
-    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+    override fun onViewEvent(view: View, adapter: SmartRecyclerAdapter, position: Position) {
       playMovie()
     }
   })
   // Adds event listener for MovieViewHolder only and auto binds `View.OnClickListener` on view with id `R.id.movie_info_button`
   .addViewEventListener(object : OnMovieInfoButtonClickListener {
-    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+    override fun onViewEvent(view: View, adapter: SmartRecyclerAdapter, position: Position) {
       showMovieInfo(position)
     }
   })
@@ -392,7 +392,7 @@ interface OnMovieItemClickListener : OnItemClickListener {
 
 ```kotlin
 .addViewEventListener(object : OnMovieItemClickListener {
-  override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+  override fun onViewEvent(view: View, adapter: SmartRecyclerAdapter, position: Position) {
     playMovie()
   }
 })
@@ -408,8 +408,8 @@ inline fun onMovieItemClickListener(crossinline viewEvent: (
         view: View,
         viewEventId: ViewEventId,
         position: Position) -> Unit) = object : OnItemClickListener {
-    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
-        viewEvent(view, viewEventId, position)
+    override fun onViewEvent(view: View, adapter: SmartRecyclerAdapter, position: Position) {
+        viewEvent(view, adapter, position)
     }
 }
 ```

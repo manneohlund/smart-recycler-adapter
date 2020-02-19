@@ -64,7 +64,7 @@ class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter:
      * @param viewEventListener target [OnViewEventListener]
      * @return SmartAdapterBuilder
      */
-    fun addViewEventListener(viewEventListener: OnViewEventListener): SmartAdapterBuilder {
+    fun addViewEventListener(viewEventListener: OnViewEventListener<*>): SmartAdapterBuilder {
         if (viewEventListener is OnItemSelectedListener) {
             viewEventListener.selectionStateHolder.smartRecyclerAdapter = smartRecyclerAdapter
             viewEventMapper.addViewEventListener(viewEventListener)
@@ -88,6 +88,7 @@ class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter:
 
     @Suppress("UNCHECKED_CAST")
     fun <T> into(recyclerView: RecyclerView): T {
+        viewEventMapper.smartRecyclerAdapter = smartRecyclerAdapter
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper)
         smartRecyclerAdapter.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper)
         smartRecyclerAdapter.viewTypeResolver = viewTypeResolver
@@ -100,6 +101,7 @@ class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter:
 
     @Suppress("UNCHECKED_CAST")
     fun <T> create(): T {
+        viewEventMapper.smartRecyclerAdapter = smartRecyclerAdapter
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper)
         smartRecyclerAdapter.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper)
         smartRecyclerAdapter.viewTypeResolver = viewTypeResolver

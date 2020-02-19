@@ -10,9 +10,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import smartadapter.SmartRecyclerAdapter
 import smartadapter.SmartViewHolderType
 import smartadapter.ViewId
+import smartadapter.listener.OnClick
+import smartadapter.listener.OnSmartViewEvent
 import smartadapter.listener.OnViewEventListener
+import smartadapter.listener.ViewEvent
+import smartadapter.viewholder.SmartAdapterHolder
 import smartadapter.viewholder.SmartViewHolder
 import smartadapter.viewholder.ViewEventListenerHolder
 import smartrecycleradapter.R
@@ -22,15 +27,20 @@ import smartrecycleradapter.utils.displayWidth
 
 class PosterViewHolder(parentView: ViewGroup) : SmartViewHolder<MovieModel>(
     LayoutInflater.from(parentView.context).inflate(R.layout.poster_item, parentView, false)
-), ViewEventListenerHolder {
+), ViewEventListenerHolder<ViewEvent>, SmartAdapterHolder {
 
     private val imageView: ImageView = itemView.findViewById(R.id.imageView)
     private val playButton: ImageView = itemView.findViewById(R.id.playButton)
-    override lateinit var viewEventListener: OnViewEventListener
+    override var viewEventListener: ViewEvent? = null
+        set(value) {
+            if (value is OnSmartViewEvent)
+                field = value
+        }
+    override lateinit var smartRecyclerAdapter: SmartRecyclerAdapter
 
     init {
         playButton.setOnClickListener { playButton ->
-            viewEventListener.onViewEvent(playButton, R.id.event_play, adapterPosition)
+            (viewEventListener!! as OnSmartViewEvent).event.invoke(playButton, R.id.event_play, smartRecyclerAdapter, adapterPosition)
         }
     }
 
@@ -52,23 +62,23 @@ class PosterViewHolder(parentView: ViewGroup) : SmartViewHolder<MovieModel>(
     }
 
     // Event listeners
-    internal interface OnItemClickListener : smartadapter.listener.OnItemClickListener {
-        override val viewHolderType: SmartViewHolderType
-            get() = PosterViewHolder::class
-    }
+    internal open class OnItemClickListener(
+        override val viewHolderType: SmartViewHolderType = PosterViewHolder::class,
+        override val listener: OnClick
+    ) : smartadapter.listener.OnItemClickListener
 
-    internal interface OnPlayButtonClickListener : OnItemClickListener {
-        override val viewId: ViewId
-            get() = R.id.playButton
-    }
+    internal class OnPlayButtonClickListener(
+        override val viewHolderType: SmartViewHolderType = PosterViewHolder::class,
+        override val listener: OnSmartViewEvent
+    ) : OnViewEventListener<OnSmartViewEvent>
 
-    internal interface OnStarButtonClickListener : OnItemClickListener {
-        override val viewId: ViewId
-            get() = R.id.starButton
-    }
+    internal  class OnStarButtonClickListener(
+        override val viewId: ViewId = R.id.starButton,
+        override val listener: OnClick
+    ) : OnItemClickListener(listener = listener)
 
-    internal interface OnInfoButtonClickListener : OnItemClickListener {
-        override val viewId: ViewId
-            get() = R.id.infoButton
-    }
+    internal class OnInfoButtonClickListener(
+        override val viewId: ViewId = R.id.infoButton,
+        override val listener: OnClick
+    ) : OnItemClickListener(listener = listener)
 }

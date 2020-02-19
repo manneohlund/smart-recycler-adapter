@@ -11,5 +11,7 @@ import smartadapter.SmartRecyclerAdapter
  * Receiver for [SmartRecyclerAdapter], can be use in [SmartViewHolder] extension that handles nested adapters.
  */
 interface SmartAdapterHolder {
-    var smartRecyclerAdapter: SmartRecyclerAdapter?
+    var smartRecyclerAdapter: SmartRecyclerAdapter
+
+    fun initAdapter() {}
 }

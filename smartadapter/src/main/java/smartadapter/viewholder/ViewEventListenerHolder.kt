@@ -6,19 +6,20 @@ package smartadapter.viewholder
  */
 
 import smartadapter.listener.OnViewEventListener
+import smartadapter.listener.ViewEvent
 
 /**
  * Lets a view holder handle events with custom event ids.
  * Implement this interface in your [SmartViewHolder] extension.
  */
-interface ViewEventListenerHolder {
+interface ViewEventListenerHolder<T : ViewEvent> {
 
     /**
      * Will be set from [smartadapter.SmartRecyclerAdapter]
      * if a default global listener has been added to the adapter
-     * or target view holder is defined by [OnViewEventListener.getViewHolderType].
+     * or target view holder is defined by [OnViewEventListener.viewHolderType].
      *
      * @see OnViewEventListener
      */
-    var viewEventListener: OnViewEventListener
+    var viewEventListener: T?
 }

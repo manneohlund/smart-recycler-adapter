@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_simple_item.*
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.listener.onItemClickListener
+import smartadapter.listener.OnClick
+import smartadapter.listener.OnItemClickListener
 import smartadapter.widget.BasicSwipeExtension
 import smartadapter.widget.Direction
 import smartadapter.widget.SwipeExtensionBuilder
@@ -36,8 +37,10 @@ class SwipeRemoveItemActivity : BaseSampleActivity() {
         smartRecyclerAdapter = SmartRecyclerAdapter
                 .items(items)
                 .map(Integer::class, SimpleItemViewHolder::class)
-                .addViewEventListener(onItemClickListener { _, _, position ->
+                .addViewEventListener(object : OnItemClickListener {
+                    override val listener: OnClick = { _, _, position ->
                         Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT).show()
+                    }
                 })
                 .addExtensionBuilder(SwipeExtensionBuilder(SwipeRemoveItemExtension()).apply {
                     swipeFlags = ItemTouchHelper.LEFT

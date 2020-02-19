@@ -6,26 +6,14 @@ package smartadapter.listener
  */
 
 import android.view.View
-import io.github.manneohlund.smartrecycleradapter.R
 import smartadapter.Position
-import smartadapter.ViewEventId
+import smartadapter.SmartRecyclerAdapter
 
 /**
  * Default implementation of adapter item row long click listener.
  */
-interface OnItemLongClickListener : OnViewEventListener {
-    override val viewEventId: ViewEventId
-        get() = R.id.event_on_long_click
-}
+typealias OnLongClick = (View, SmartRecyclerAdapter, Position) -> Unit
 
-/**
- * Helper method to provide lambda call to interface instances of [OnItemLongClickListener].
- */
-inline fun onItemLongClickListener(crossinline viewEvent: (
-        view: View,
-        viewEventId: ViewEventId,
-        position: Position) -> Unit) = object : OnItemLongClickListener {
-    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
-        viewEvent(view, viewEventId, position)
-    }
+interface OnItemLongClickListener : OnViewEventListener<OnLongClick> {
+    override val listener: OnLongClick
 }

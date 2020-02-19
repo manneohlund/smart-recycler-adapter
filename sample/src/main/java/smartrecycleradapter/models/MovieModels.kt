@@ -11,11 +11,11 @@ import smartrecycleradapter.data.MovieDataItems.THUMBS_BASE_URL
 
 class ComingSoonMoviesModel(title: String) : NestedRecyclerViewModel(title)
 
-class MyWatchListModel(title: String) : NestedRecyclerViewModel(title)
+class MyWatchListModel(title: String, items: MutableList<Any>? = null) : NestedRecyclerViewModel(title, items)
 
-class ActionMoviesModel(title: String) : NestedRecyclerViewModel(title)
+class ActionMoviesModel(title: String, items: MutableList<Any>? = null) : NestedRecyclerViewModel(title, items)
 
-class AdventureMoviesModel(title: String) : NestedRecyclerViewModel(title)
+class AdventureMoviesModel(title: String, items: MutableList<Any>? = null) : NestedRecyclerViewModel(title, items)
 
 class AnimatedMoviesModel(title: String) : NestedRecyclerViewModel(title)
 
@@ -23,7 +23,7 @@ class SciFiMoviesModel(title: String) : NestedRecyclerViewModel(title)
 
 class RecentlyPlayedMoviesModel(title: String) : NestedRecyclerViewModel(title)
 
-open class NestedRecyclerViewModel(var title: String) {
+open class NestedRecyclerViewModel(var title: String, var items: MutableList<Any>? = null) {
 
     override fun toString(): String {
         return title

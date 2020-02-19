@@ -1,14 +1,13 @@
 package smartrecycleradapter.feature
 
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_simple_item.*
-import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.ViewEventId
+import smartadapter.listener.OnClick
 import smartadapter.listener.OnItemClickListener
 import smartadapter.listener.OnItemLongClickListener
+import smartadapter.listener.OnLongClick
 import smartrecycleradapter.feature.simpleitem.SimpleItemViewHolder
 
 /*
@@ -29,12 +28,12 @@ class SimpleItemOnClickOnLongClickActivity : BaseSampleActivity() {
                 .items(items)
                 .map(Integer::class, SimpleItemViewHolder::class)
                 .addViewEventListener(object : OnItemClickListener {
-                    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+                    override val listener: OnClick = { view, smartRecyclerAdapter, position ->
                         Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT).show()
                     }
                 })
                 .addViewEventListener(object : OnItemLongClickListener {
-                    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+                    override val listener: OnLongClick = { view, smartRecyclerAdapter, position ->
                         Toast.makeText(applicationContext, "onLongClick $position", Toast.LENGTH_SHORT).show()
                     }
                 })

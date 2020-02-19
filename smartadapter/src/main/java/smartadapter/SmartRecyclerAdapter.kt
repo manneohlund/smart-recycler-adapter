@@ -17,7 +17,8 @@ import smartadapter.listener.OnViewEventListener
 import smartadapter.viewholder.RecyclableViewHolder
 import smartadapter.viewholder.SmartViewHolder
 import smartadapter.widget.ViewTypeResolver
-import java.util.*
+import java.util.ArrayList
+import java.util.HashMap
 import kotlin.reflect.KClass
 
 /**
@@ -60,8 +61,12 @@ open class SmartRecyclerAdapter
         : RecyclerView.Adapter<SmartViewHolder<Any>>(), ISmartRecyclerAdapter {
 
     override var smartItemCount: Int = 0
-    override var viewHolderMapper: ViewHolderMapper = ViewHolderMapper()
-    override var viewEventMapper: ViewEventMapper = ViewEventMapper()
+    override var viewHolderMapper: ViewHolderMapper = ViewHolderMapper().also {
+        it.smartRecyclerAdapter = this
+    }
+    override var viewEventMapper: ViewEventMapper = ViewEventMapper().also {
+        it.smartRecyclerAdapter = this
+    }
     override var viewTypeResolver: ViewTypeResolver? = null
     private val onViewAttachedToWindowListeners = ArrayList<OnViewAttachedToWindowListener>()
     private val onViewDetachedFromWindowListeners = ArrayList<OnViewDetachedFromWindowListener>()
@@ -281,7 +286,7 @@ open class SmartRecyclerAdapter
         viewHolderMapper.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper)
     }
 
-    override fun getViewEventListenersForViewHolder(viewHolderType: SmartViewHolderType): SparseArray<SparseArray<OnViewEventListener>>? {
+    override fun getViewEventListenersForViewHolder(viewHolderType: SmartViewHolderType): SparseArray<SparseArray<OnViewEventListener<*>>>? {
         return this.viewEventMapper.viewEventListenerMap[viewHolderType]
     }
 

@@ -8,17 +8,28 @@ package smartadapter.listener
 import android.view.View
 import io.github.manneohlund.smartrecycleradapter.R
 import smartadapter.Position
+import smartadapter.SmartRecyclerAdapter
 import smartadapter.SmartViewHolderType
 import smartadapter.ViewEventId
 import smartadapter.ViewId
 import smartadapter.viewholder.SmartViewHolder
-import smartadapter.viewholder.ViewEventListenerHolder
+
+interface ViewEvent {
+    val event: Any
+}
+
+inline class OnViewEvent(
+    override val event: (View, ViewEventId, Position) -> Unit
+) : ViewEvent
+
+inline class OnSmartViewEvent(
+    override val event: (View, ViewEventId, SmartRecyclerAdapter, Position) -> Unit
+) : ViewEvent
 
 /**
  * Callback added in [smartadapter.SmartRecyclerAdapter] for view events listening in [SmartViewHolder] extensions.
  */
-interface OnViewEventListener {
-
+interface OnViewEventListener<T : Any> {
     /**
      * Default implementation returns [SmartViewHolder] class which
      * [smartadapter.SmartRecyclerAdapter] will bind to all [SmartViewHolder] extensions.
@@ -37,33 +48,7 @@ interface OnViewEventListener {
         get() = R.id.undefined
 
     /**
-     * Default implementation returns [R.id.undefined] and any [SmartViewHolder] extensions must implement [ViewEventListenerHolder].
-     *
-     * Can be overridden with predefined view action ids.
-     * [R.id.event_on_click]
-     * [R.id.event_on_long_click]
+     * Listener that can reference anything.
      */
-    val viewEventId: ViewEventId
-        get() = R.id.undefined
-
-    /**
-     * Receiver of a view events.
-     *
-     * @param view source view which dispatched the action
-     * @param viewEventId callback viewEventId
-     * @param position the adapter position
-     */
-    fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position)
-}
-
-/**
- * Helper method to provide lambda call to interface instances of [OnViewEventListener].
- */
-inline fun onViewEventListener(crossinline viewEvent: (
-    view: View,
-    viewEventId: ViewEventId,
-    position: Position) -> Unit) = object : OnViewEventListener {
-    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
-        viewEvent(view, viewEventId, position)
-    }
+    val listener: T
 }

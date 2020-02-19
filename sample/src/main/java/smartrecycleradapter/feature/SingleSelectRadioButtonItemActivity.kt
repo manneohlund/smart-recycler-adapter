@@ -8,13 +8,11 @@ package smartrecycleradapter.feature
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_simple_item.*
-import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.ViewEventId
 import smartadapter.ViewId
+import smartadapter.listener.OnClick
 import smartadapter.listener.OnItemClickListener
 import smartadapter.listener.OnItemSelectedListener
 import smartadapter.state.SelectionStateHolder
@@ -34,23 +32,21 @@ class SingleSelectRadioButtonItemActivity : BaseSampleActivity() {
 
         val items = (0..100).toMutableList()
 
-        onSingleRadioButtonItemSelectedListener = object : OnSingleRadioButtonItemSelectedListener {
-            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+        onSingleRadioButtonItemSelectedListener = OnSingleRadioButtonItemSelectedListener { view, smartRecyclerAdapter, position ->
                 Toast.makeText(
                     applicationContext,
                     String.format(
                         "Item click %d\n" +
                                 "%d of %d selected items",
                         position,
-                        selectionStateHolder.selectedItemsCount,
-                        smartRecyclerAdapter.itemCount
+                        singleRadioButtonStateHolder.selectedItemsCount,
+                        this.smartRecyclerAdapter.itemCount
                     ),
                     Toast.LENGTH_LONG
                 ).show()
 
                 deleteMenuItem?.isVisible =
                     onSingleRadioButtonItemSelectedListener.selectionStateHolder.selectedItemsCount > 0
-            }
         }
 
         smartRecyclerAdapter = SmartRecyclerAdapter
@@ -58,7 +54,7 @@ class SingleSelectRadioButtonItemActivity : BaseSampleActivity() {
             .map(Integer::class, SimpleSelectableRadioButtonViewHolder::class)
             .addViewEventListener(onSingleRadioButtonItemSelectedListener)
             .addViewEventListener(object : OnItemClickListener {
-                override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+                override val listener: OnClick = { view, adapter, position ->
                     Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT)
                         .show()
                 }
@@ -85,10 +81,8 @@ class SingleSelectRadioButtonItemActivity : BaseSampleActivity() {
 
 var singleRadioButtonStateHolder = SingleSelectionStateHolder()
 
-interface OnSingleRadioButtonItemSelectedListener : OnItemSelectedListener {
-    override val selectionStateHolder: SelectionStateHolder
-        get() = singleRadioButtonStateHolder
-
-    override val viewId: ViewId
-        get() = R.id.radioButton
-}
+class OnSingleRadioButtonItemSelectedListener(
+    override val selectionStateHolder: SelectionStateHolder  = singleRadioButtonStateHolder,
+    override val viewId: ViewId = R.id.radioButton,
+    override val listener: OnClick
+) : OnItemSelectedListener

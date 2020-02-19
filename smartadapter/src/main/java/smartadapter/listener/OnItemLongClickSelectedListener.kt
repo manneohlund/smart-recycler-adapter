@@ -11,4 +11,6 @@ package smartadapter.listener
 interface OnItemLongClickSelectedListener : OnItemSelectedListener {
     override val enableOnLongClick: Boolean
         get() = true
+
+    override val listener: OnLongClick
 }

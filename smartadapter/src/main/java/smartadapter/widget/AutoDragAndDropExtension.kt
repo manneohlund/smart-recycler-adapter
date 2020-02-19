@@ -12,7 +12,7 @@ import smartadapter.SmartRecyclerAdapter
 import smartadapter.listener.onViewAttachedToWindowListener
 import smartadapter.viewholder.DraggableViewHolder
 import smartadapter.viewholder.SmartAdapterHolder
-import java.util.*
+import java.util.HashSet
 
 /**
  * Automatically moves an item in [SmartRecyclerAdapter] dragged and dropped.
@@ -22,7 +22,7 @@ import java.util.*
  */
 class AutoDragAndDropExtension : BasicDragAndDropExtension(), SmartAdapterHolder {
 
-    override var smartRecyclerAdapter: SmartRecyclerAdapter? = null
+    override lateinit var smartRecyclerAdapter: SmartRecyclerAdapter
     private val draggableViews = HashSet<RecyclerView.ViewHolder>()
 
     override fun onMove(
@@ -34,7 +34,7 @@ class AutoDragAndDropExtension : BasicDragAndDropExtension(), SmartAdapterHolder
         if (moved) {
             val oldPosition = viewHolder.adapterPosition
             val newPosition = target.adapterPosition
-            with (smartRecyclerAdapter!!) {
+            with (smartRecyclerAdapter) {
                 val targetItem = getItems()[oldPosition]
                 getItems().removeAt(oldPosition)
                 getItems().add(newPosition, targetItem)
@@ -58,7 +58,7 @@ class AutoDragAndDropExtension : BasicDragAndDropExtension(), SmartAdapterHolder
         super.setupDragAndDrop(recyclerView)
 
         if (!isLongPressDragEnabled) {
-            smartRecyclerAdapter?.addOnViewAttachedToWindowListener(onViewAttachedToWindowListener { viewHolder ->
+            smartRecyclerAdapter.addOnViewAttachedToWindowListener(onViewAttachedToWindowListener { viewHolder ->
                 if (viewHolder is DraggableViewHolder && !draggableViews.contains(viewHolder)) {
                     draggableViews.add(viewHolder)
                     (viewHolder as DraggableViewHolder).draggableView

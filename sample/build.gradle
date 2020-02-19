@@ -96,4 +96,6 @@ dependencies {
 
     //implementation 'io.github.manneohlund:smart-recycler-adapter:4.1.0'
     implementation project(':smartadapter')
+
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.1'
 }

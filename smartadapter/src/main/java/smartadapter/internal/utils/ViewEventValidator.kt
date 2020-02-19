@@ -5,21 +5,22 @@ package smartadapter.internal.utils
  * Copyright (c) All rights reserved.
  */
 
-import io.github.manneohlund.smartrecycleradapter.R
+import smartadapter.listener.OnItemClickListener
+import smartadapter.listener.OnItemLongClickListener
+import smartadapter.listener.OnViewEventListener
 
 /**
  * Checks if auto view events are of the predefined types provided by the SmartRecyclerAdapter library.
  */
+@Deprecated("Use custom view event binder")
 object ViewEventValidator {
 
     private val autoViewEvents = listOf(
-        R.id.undefined,
-        R.id.event_on_click,
-        R.id.event_on_long_click,
-        R.id.event_on_item_selected
+        OnItemClickListener::class,
+        OnItemLongClickListener::class
     )
 
-    fun isViewEventIdValid(viewEventId: Int): Boolean {
-        return autoViewEvents.contains(viewEventId)
+    fun isViewEventIdValid(viewEventId: OnViewEventListener<*>): Boolean {
+        return autoViewEvents.contains(viewEventId::class)
     }
 }

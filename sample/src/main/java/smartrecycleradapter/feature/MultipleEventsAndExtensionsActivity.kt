@@ -6,8 +6,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_simple_item.*
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.listener.onItemClickListener
-import smartadapter.listener.onItemLongClickListener
+import smartadapter.listener.OnClick
+import smartadapter.listener.OnItemClickListener
+import smartadapter.listener.OnItemLongClickListener
+import smartadapter.listener.OnLongClick
 import smartadapter.widget.AutoDragAndDropExtension
 import smartadapter.widget.AutoRemoveItemSwipeExtension
 import smartadapter.widget.DragAndDropExtensionBuilder
@@ -33,12 +35,16 @@ class MultipleEventsAndExtensionsActivity : BaseSampleActivity() {
         smartRecyclerAdapter = SmartRecyclerAdapter
             .items(items)
             .map(Integer::class, SimpleItemViewHolder::class)
-            .addViewEventListener(onItemClickListener { view, viewEventId, position ->
-                Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT).show()
+            .addViewEventListener(object : OnItemClickListener {
+                override val listener: OnClick = { view, adapter, position ->
+                    Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT).show()
+                }
             })
-            .addViewEventListener(onItemLongClickListener { view, viewEventId, position ->
-                Toast.makeText(applicationContext, "onLongClick $position", Toast.LENGTH_SHORT)
-                    .show()
+            .addViewEventListener(object : OnItemLongClickListener {
+                override val listener: OnLongClick = { view, adapter, position ->
+                    Toast.makeText(applicationContext, "onLongClick $position", Toast.LENGTH_SHORT)
+                        .show()
+                }
             })
             .addExtensionBuilder(
                 DragAndDropExtensionBuilder(AutoDragAndDropExtension()).apply {

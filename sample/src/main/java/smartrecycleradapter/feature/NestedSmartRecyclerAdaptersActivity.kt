@@ -2,13 +2,11 @@ package smartrecycleradapter.feature
 
 import android.os.Bundle
 import android.os.Handler
-import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_simple_item.*
 import smartadapter.Position
 import smartadapter.SmartEndlessScrollRecyclerAdapter
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.ViewEventId
 import smartrecycleradapter.BuildConfig
 import smartrecycleradapter.DemoActivity.Companion.getActionName
 import smartrecycleradapter.R
@@ -62,9 +60,9 @@ class NestedSmartRecyclerAdaptersActivity : BaseSampleActivity() {
     private fun initSmartRecyclerAdapter() {
         val items = mutableListOf(
             ComingSoonMoviesModel("Coming soon"),
-            MyWatchListModel("My watch list"),
-            ActionMoviesModel("Action"),
-            AdventureMoviesModel("Adventure"),
+            MyWatchListModel("My watch list", MovieDataItems.myWatchListItems.toMutableList()),
+            ActionMoviesModel("Action", MovieDataItems.nestedActionItems.toMutableList()),
+            AdventureMoviesModel("Adventure", MovieDataItems.nestedAdventureItems.toMutableList()),
             AnimatedMoviesModel("Animated"),
             SciFiMoviesModel("Sci-Fi"),
             CopyrightModel(
@@ -100,21 +98,20 @@ class NestedSmartRecyclerAdaptersActivity : BaseSampleActivity() {
 
     private var moreItemsLoadedCount = 0
     private fun initNestedSmartRecyclerAdapters() {
-        val onThumbnailClickListener = object : ThumbViewHolder.OnItemClickListener {
-            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
-                showToast(
-                    "Coming soon \n%s \n%s index: %d",
-                    getMovieTitle(comingSoonSmartMovieAdapter, position),
-                    getActionName(viewEventId),
-                    position
-                )
-            }
+
+        val onComingSoonItemClickListener = LargeThumbViewHolder.OnItemClickListener { view, smartRecyclerAdapter, position ->
+            showToast(
+                "Coming soon \n%s \n%s index: %d",
+                getMovieTitle(comingSoonSmartMovieAdapter, position),
+                getActionName(R.id.event_on_click),
+                position
+            )
         }
 
         comingSoonSmartMovieAdapter =
             SmartEndlessScrollRecyclerAdapter.items(MovieDataItems.comingSoonItems)
                 .map(MovieModel::class, LargeThumbViewHolder::class)
-                .addViewEventListener(onThumbnailClickListener)
+                .addViewEventListener(onComingSoonItemClickListener)
                 .create()
 
         comingSoonSmartMovieAdapter.autoLoadMoreEnabled = true
@@ -134,32 +131,53 @@ class NestedSmartRecyclerAdaptersActivity : BaseSampleActivity() {
             }, 1000)
         }
 
+        val sharedOnItemClickListener = ThumbViewHolder.OnItemClickListener { view, smartRecyclerAdapter, position ->
+            showToast(
+                "%s \n%s \n%s index: %d",
+                getAdapterName(smartRecyclerAdapter),
+                getMovieTitle(smartRecyclerAdapter, position),
+                getActionName(R.id.event_on_click),
+                position
+            )
+        }
+
         myWatchListSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.myWatchListItems)
             .map(MovieModel::class, ThumbViewHolder::class)
-            .addViewEventListener(onThumbnailClickListener)
+            .addViewEventListener(sharedOnItemClickListener)
             .create()
 
         actionMoviesSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.nestedActionItems)
             .map(MovieModel::class, ThumbViewHolder::class)
-            .addViewEventListener(onThumbnailClickListener)
+            .addViewEventListener(sharedOnItemClickListener)
             .create()
 
         adventuresMoviesSmartMovieAdapter =
             SmartRecyclerAdapter.items(MovieDataItems.nestedAdventureItems)
                 .map(MovieModel::class, ThumbViewHolder::class)
-                .addViewEventListener(onThumbnailClickListener)
+                .addViewEventListener(sharedOnItemClickListener)
                 .create()
 
         animatedMoviesSmartMovieAdapter =
             SmartRecyclerAdapter.items(MovieDataItems.nestedAnimatedItems)
                 .map(MovieModel::class, ThumbViewHolder::class)
-                .addViewEventListener(onThumbnailClickListener)
+                .addViewEventListener(sharedOnItemClickListener)
                 .create()
 
         sciFiMoviesSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.nestedSciFiItems)
             .map(MovieModel::class, ThumbViewHolder::class)
-            .addViewEventListener(onThumbnailClickListener)
+            .addViewEventListener(sharedOnItemClickListener)
             .create()
+    }
+
+    private fun getAdapterName(smartRecyclerAdapter: SmartRecyclerAdapter?) : String {
+        return when(smartRecyclerAdapter) {
+            myWatchListSmartMovieAdapter -> "MyWatchList"
+            actionMoviesSmartMovieAdapter -> "ActionMovies"
+            adventuresMoviesSmartMovieAdapter -> "AdventuresMovies"
+            animatedMoviesSmartMovieAdapter -> "AnimatedMovies"
+            sciFiMoviesSmartMovieAdapter -> "SciFiMovies"
+            else -> "Unknown"
+        }
     }
 
     private fun getMovieTitle(smartRecyclerAdapter: SmartRecyclerAdapter, position: Position): String {

@@ -9,11 +9,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
 import kotlinx.android.synthetic.main.activity_simple_item.*
-import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.ViewEventId
+import smartadapter.listener.OnClick
 import smartadapter.listener.OnItemClickListener
 import smartadapter.listener.OnItemLongClickListener
+import smartadapter.listener.OnLongClick
 import smartadapter.viewholder.DraggableViewHolder
 import smartadapter.viewholder.SmartViewHolder
 import smartadapter.widget.AutoDragAndDropExtension
@@ -38,12 +38,12 @@ class DragAndDropHandleItemActivity : BaseSampleActivity() {
                 .items(items)
                 .map(Integer::class, SimpleDragHandleItemViewHolder::class)
                 .addViewEventListener(object : OnItemClickListener {
-                    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+                    override val listener: OnClick = { view, smartRecyclerAdapter, position ->
                         Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT).show()
                     }
                 })
                 .addViewEventListener(object : OnItemLongClickListener {
-                    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
+                    override val listener: OnLongClick = { view, smartRecyclerAdapter, position ->
                         Toast.makeText(applicationContext, "onLongClick $position", Toast.LENGTH_SHORT).show()
                     }
                 })
