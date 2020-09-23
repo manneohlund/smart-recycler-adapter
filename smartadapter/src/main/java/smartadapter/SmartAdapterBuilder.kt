@@ -13,6 +13,8 @@ import smartadapter.internal.factory.SmartRecyclerAdapterExtensionFactory
 import smartadapter.internal.mapper.ViewEventMapper
 import smartadapter.listener.OnItemSelectedListener
 import smartadapter.listener.OnViewEventListener
+import smartadapter.widget.DiffUtilExtension
+import smartadapter.widget.DiffUtilExtensionBuilder
 import smartadapter.widget.ViewTypeResolver
 import java.util.HashMap
 import kotlin.reflect.KClass
@@ -52,6 +54,11 @@ class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter:
 
     fun setViewTypeResolver(viewTypeResolver: ViewTypeResolver): SmartAdapterBuilder {
         this.viewTypeResolver = viewTypeResolver
+        return this
+    }
+
+    fun setDiffUtil(predicate: DiffUtilExtension.DiffPredicate<*>): SmartAdapterBuilder {
+        smartRecyclerAdapter.setDiffUtil(predicate)
         return this
     }
 

@@ -16,6 +16,8 @@ import smartadapter.listener.OnViewDetachedFromWindowListener
 import smartadapter.listener.OnViewEventListener
 import smartadapter.viewholder.RecyclableViewHolder
 import smartadapter.viewholder.SmartViewHolder
+import smartadapter.widget.DiffUtilExtension
+import smartadapter.widget.DiffUtilExtensionBuilder
 import smartadapter.widget.ViewTypeResolver
 import java.util.*
 import kotlin.reflect.KClass
@@ -63,6 +65,7 @@ open class SmartRecyclerAdapter
     override var viewHolderMapper: ViewHolderMapper = ViewHolderMapper()
     override var viewEventMapper: ViewEventMapper = ViewEventMapper()
     override var viewTypeResolver: ViewTypeResolver? = null
+    private var diffUtil: DiffUtilExtension? = null
     private val onViewAttachedToWindowListeners = ArrayList<OnViewAttachedToWindowListener>()
     private val onViewDetachedFromWindowListeners = ArrayList<OnViewDetachedFromWindowListener>()
 
@@ -291,6 +294,20 @@ open class SmartRecyclerAdapter
 
     override fun addOnViewDetachedFromWindowListener(onViewDetachedFromWindowListener: OnViewDetachedFromWindowListener) {
         this.onViewDetachedFromWindowListeners.add(onViewDetachedFromWindowListener)
+    }
+
+    override fun setDiffUtil(predicate: DiffUtilExtension.DiffPredicate<*>) {
+        diffUtil = DiffUtilExtensionBuilder()
+            .apply {
+                smartRecyclerAdapter = this@SmartRecyclerAdapter
+                diffPredicate = predicate
+            }.build()
+    }
+
+    override fun submitItems(items: List<Any>?) {
+        diffUtil
+            ?.diffSwapList(items?.toMutableList() ?: mutableListOf<Any>())
+            ?: throw RuntimeException("adapter diffUtil is null. Set it via setDiffUtil(predicate: DiffPredicate)")
     }
 
     companion object {

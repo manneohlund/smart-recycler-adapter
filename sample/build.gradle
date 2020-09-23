@@ -23,10 +23,10 @@ android {
 
     signingConfigs {
         release {
-            storeFile file(properties['storeFile'])
-            storePassword properties['storePassword']
-            keyAlias properties['keyAlias']
-            keyPassword properties['keyPassword']
+//            storeFile file(properties['storeFile'])
+//            storePassword properties['storePassword']
+//            keyAlias properties['keyAlias']
+//            keyPassword properties['keyPassword']
         }
     }
 

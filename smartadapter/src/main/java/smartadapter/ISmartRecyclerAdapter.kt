@@ -12,6 +12,7 @@ import smartadapter.internal.mapper.ViewHolderMapper
 import smartadapter.listener.OnViewAttachedToWindowListener
 import smartadapter.listener.OnViewDetachedFromWindowListener
 import smartadapter.listener.OnViewEventListener
+import smartadapter.widget.DiffUtilExtension
 import smartadapter.widget.ViewTypeResolver
 import kotlin.reflect.KClass
 
@@ -180,6 +181,13 @@ interface ISmartRecyclerAdapter {
      */
     fun replaceItem(index: Int, item: Any, notifyDataSetChanged: Boolean)
 
+
+    /**
+     * Submit list to adapter DiffUtil, emptyList if null.
+     * @param items your List
+     */
+    fun submitItems(items: List<Any>?)
+
     /**
      * Clears all the data and calls [.smartNotifyDataSetChanged]
      */
@@ -264,4 +272,6 @@ interface ISmartRecyclerAdapter {
      * @param onViewDetachedFromWindowListener listener
      */
     fun addOnViewDetachedFromWindowListener(onViewDetachedFromWindowListener: OnViewDetachedFromWindowListener)
+
+    fun setDiffUtil(predicate: DiffUtilExtension.DiffPredicate<*>)
 }
