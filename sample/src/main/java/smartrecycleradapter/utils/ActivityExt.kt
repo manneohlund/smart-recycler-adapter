@@ -8,8 +8,8 @@ import android.os.Handler
  * Copyright (c) All rights reserved.
  */
  
- inline fun runDelayed(crossinline action: () -> Unit) {
+ inline fun runDelayed(delay: Long = 800, crossinline action: () -> Unit) {
      Handler().postDelayed({
          action.invoke()
-     }, 800)
+     }, delay)
  }
