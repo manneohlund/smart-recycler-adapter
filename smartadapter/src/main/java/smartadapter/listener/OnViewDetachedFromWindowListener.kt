@@ -1,8 +1,8 @@
 package smartadapter.listener
 
 /*
- * Created by Manne Öhlund on 03/10/17.
- * Copyright © 2017. All rights reserved.
+ * Created by Manne Öhlund on 21/09/20.
+ * Copyright © 2020. All rights reserved.
  */
 
 import androidx.recyclerview.widget.RecyclerView
@@ -24,13 +24,3 @@ interface OnViewDetachedFromWindowListener {
      */
     fun onViewDetachedFromWindow(viewHolder: RecyclerView.ViewHolder)
 }
-
-/**
- * Helper method to provide lambda call to interface instances of [OnViewDetachedFromWindowListener].
- */
-inline fun onViewDetachedFromWindowListener(crossinline listener: (viewHolder: RecyclerView.ViewHolder) -> Unit) =
-    object : OnViewDetachedFromWindowListener {
-        override fun onViewDetachedFromWindow(viewHolder: RecyclerView.ViewHolder) {
-            listener(viewHolder)
-        }
-    }
