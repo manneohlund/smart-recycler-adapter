@@ -7,11 +7,12 @@ package smartadapter.state
 
 import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
-import java.util.*
+import java.util.TreeSet
 
 /**
  * Implementation of [SmartStateHolder] and contains the logic of the selection states for recycler adapter positions.
  */
+@Deprecated("Will be removed soon, use extension library 'io.github.manneohlund:smart-recycler-adapter-listeners'")
 open class SelectionStateHolder : SmartStateHolder {
 
     /**

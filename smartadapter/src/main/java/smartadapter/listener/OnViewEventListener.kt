@@ -17,6 +17,7 @@ import smartadapter.viewholder.ViewEventListenerHolder
 /**
  * Callback added in [smartadapter.SmartRecyclerAdapter] for view events listening in [SmartViewHolder] extensions.
  */
+@Deprecated("Will be removed soon, use extension library 'io.github.manneohlund:smart-recycler-adapter-listeners'")
 interface OnViewEventListener {
 
     /**

@@ -25,6 +25,7 @@ class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter:
     private var viewTypeResolver: ViewTypeResolver? = null
     private val viewHolderMapper = HashMap<String, SmartViewHolderType>()
     private val smartRecyclerAdapterMapper = HashMap<SmartViewHolderType, SmartRecyclerAdapter>()
+    @Deprecated("Will be removed soon, use extension library 'io.github.manneohlund:smart-recycler-adapter-listeners'")
     private val viewEventMapper = ViewEventMapper()
     private val smartRecyclerAdapterExtensionFactory = SmartRecyclerAdapterExtensionFactory()
 
@@ -64,6 +65,7 @@ class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter:
      * @param viewEventListener target [OnViewEventListener]
      * @return SmartAdapterBuilder
      */
+    @Deprecated("Will be removed soon, use extension library 'io.github.manneohlund:smart-recycler-adapter-listeners'")
     fun addViewEventListener(viewEventListener: OnViewEventListener): SmartAdapterBuilder {
         if (viewEventListener is OnItemSelectedListener) {
             viewEventListener.selectionStateHolder.smartRecyclerAdapter = smartRecyclerAdapter
@@ -81,6 +83,7 @@ class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter:
      * @param smartExtensionBuilder extension builder
      * @return SmartAdapterBuilder
      */
+    @Deprecated("Will be removed soon, use SmartAdapterBuilder.addBinder")
     fun addExtensionBuilder(smartExtensionBuilder: SmartExtensionBuilder<*>): SmartAdapterBuilder {
         smartRecyclerAdapterExtensionFactory.add(smartExtensionBuilder)
         return this

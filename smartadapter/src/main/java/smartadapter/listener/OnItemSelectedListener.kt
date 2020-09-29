@@ -17,6 +17,7 @@ val defaultGlobalStateHolder = SelectionStateHolder()
 /**
  * Default implementation of adapter item row click listener.
  */
+@Deprecated("Will be removed soon, use extension library 'io.github.manneohlund:smart-recycler-adapter-listeners'")
 interface OnItemSelectedListener : OnItemClickListener {
 
     override val viewEventId: ViewEventId

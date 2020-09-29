@@ -18,6 +18,7 @@ import smartadapter.viewholder.StatefulViewHolder
 /**
  * Provides the view listener binding logic for views.
  */
+@Deprecated("Will be removed soon, use extension library 'io.github.manneohlund:smart-recycler-adapter-listeners'")
 class ViewEventBinderProvider internal constructor() {
 
     private val eventBinders = SparseArray<ViewEventBinder>()

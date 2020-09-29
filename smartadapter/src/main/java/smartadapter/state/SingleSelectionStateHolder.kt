@@ -10,6 +10,7 @@ import smartadapter.Position
 /**
  * Extends [SelectionStateHolder] and contains the logic for the single selection states for recycler adapter positions.
  */
+@Deprecated("Will be removed soon, use extension library 'io.github.manneohlund:smart-recycler-adapter-listeners'")
 class SingleSelectionStateHolder : SelectionStateHolder() {
 
     /**

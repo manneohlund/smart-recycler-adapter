@@ -13,11 +13,12 @@ import smartadapter.internal.utils.ViewEventValidator.isViewEventIdValid
 import smartadapter.listener.OnViewEventListener
 import smartadapter.viewholder.SmartViewHolder
 import smartadapter.viewholder.ViewEventListenerHolder
-import java.util.*
+import java.util.HashMap
 
 /**
  * Maps and binds view events with view holder target views with [ViewEventBinderProvider].
  */
+@Deprecated("Will be removed soon, use extension library 'io.github.manneohlund:smart-recycler-adapter-listeners'")
 class ViewEventMapper {
 
     val viewEventListenerMap = HashMap<SmartViewHolderType, SparseArray<SparseArray<OnViewEventListener>>>()

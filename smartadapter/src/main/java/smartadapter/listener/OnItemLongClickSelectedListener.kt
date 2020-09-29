@@ -8,6 +8,7 @@ package smartadapter.listener
 /**
  * Default implementation of adapter item row click listener.
  */
+@Deprecated("Will be removed soon, use extension library 'io.github.manneohlund:smart-recycler-adapter-listeners'")
 interface OnItemLongClickSelectedListener : OnItemSelectedListener {
     override val enableOnLongClick: Boolean
         get() = true

@@ -86,7 +86,7 @@ class ViewHolderMapper {
 
         val smartRecyclerAdapter = smartRecyclerAdapterMapper[viewHolder::class]
         if (viewHolder is SmartAdapterHolder && smartRecyclerAdapter != null) {
-            (viewHolder as SmartAdapterHolder).smartRecyclerAdapter = smartRecyclerAdapter
+            viewHolder.smartRecyclerAdapter = smartRecyclerAdapter
         }
 
         return viewHolder

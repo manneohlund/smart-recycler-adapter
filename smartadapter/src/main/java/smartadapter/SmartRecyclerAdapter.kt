@@ -61,6 +61,7 @@ open class SmartRecyclerAdapter
 
     override var smartItemCount: Int = 0
     override var viewHolderMapper: ViewHolderMapper = ViewHolderMapper()
+    @Deprecated("Will be removed soon, use extension library 'io.github.manneohlund:smart-recycler-adapter-listeners'")
     override var viewEventMapper: ViewEventMapper = ViewEventMapper()
     override var viewTypeResolver: ViewTypeResolver? = null
     private val onViewAttachedToWindowListeners = ArrayList<OnViewAttachedToWindowListener>()

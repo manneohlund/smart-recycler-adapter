@@ -11,6 +11,7 @@ import smartadapter.listener.OnViewEventListener
  * Lets a view holder handle events with custom event ids.
  * Implement this interface in your [SmartViewHolder] extension.
  */
+@Deprecated("Will be removed soon, use extension library 'io.github.manneohlund:smart-recycler-adapter-listeners'")
 interface ViewEventListenerHolder {
 
     /**

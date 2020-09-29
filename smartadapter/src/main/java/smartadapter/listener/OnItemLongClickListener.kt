@@ -13,6 +13,7 @@ import smartadapter.ViewEventId
 /**
  * Default implementation of adapter item row long click listener.
  */
+@Deprecated("Will be removed soon, use extension library 'io.github.manneohlund:smart-recycler-adapter-listeners'")
 interface OnItemLongClickListener : OnViewEventListener {
     override val viewEventId: ViewEventId
         get() = R.id.event_on_long_click
@@ -21,6 +22,7 @@ interface OnItemLongClickListener : OnViewEventListener {
 /**
  * Helper method to provide lambda call to interface instances of [OnItemLongClickListener].
  */
+@Deprecated("Will be removed soon, use extension library 'io.github.manneohlund:smart-recycler-adapter-listeners'")
 inline fun onItemLongClickListener(crossinline viewEvent: (
         view: View,
         viewEventId: ViewEventId,

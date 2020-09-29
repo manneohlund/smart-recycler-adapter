@@ -8,5 +8,5 @@ import kotlin.reflect.KClass
  * Copyright (c) All rights reserved.
  */
  
- internal val <T : Any> KClass<T>.name
+ val <T : Any> KClass<T>.name
     get() = qualifiedName ?: java.name
