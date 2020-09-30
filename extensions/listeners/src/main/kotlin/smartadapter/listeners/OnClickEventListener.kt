@@ -26,10 +26,20 @@ class OnClickEventListener(
             with(findView(it, viewHolder)) {
                 setOnClickListener { view ->
                     if (viewHolder is OnItemClickListener) {
-                        viewHolder.onItemClick(adapter, viewHolder.adapterPosition, view)
+                        viewHolder.onItemClick(
+                            adapter,
+                            viewHolder,
+                            viewHolder.adapterPosition,
+                            view
+                        )
                     }
                     eventListener.postValue(
-                        ViewEvent.OnClick(adapter, viewHolder.adapterPosition, this)
+                        ViewEvent.OnClick(
+                            adapter,
+                            viewHolder,
+                            viewHolder.adapterPosition,
+                            view
+                        )
                     )
                 }
             }

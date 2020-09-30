@@ -103,6 +103,7 @@ open class OnMultiItemCheckListener(
                 eventListener.postValue(
                     ViewEvent.OnItemSelected(
                         adapter,
+                        viewHolder,
                         viewHolder.adapterPosition,
                         view,
                         isSelected(viewHolder.adapterPosition)
@@ -214,6 +215,7 @@ open class OnMultiItemSelectListener(
                     eventListener.postValue(
                         ViewEvent.OnItemSelected(
                             adapter,
+                            viewHolder,
                             viewHolder.adapterPosition,
                             view,
                             isSelected(viewHolder.adapterPosition)
@@ -233,6 +235,7 @@ open class OnMultiItemSelectListener(
                     eventListener.postValue(
                         ViewEvent.OnItemSelected(
                             adapter,
+                            viewHolder,
                             viewHolder.adapterPosition,
                             view,
                             isSelected(viewHolder.adapterPosition)
@@ -240,7 +243,12 @@ open class OnMultiItemSelectListener(
                     )
                 } else {
                     eventListener.postValue(
-                        ViewEvent.OnClick(adapter, viewHolder.adapterPosition, view)
+                        ViewEvent.OnClick(
+                            adapter,
+                            viewHolder,
+                            viewHolder.adapterPosition,
+                            view
+                        )
                     )
                 }
             }
@@ -258,6 +266,7 @@ open class OnMultiItemSelectListener(
         if (viewHolder is OnItemSelectListener) {
             viewHolder.onItemSelect(
                 adapter,
+                viewHolder,
                 viewHolder.adapterPosition,
                 viewHolder.itemView,
                 isSelected(viewHolder.adapterPosition)

@@ -25,11 +25,17 @@ class OnLongClickEventListener(
             with(findView(it, viewHolder)) {
                 setOnLongClickListener { view ->
                     if (viewHolder is OnItemLongClickListener) {
-                        viewHolder.onItemLongClick(adapter, viewHolder.adapterPosition, view)
+                        viewHolder.onItemLongClick(
+                            adapter,
+                            viewHolder,
+                            viewHolder.adapterPosition,
+                            view
+                        )
                     }
                     eventListener.postValue(
                         ViewEvent.OnLongClick(
                             adapter,
+                            viewHolder,
                             viewHolder.adapterPosition,
                             view
                         )
