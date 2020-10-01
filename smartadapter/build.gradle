@@ -4,6 +4,14 @@ apply plugin: 'com.jfrog.bintray'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+ext {
+    LIB_ARTIFACT_NAME = PROJ_NAME
+    LIB_ARTIFACT_ID = PROJ_ARTIFACT_ID
+    LIB_VERSION_CODE = PROJ_VERSION_CODE
+    LIB_VERSION_NAME = PROJ_VERSION_NAME
+    LIB_DESCRIPTION = 'Never code any boilerplate RecyclerAdapter again! This library will make it easy and painless to map your data item with a target ViewHolder.'
+}
+
 android {
     compileSdkVersion TARGET_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
@@ -11,17 +19,14 @@ android {
     defaultConfig {
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
-        versionCode VERSION_CODE
-        versionName VERSION_NAME
+        versionCode PROJ_VERSION_CODE
+        versionName PROJ_VERSION_NAME
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        setProperty("archivesBaseName", "$LIB_ARTIFACT_ID-$LIB_VERSION_NAME")
     }
 
     sourceSets {
-        main {
-            java.srcDirs = ['src/main/java']
-            res.srcDirs = ['src/main/res']
-        }
         release {
             java.srcDirs = ['src/main/java']
             res.srcDirs = ['src/main/res']
@@ -58,6 +63,8 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    // Test
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -65,14 +72,17 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:2.28.2'
     testImplementation 'org.robolectric:robolectric:4.3'
 
+    // Androidx
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
 
+    // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 }
 
 if (project.rootProject.file('local.properties').exists()) {
+    apply from: '../maven-local-publish.gradle'
     apply from: '../maven-release-config.gradle'
     apply from: '../maven-release-script.gradle'
 }

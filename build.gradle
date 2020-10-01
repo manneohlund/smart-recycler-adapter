@@ -25,6 +25,7 @@ buildscript {
             name 'Google'
         }
         google()
+        mavenLocal()
     }
 
     dependencies {
@@ -50,6 +51,7 @@ allprojects {
         maven {
             url "https://dl.bintray.com/manneohlund/maven"
         }
+        mavenLocal()
     }
 }
 
