@@ -6,12 +6,10 @@ package smartadapter.viewholder
  */
 
 import android.view.View
-import smartadapter.widget.BasicDragAndDropExtension
 
 /**
  * Provides target view for draggable purposes.
- * Lets ItemTouchHelper handler such as [BasicDragAndDropExtension]
- * to bind [androidx.recyclerview.widget.ItemTouchHelper.startDrag].
+ * Lets ItemTouchHelper handler to bind [androidx.recyclerview.widget.ItemTouchHelper.startDrag].
  */
 interface DraggableViewHolder {
 
