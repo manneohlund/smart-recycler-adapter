@@ -1,6 +1,7 @@
-package smartadapter.state
+package smartadapter.viewevent.state
 
 import smartadapter.Position
+import java.util.TreeSet
 
 /*
  * Created by Manne Öhlund on 2019-08-09.
@@ -11,6 +12,11 @@ import smartadapter.Position
  * Defines the SortedSet for enabled adapter positions.
  */
 interface SmartStateHolder {
+
+    /**
+     * Provides sorted set of selected positions.
+     */
+    var selectedItems: TreeSet<Int>
 
     /**
      * Adds the position to the data set.
