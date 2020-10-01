@@ -1,19 +1,18 @@
 package smartrecycleradapter.feature
 
 import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.activity_simple_item.*
+import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.ViewEventId
-import smartadapter.widget.AutoDragAndDropExtension
-import smartadapter.widget.DragAndDropExtensionBuilder
+import smartadapter.viewevent.dragdrop.AutoDragAndDropBinder
+import smartadapter.viewevent.extension.add
+import smartadapter.viewevent.listeners.OnClickEventListener
 import smartrecycleradapter.data.MovieDataItems
 import smartrecycleradapter.extension.GridAutoLayoutManager
 import smartrecycleradapter.models.MovieModel
+import smartrecycleradapter.utils.showToast
 import smartrecycleradapter.viewholder.HeaderViewHolder
 import smartrecycleradapter.viewholder.ThumbViewHolder
 
@@ -43,28 +42,22 @@ class GridActivity : BaseSampleActivity() {
             .map(AnimatedMovieModel::class, AnimateThumbViewHolder::class)
             .map(SciFiMovieModel::class, SciFiThumbViewHolder::class)
             .setLayoutManager(gridAutoLayoutManager)
-            .addViewEventListener(object : ThumbViewHolder.OnItemClickListener {
-                override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
-                    Toast.makeText(applicationContext, "Movie $position", Toast.LENGTH_SHORT).show()
-                }
+            .add(OnClickEventListener(ThumbViewHolder::class) {
+                showToast("Movie ${it.position}")
             })
-            .addExtensionBuilder(
-                DragAndDropExtensionBuilder(AutoDragAndDropExtension()).apply {
-                    longPressDragEnabled = true
-                    viewHolderTypes = listOf(
-                        ComingSoonThumbViewHolder::class,
-                        ActionThumbViewHolder::class,
-                        AnimateThumbViewHolder::class,
-                        SciFiThumbViewHolder::class
-                    )
-                    onItemMovedListener = { oldViewHolder, targetViewHolder ->
-                        Toast.makeText(
-                            applicationContext,
-                            "onItemMoved from ${oldViewHolder.adapterPosition} to ${targetViewHolder.adapterPosition}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
+            .add(
+                AutoDragAndDropBinder(
+                longPressDragEnabled = true,
+                viewHolderTypes = listOf(
+                    ComingSoonThumbViewHolder::class,
+                    ActionThumbViewHolder::class,
+                    AnimateThumbViewHolder::class,
+                    SciFiThumbViewHolder::class
+                )
+            ) {
+                supportActionBar?.subtitle =
+                    "onItemMoved from ${it.viewHolder.adapterPosition} to ${it.targetViewHolder.adapterPosition}"
+            }
             )
             .into(recyclerView)
 

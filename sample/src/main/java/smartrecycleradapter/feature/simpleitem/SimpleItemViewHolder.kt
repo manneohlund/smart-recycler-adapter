@@ -1,7 +1,5 @@
 package smartrecycleradapter.feature.simpleitem
 
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import smartadapter.viewholder.SmartViewHolder
@@ -12,9 +10,8 @@ import smartrecycleradapter.R
  * Copyright (c) All rights reserved.
  */
 
-open class SimpleItemViewHolder(parentView: View) : SmartViewHolder<Int>(
-    LayoutInflater.from(parentView.context)
-        .inflate(R.layout.simple_item, parentView as ViewGroup, false)) {
+open class SimpleItemViewHolder(parentView: ViewGroup) :
+    SmartViewHolder<Int>(parentView, R.layout.simple_item) {
 
     override fun bind(item: Int) {
         (itemView as TextView).text = "Item $item"

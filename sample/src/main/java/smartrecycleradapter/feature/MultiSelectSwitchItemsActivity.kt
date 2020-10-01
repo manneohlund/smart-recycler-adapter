@@ -6,22 +6,30 @@ package smartrecycleradapter.feature
  */
 
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_simple_item.*
-import smartadapter.Position
+import androidx.activity.viewModels
+import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.ViewEventId
-import smartadapter.ViewId
-import smartadapter.listener.OnItemClickListener
-import smartadapter.listener.OnItemSelectedListener
-import smartadapter.state.SelectionStateHolder
+import smartadapter.viewevent.extension.add
+import smartadapter.viewevent.listeners.OnClickEventListener
+import smartadapter.viewevent.listeners.OnMultiItemCheckListener
+import smartadapter.viewevent.models.ViewEvent
+import smartadapter.viewevent.viewmodels.ViewEventViewModel
 import smartrecycleradapter.R
+import smartrecycleradapter.utils.showToast
+import smartrecycleradapter.viewholder.SimpleSelectableSwitchViewHolder
 
 class MultiSelectSwitchItemsActivity : BaseSampleActivity() {
 
+    class MultiItemCheckViewModel : ViewEventViewModel<ViewEvent, OnMultiItemCheckListener>(
+        OnMultiItemCheckListener(
+            viewHolderType = SimpleSelectableSwitchViewHolder::class,
+            viewId = R.id.switchButton
+        )
+    )
+
+    private val multiItemCheckViewModel: MultiItemCheckViewModel by viewModels()
+
     lateinit var smartRecyclerAdapter: SmartRecyclerAdapter
-    private lateinit var onSwitchItemSelectedListener: OnSwitchItemSelectedListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,43 +38,24 @@ class MultiSelectSwitchItemsActivity : BaseSampleActivity() {
 
         val items = (0..100).toMutableList()
 
-        onSwitchItemSelectedListener = object : OnSwitchItemSelectedListener {
-            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
-                Toast.makeText(
-                    applicationContext,
-                    String.format(
-                        "Item click %d\n" +
-                            "%d of %d selected items",
-                        position,
-                        selectionStateHolder.selectedItemsCount,
-                        smartRecyclerAdapter.itemCount
-                    ), Toast.LENGTH_LONG
-                ).show()
-
-                supportActionBar?.subtitle =
-                    "${switchStateHolder.selectedItemsCount} / ${items.size} selected"
-            }
-        }
-
         smartRecyclerAdapter = SmartRecyclerAdapter
             .items(items)
             .map(Integer::class, SimpleSelectableSwitchViewHolder::class)
-            .addViewEventListener(onSwitchItemSelectedListener)
-            .addViewEventListener(object : OnItemClickListener {
-                override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
-                    Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT).show()
-                }
+            .add(multiItemCheckViewModel.observe(this) {
+                handleCheckEvent(it)
+            })
+            .add(OnClickEventListener {
+                showToast("onClick ${it.position}")
             })
             .into(recyclerView)
     }
-}
 
-var switchStateHolder: SelectionStateHolder = SelectionStateHolder()
+    private fun handleCheckEvent(it: ViewEvent) {
+        showToast("Item click ${it.position}\n" +
+                "${multiItemCheckViewModel.viewEventListener.selectedItemsCount} of " +
+                "${it.adapter.itemCount} selected items")
 
-interface OnSwitchItemSelectedListener : OnItemSelectedListener {
-    override val selectionStateHolder: SelectionStateHolder
-        get() = switchStateHolder
-
-    override val viewId: ViewId
-        get() = R.id.switchButton
+        supportActionBar?.subtitle =
+            "${multiItemCheckViewModel.viewEventListener.selectedItemsCount} / ${it.adapter.itemCount} selected"
+    }
 }

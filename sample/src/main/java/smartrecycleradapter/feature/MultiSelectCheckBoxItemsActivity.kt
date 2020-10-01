@@ -8,23 +8,30 @@ package smartrecycleradapter.feature
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_simple_item.*
-import smartadapter.Position
+import androidx.activity.viewModels
+import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.ViewEventId
-import smartadapter.ViewId
-import smartadapter.listener.OnItemClickListener
-import smartadapter.listener.OnItemSelectedListener
-import smartadapter.state.SelectionStateHolder
+import smartadapter.viewevent.extension.add
+import smartadapter.viewevent.listeners.OnClickEventListener
+import smartadapter.viewevent.listeners.OnMultiItemCheckListener
+import smartadapter.viewevent.models.ViewEvent
+import smartadapter.viewevent.viewmodels.ViewEventViewModel
 import smartrecycleradapter.R
+import smartrecycleradapter.utils.showToast
+import smartrecycleradapter.viewholder.SimpleSelectableCheckBoxViewHolder
 
 class MultiSelectCheckBoxItemsActivity : BaseSampleActivity() {
 
+    class MultiItemCheckViewModel : ViewEventViewModel<ViewEvent, OnMultiItemCheckListener>(
+        OnMultiItemCheckListener(
+            viewHolderType = SimpleSelectableCheckBoxViewHolder::class,
+            viewId = R.id.checkBox
+        )
+    )
+
     lateinit var smartRecyclerAdapter: SmartRecyclerAdapter
-    lateinit var onCheckBoxItemSelectedListener: OnCheckBoxItemSelectedListener
-    var deleteMenuItem: MenuItem? = null
+    private val multiItemCheckViewModel: MultiItemCheckViewModel by viewModels()
+    private var deleteMenuItem: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,36 +40,14 @@ class MultiSelectCheckBoxItemsActivity : BaseSampleActivity() {
 
         val items = (0..100).toMutableList()
 
-        onCheckBoxItemSelectedListener = object : OnCheckBoxItemSelectedListener {
-            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
-                Toast.makeText(
-                    applicationContext,
-                    String.format(
-                        "Item click %d\n" +
-                            "%d of %d selected items",
-                        position,
-                        selectionStateHolder.selectedItemsCount,
-                        smartRecyclerAdapter.itemCount
-                    ),
-                    Toast.LENGTH_LONG
-                ).show()
-                supportActionBar?.subtitle =
-                    "${checkBoxStateHolder.selectedItemsCount} / ${items.size} selected"
-
-                deleteMenuItem?.isVisible =
-                    onCheckBoxItemSelectedListener.selectionStateHolder.selectedItemsCount > 0
-            }
-        }
-
         smartRecyclerAdapter = SmartRecyclerAdapter
             .items(items)
             .map(Integer::class, SimpleSelectableCheckBoxViewHolder::class)
-            .addViewEventListener(onCheckBoxItemSelectedListener)
-            .addViewEventListener(object : OnItemClickListener {
-                override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
-                    Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT)
-                        .show()
-                }
+            .add(multiItemCheckViewModel.observe(this) {
+                handleCheckEvent(it)
+            })
+            .add(OnClickEventListener {
+                showToast("onClick ${it.position}")
             })
             .into(recyclerView)
     }
@@ -76,21 +61,21 @@ class MultiSelectCheckBoxItemsActivity : BaseSampleActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.delete -> {
-                onCheckBoxItemSelectedListener.selectionStateHolder.removeSelections()
+                multiItemCheckViewModel.viewEventListener.removeSelections()
                 item.isVisible = false
             }
         }
         return super.onOptionsItemSelected(item)
     }
-}
 
-var checkBoxStateHolder = SelectionStateHolder()
+    private fun handleCheckEvent(it: ViewEvent) {
+        showToast("Item click ${it.position}\n" +
+                "${multiItemCheckViewModel.viewEventListener.selectedItemsCount} of " +
+                "${it.adapter.itemCount} selected items")
 
-interface OnCheckBoxItemSelectedListener : OnItemSelectedListener {
+        supportActionBar?.subtitle =
+            "${multiItemCheckViewModel.viewEventListener.selectedItemsCount} / ${it.adapter.itemCount} selected"
 
-    override val selectionStateHolder: SelectionStateHolder
-        get() = checkBoxStateHolder
-
-    override val viewId: ViewId
-        get() = R.id.checkBox
+        deleteMenuItem?.isVisible = multiItemCheckViewModel.viewEventListener.selectedItemsCount > 0
+    }
 }

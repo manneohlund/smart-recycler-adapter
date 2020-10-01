@@ -1,28 +1,38 @@
 package smartrecycleradapter.feature
 
+/*
+ * Created by Manne Öhlund on 2020-09-23.
+ * Copyright (c) All rights reserved.
+ */
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import kotlinx.android.synthetic.main.activity_simple_item.*
-import smartadapter.Position
+import androidx.activity.viewModels
+import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.ViewEventId
-import smartadapter.ViewId
-import smartadapter.listener.OnItemSelectedListener
-import smartadapter.state.SelectionStateHolder
+import smartadapter.viewevent.extension.add
+import smartadapter.viewevent.listeners.OnMultiItemSelectListener
+import smartadapter.viewevent.models.ViewEvent
+import smartadapter.viewevent.viewmodels.ViewEventViewModel
+import smartadapter.viewholder.OnItemSelectedEventListener
 import smartadapter.viewholder.SmartViewHolder
-import smartadapter.viewholder.StatefulViewHolder
 import smartrecycleradapter.R
 
-/*
- * Created by Manne Öhlund on 2019-08-23.
- * Copyright (c) All rights reserved.
- */
-
 class MultipleExpandableItemActivity : BaseSampleActivity() {
+
+    class MultiItemSelectViewModel : ViewEventViewModel<ViewEvent, OnMultiItemSelectListener>(
+        OnMultiItemSelectListener(
+            enableOnLongClick = false,
+            viewHolderType = SimpleExpandableItemViewHolder::class,
+            viewId = R.id.itemTitle
+        )
+    )
+
+    private val multiItemSelectViewModel: MultiItemSelectViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,9 +44,9 @@ class MultipleExpandableItemActivity : BaseSampleActivity() {
         SmartRecyclerAdapter
             .items(items)
             .map(Integer::class, SimpleExpandableItemViewHolder::class)
-            .addViewEventListener(onItemExpandedListener { view, viewEventId, position ->
+            .add(multiItemSelectViewModel.observe(this) {
                 supportActionBar?.subtitle =
-                    "${expandedStateHolder.selectedItemsCount} / ${items.size} expanded"
+                    "${multiItemSelectViewModel.viewEventListener.selectedItemsCount} / ${items.size} expanded"
             })
             .into<SmartRecyclerAdapter>(recyclerView)
     }
@@ -45,10 +55,7 @@ class MultipleExpandableItemActivity : BaseSampleActivity() {
 class SimpleExpandableItemViewHolder(parentView: ViewGroup) : SmartViewHolder<Int>(
     LayoutInflater.from(parentView.context)
         .inflate(R.layout.simple_expandable_item, parentView, false)
-),
-    StatefulViewHolder<SelectionStateHolder> {
-
-    override lateinit var stateHolder: SelectionStateHolder
+), OnItemSelectedEventListener {
 
     private val title: TextView = itemView.findViewById(R.id.itemTitle)
     private val subItem: LinearLayout = itemView.findViewById(R.id.subItemContainer)
@@ -57,7 +64,10 @@ class SimpleExpandableItemViewHolder(parentView: ViewGroup) : SmartViewHolder<In
     override fun bind(item: Int) {
         title.text = "Item $item"
         subItemTitle.text = "Sub item of '$item'"
-        when (stateHolder.isSelected(adapterPosition)) {
+    }
+
+    override fun onItemSelect(event: ViewEvent.OnItemSelected) {
+        when (event.isSelected) {
             true -> {
                 title.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_expand_less_black_24dp, 0)
                 subItem.visibility = View.VISIBLE
@@ -69,20 +79,3 @@ class SimpleExpandableItemViewHolder(parentView: ViewGroup) : SmartViewHolder<In
         }
     }
 }
-
-var expandedStateHolder = SelectionStateHolder()
-
-interface OnItemExpandedListener : OnItemSelectedListener {
-    override val selectionStateHolder: SelectionStateHolder
-        get() = expandedStateHolder
-
-    override val viewId: ViewId
-        get() = R.id.itemTitle
-}
-
-inline fun onItemExpandedListener(crossinline viewEvent: (view: View, viewEventId: ViewEventId, position: Position) -> Unit) =
-    object : OnItemExpandedListener {
-        override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
-            viewEvent(view, viewEventId, position)
-        }
-    }
