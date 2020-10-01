@@ -120,10 +120,12 @@ open class SmartRecyclerAdapter
         }
     }
 
-    override fun onFailedToRecycleView(holder: SmartViewHolder<Any>): Boolean {
-        return if (holder is RecyclableViewHolder) {
-            holder.onFailedToRecycleView()
-        } else super.onFailedToRecycleView(holder)
+    override fun onFailedToRecycleView(smartViewHolder: SmartViewHolder<Any>): Boolean {
+        return if (smartViewHolder is RecyclableViewHolder) {
+            smartViewHolder.onFailedToRecycleView()
+        } else {
+            super.onFailedToRecycleView(smartViewHolder)
+        }
     }
 
     override fun onViewAttachedToWindow(holder: SmartViewHolder<Any>) {
@@ -142,36 +144,20 @@ open class SmartRecyclerAdapter
         }
     }
 
-    override fun getItemCount(): Int {
-        return smartItemCount
-    }
+    override fun getItemCount(): Int = smartItemCount
 
     override fun <T : Any> getItemCount(type: KClass<out T>): Int {
-        var count = 0
-        for (item in items) {
-            if (item::class == type) {
-                count++
-            }
-        }
-        return count
+        return items.count { it::class == type }
     }
 
-    override fun getItem(index: Int): Any {
-        return items[index]
-    }
+    override fun getItem(index: Int): Any = items[index]
 
-    override fun getItems(): MutableList<Any> {
-        return items
-    }
+    override fun getItems(): MutableList<Any> = items
 
     override fun <T : Any> getItems(type: KClass<out T>): ArrayList<T> {
-        val itemOfType = ArrayList<T>()
-        for (item in items) {
-            if (item::class == type) {
-                itemOfType.add(item as T)
-            }
-        }
-        return itemOfType
+        return items.filter {
+            it::class == type
+        } as ArrayList<T>
     }
 
     override fun setItems(items: MutableList<*>) {
