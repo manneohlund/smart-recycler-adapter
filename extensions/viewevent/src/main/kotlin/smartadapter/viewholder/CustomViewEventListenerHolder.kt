@@ -5,18 +5,19 @@ package smartadapter.viewholder
  * Copyright (c) All rights reserved.
  */
 
-import smartadapter.listeners.OnCustomViewEventListener
+import smartadapter.viewevent.listeners.OnCustomViewEventListener
+import smartadapter.viewevent.models.ViewEvent
 
 /**
  * Lets a view holder handle events with custom event ids.
  * Implement this interface in your [SmartViewHolder] extension.
  */
-interface GenericViewEventViewModelHolder {
+interface CustomViewEventListenerHolder {
 
     /**
      * Will be set from corresponding [OnCustomViewEventListener]
      *
      * @see OnCustomViewEventListener
      */
-    var customViewEventListener: OnCustomViewEventListener
+    var customViewEventListener: (ViewEvent) -> Unit
 }

@@ -1,4 +1,4 @@
-package smartadapter.listeners
+package smartadapter.viewevent.listeners
 
 /*
  * Created by Manne Öhlund on 2020-09-23.
@@ -8,16 +8,19 @@ package smartadapter.listeners
 import android.graphics.Color
 import android.widget.CompoundButton
 import androidx.annotation.IdRes
-import io.github.manneohlund.smartrecycleradapter.listeners.R
+import io.github.manneohlund.smartrecycleradapter.viewevent.R
 import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.SmartViewHolderBinder
 import smartadapter.SmartViewHolderType
 import smartadapter.ViewId
 import smartadapter.extension.setBackgroundAttribute
+import smartadapter.findView
 import smartadapter.listener.OnBindViewHolderListener
 import smartadapter.listener.OnCreateViewHolderListener
 import smartadapter.state.SmartStateHolder
+import smartadapter.viewevent.models.ViewEvent
+import smartadapter.viewholder.OnItemSelectedEventListener
 import smartadapter.viewholder.SmartViewHolder
 import java.util.TreeSet
 
@@ -57,7 +60,10 @@ open class OnSingleItemCheckListener(
 open class OnSingleItemSelectListener(
     override val viewHolderType: SmartViewHolderType = SmartViewHolder::class,
     @IdRes viewId: ViewId = R.id.undefined
-) : OnMultiItemSelectListener(enableOnLongClick = false, viewId = viewId) {
+) : OnMultiItemSelectListener(
+    enableOnLongClick = false,
+    viewId = viewId
+) {
 
     /**
      * Adds the position to the data set and [.disable]s any old positions.
@@ -87,7 +93,10 @@ open class OnSingleItemSelectListener(
 open class OnMultiItemCheckListener(
     override val viewHolderType: SmartViewHolderType = SmartViewHolder::class,
     @IdRes viewId: ViewId = R.id.undefined
-) : OnMultiItemSelectListener(enableOnLongClick = false, viewId = viewId) {
+) : OnMultiItemSelectListener(
+    enableOnLongClick = false,
+    viewId = viewId
+) {
 
     override fun onCreateViewHolder(
         adapter: SmartRecyclerAdapter,
@@ -100,7 +109,7 @@ open class OnMultiItemCheckListener(
         with(view) {
             setOnClickListener {
                 toggle(viewHolder.adapterPosition)
-                eventListener.postValue(
+                eventListener.invoke(
                     ViewEvent.OnItemSelected(
                         adapter,
                         viewHolder,
@@ -123,7 +132,7 @@ open class OnMultiItemCheckListener(
 }
 
 /**
- * Extends [OnViewEventListener] and contains the logic for the multi select states for recycler adapter positions.
+ * Contains the logic for the multi select states for recycler adapter positions.
  *
  * if [enableOnLongClick] is true multi select will be enabled after a long click.
  *
@@ -132,8 +141,9 @@ open class OnMultiItemCheckListener(
 open class OnMultiItemSelectListener(
     val enableOnLongClick: Boolean = true,
     override val viewHolderType: SmartViewHolderType = SmartViewHolder::class,
-    @IdRes val viewId: ViewId = R.id.undefined
-) : OnViewEventListener<ViewEvent>(),
+    @IdRes val viewId: ViewId = R.id.undefined,
+    override var eventListener: (ViewEvent) -> Unit = {}
+) : OnViewEventListener<ViewEvent>,
     SmartViewHolderBinder,
     SmartStateHolder,
     OnCreateViewHolderListener,
@@ -147,7 +157,7 @@ open class OnMultiItemSelectListener(
     /**
      * Provides sorted set of selected positions.
      */
-    internal var selectedItems = TreeSet<Int>()
+    override var selectedItems = TreeSet<Int>()
 
     /**
      * Provides selected item count.
@@ -212,7 +222,7 @@ open class OnMultiItemSelectListener(
                     toggle(viewHolder.adapterPosition)
                     setSelected(adapter, viewHolder)
                     smartRecyclerAdapter.smartNotifyItemChanged(viewHolder.adapterPosition)
-                    eventListener.postValue(
+                    eventListener.invoke(
                         ViewEvent.OnItemSelected(
                             adapter,
                             viewHolder,
@@ -232,7 +242,7 @@ open class OnMultiItemSelectListener(
                     toggle(viewHolder.adapterPosition)
                     setSelected(adapter, viewHolder)
                     smartRecyclerAdapter.smartNotifyItemChanged(viewHolder.adapterPosition)
-                    eventListener.postValue(
+                    eventListener.invoke(
                         ViewEvent.OnItemSelected(
                             adapter,
                             viewHolder,
@@ -242,7 +252,7 @@ open class OnMultiItemSelectListener(
                         )
                     )
                 } else {
-                    eventListener.postValue(
+                    eventListener.invoke(
                         ViewEvent.OnClick(
                             adapter,
                             viewHolder,
@@ -263,13 +273,15 @@ open class OnMultiItemSelectListener(
         adapter: SmartRecyclerAdapter,
         viewHolder: SmartViewHolder<Any>
     ) {
-        if (viewHolder is OnItemSelectListener) {
+        if (viewHolder is OnItemSelectedEventListener) {
             viewHolder.onItemSelect(
-                adapter,
-                viewHolder,
-                viewHolder.adapterPosition,
-                viewHolder.itemView,
-                isSelected(viewHolder.adapterPosition)
+                ViewEvent.OnItemSelected(
+                    adapter,
+                    viewHolder,
+                    viewHolder.adapterPosition,
+                    viewHolder.itemView,
+                    isSelected(viewHolder.adapterPosition)
+                )
             )
         } else {
             if (isSelected(viewHolder.adapterPosition)) {
