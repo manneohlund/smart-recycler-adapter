@@ -5,19 +5,22 @@ package smartadapter
  * Copyright © 2019 All rights reserved.
  */
 
-import android.util.SparseArray
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import smartadapter.internal.extension.isMutable
-import smartadapter.internal.mapper.ViewEventMapper
 import smartadapter.internal.mapper.ViewHolderMapper
+import smartadapter.listener.OnBindViewHolderListener
+import smartadapter.listener.OnCreateViewHolderListener
+import smartadapter.listener.OnSmartRecycleAdapterCreatedListener
 import smartadapter.listener.OnViewAttachedToWindowListener
 import smartadapter.listener.OnViewDetachedFromWindowListener
-import smartadapter.listener.OnViewEventListener
+import smartadapter.listener.OnViewRecycledListener
 import smartadapter.viewholder.RecyclableViewHolder
+import smartadapter.viewholder.SmartAdapterHolder
 import smartadapter.viewholder.SmartViewHolder
 import smartadapter.widget.ViewTypeResolver
-import java.util.*
+import java.util.ArrayList
+import java.util.HashMap
 import kotlin.reflect.KClass
 
 /**
@@ -34,11 +37,6 @@ typealias ItemType = KClass<*>
  * Type alias for view id, ex: R.id.my_id.
  */
 typealias ViewId = Int
-
-/**
- * Type alias for event id that is passed on view event invocation.
- */
-typealias ViewEventId = Int
 
 /**
  * Type alias for resolved view type in [RecyclerView.Adapter].
@@ -61,15 +59,16 @@ open class SmartRecyclerAdapter
 
     override var smartItemCount: Int = 0
     override var viewHolderMapper: ViewHolderMapper = ViewHolderMapper()
-    @Deprecated("Will be removed soon, use extension library 'io.github.manneohlund:smart-recycler-adapter-listeners'")
-    override var viewEventMapper: ViewEventMapper = ViewEventMapper()
     override var viewTypeResolver: ViewTypeResolver? = null
-    private val onViewAttachedToWindowListeners = ArrayList<OnViewAttachedToWindowListener>()
-    private val onViewDetachedFromWindowListeners = ArrayList<OnViewDetachedFromWindowListener>()
+    final override val viewHolderBinders = mutableListOf<SmartViewHolderBinder>()
 
     init {
         setItems(items, false)
         updateItemCount()
+
+        viewHolderBinders.forEach {
+            (it as? OnSmartRecycleAdapterCreatedListener)?.onSmartRecycleAdapterCreated(this)
+        }
     }
 
     override fun getItemViewType(position: Position): ViewType {
@@ -78,17 +77,47 @@ open class SmartRecyclerAdapter
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: ViewType): SmartViewHolder<Any> {
         val smartViewHolder = viewHolderMapper.createViewHolder<SmartViewHolder<Any>>(parent, viewType)
-        viewEventMapper.mapViewEventWith(smartViewHolder)
+        if (smartViewHolder is SmartAdapterHolder && smartViewHolder.smartRecyclerAdapter == null) {
+            smartViewHolder.smartRecyclerAdapter = this
+        }
+        viewHolderBinders.forEach {
+            if ((it.viewHolderType == SmartViewHolder::class
+                        || it.viewHolderType.isInstance(smartViewHolder))
+                && it is OnCreateViewHolderListener) {
+                it.onCreateViewHolder(this, smartViewHolder)
+            }
+        }
         return smartViewHolder
     }
 
-    override fun onBindViewHolder(holder: SmartViewHolder<Any>, position: Position) {
-        holder.bind(items[position])
+    override fun onBindViewHolder(smartViewHolder: SmartViewHolder<Any>, position: Position) {
+        smartViewHolder.bind(items[position])
+        viewHolderBinders.forEach {
+            if ((it.viewHolderType == SmartViewHolder::class || it.viewHolderType == smartViewHolder::class) && it is OnBindViewHolderListener) {
+                it.onBindViewHolder(this, smartViewHolder)
+            }
+        }
     }
 
-    override fun onViewRecycled(holder: SmartViewHolder<Any>) {
-        super.onViewRecycled(holder)
-        holder.unbind()
+    override fun onBindViewHolder(
+        smartViewHolder: SmartViewHolder<Any>,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        super.onBindViewHolder(smartViewHolder, position, payloads)
+        if (items.size != position) {
+            smartViewHolder.bind(items[position], payloads)
+        }
+    }
+
+    override fun onViewRecycled(smartViewHolder: SmartViewHolder<Any>) {
+        super.onViewRecycled(smartViewHolder)
+        smartViewHolder.unbind()
+        viewHolderBinders.forEach {
+            if ((it.viewHolderType == SmartViewHolder::class || it.viewHolderType == smartViewHolder::class) && it is OnViewRecycledListener) {
+                it.onViewRecycled(this, smartViewHolder)
+            }
+        }
     }
 
     override fun onFailedToRecycleView(holder: SmartViewHolder<Any>): Boolean {
@@ -100,16 +129,16 @@ open class SmartRecyclerAdapter
     override fun onViewAttachedToWindow(holder: SmartViewHolder<Any>) {
         super.onViewAttachedToWindow(holder)
         (holder as? OnViewAttachedToWindowListener)?.onViewAttachedToWindow(holder)
-        for (listener in onViewAttachedToWindowListeners) {
-            listener.onViewAttachedToWindow(holder)
+        viewHolderBinders.forEach {
+            (it as? OnViewAttachedToWindowListener)?.onViewAttachedToWindow(holder)
         }
     }
 
     override fun onViewDetachedFromWindow(holder: SmartViewHolder<Any>) {
         super.onViewDetachedFromWindow(holder)
         (holder as? OnViewDetachedFromWindowListener)?.onViewDetachedFromWindow(holder)
-        for (listener in onViewDetachedFromWindowListeners) {
-            listener.onViewDetachedFromWindow(holder)
+        viewHolderBinders.forEach {
+            (it as? OnViewAttachedToWindowListener)?.onViewAttachedToWindow(holder)
         }
     }
 
@@ -282,16 +311,8 @@ open class SmartRecyclerAdapter
         viewHolderMapper.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper)
     }
 
-    override fun getViewEventListenersForViewHolder(viewHolderType: SmartViewHolderType): SparseArray<SparseArray<OnViewEventListener>>? {
-        return this.viewEventMapper.viewEventListenerMap[viewHolderType]
-    }
-
-    override fun addOnViewAttachedToWindowListener(onViewAttachedToWindowListener: OnViewAttachedToWindowListener) {
-        this.onViewAttachedToWindowListeners.add(onViewAttachedToWindowListener)
-    }
-
-    override fun addOnViewDetachedFromWindowListener(onViewDetachedFromWindowListener: OnViewDetachedFromWindowListener) {
-        this.onViewDetachedFromWindowListeners.add(onViewDetachedFromWindowListener)
+    override fun addBinder(viewHolderBinder: SmartViewHolderBinder) {
+        viewHolderBinders.add(viewHolderBinder)
     }
 
     companion object {

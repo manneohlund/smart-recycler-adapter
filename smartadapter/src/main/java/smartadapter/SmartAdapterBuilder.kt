@@ -8,11 +8,9 @@ package smartadapter
 import android.content.Context
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import smartadapter.binders.ItemTouchBinder
 import smartadapter.internal.extension.name
-import smartadapter.internal.factory.SmartRecyclerAdapterExtensionFactory
-import smartadapter.internal.mapper.ViewEventMapper
-import smartadapter.listener.OnItemSelectedListener
-import smartadapter.listener.OnViewEventListener
+import smartadapter.viewholder.SmartAdapterHolder
 import smartadapter.widget.ViewTypeResolver
 import java.util.HashMap
 import kotlin.reflect.KClass
@@ -25,9 +23,7 @@ class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter:
     private var viewTypeResolver: ViewTypeResolver? = null
     private val viewHolderMapper = HashMap<String, SmartViewHolderType>()
     private val smartRecyclerAdapterMapper = HashMap<SmartViewHolderType, SmartRecyclerAdapter>()
-    @Deprecated("Will be removed soon, use extension library 'io.github.manneohlund:smart-recycler-adapter-listeners'")
-    private val viewEventMapper = ViewEventMapper()
-    private val smartRecyclerAdapterExtensionFactory = SmartRecyclerAdapterExtensionFactory()
+    private val viewHolderBinders = mutableListOf<SmartViewHolderBinder>()
 
     fun map(itemType: KClass<*>, viewHolderType: SmartViewHolderType): SmartAdapterBuilder {
         viewHolderMapper[itemType.name] = viewHolderType
@@ -57,35 +53,13 @@ class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter:
     }
 
     /**
-     * Adds [OnViewEventListener] to the [SmartRecyclerAdapter].
-     * The adapter will then automatically map the [OnViewEventListener] to the target view holder class with [OnViewEventListener.viewHolderType],
-     * set the viewEventListener on the right View with viewId using [OnViewEventListener.viewId].
+     * Adds [SmartViewHolderBinder] to the adapter.
      *
-     * @see OnViewEventListener.viewEventId
-     * @param viewEventListener target [OnViewEventListener]
+     * @param viewHolderBinder extension view holder binder
      * @return SmartAdapterBuilder
      */
-    @Deprecated("Will be removed soon, use extension library 'io.github.manneohlund:smart-recycler-adapter-listeners'")
-    fun addViewEventListener(viewEventListener: OnViewEventListener): SmartAdapterBuilder {
-        if (viewEventListener is OnItemSelectedListener) {
-            viewEventListener.selectionStateHolder.smartRecyclerAdapter = smartRecyclerAdapter
-            viewEventMapper.addViewEventListener(viewEventListener)
-        } else {
-            viewEventMapper.addViewEventListener(viewEventListener)
-        }
-        return this
-    }
-
-    /**
-     * Adds [SmartExtensionBuilder] to [SmartRecyclerAdapterExtensionFactory] that will build and bind
-     * the [SmartRecyclerAdapter] and [RecyclerView] to the ExtensionBuilder.
-     *
-     * @param smartExtensionBuilder extension builder
-     * @return SmartAdapterBuilder
-     */
-    @Deprecated("Will be removed soon, use SmartAdapterBuilder.addBinder")
-    fun addExtensionBuilder(smartExtensionBuilder: SmartExtensionBuilder<*>): SmartAdapterBuilder {
-        smartRecyclerAdapterExtensionFactory.add(smartExtensionBuilder)
+    fun addBinder(viewHolderBinder: SmartViewHolderBinder): SmartAdapterBuilder {
+        viewHolderBinders.add(viewHolderBinder)
         return this
     }
 
@@ -94,10 +68,13 @@ class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter:
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper)
         smartRecyclerAdapter.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper)
         smartRecyclerAdapter.viewTypeResolver = viewTypeResolver
-        smartRecyclerAdapter.viewEventMapper = viewEventMapper
         recyclerView.adapter = smartRecyclerAdapter
         recyclerView.layoutManager = getLayoutManager(recyclerView.context)
-        smartRecyclerAdapterExtensionFactory.build(smartRecyclerAdapter, recyclerView)
+        viewHolderBinders.forEach {
+            smartRecyclerAdapter.addBinder(it)
+            (it as? SmartAdapterHolder)?.smartRecyclerAdapter = smartRecyclerAdapter
+            (it as? ItemTouchBinder<*>)?.bind(smartRecyclerAdapter, recyclerView)
+        }
         return smartRecyclerAdapter as T
     }
 
@@ -106,7 +83,9 @@ class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter:
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper)
         smartRecyclerAdapter.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper)
         smartRecyclerAdapter.viewTypeResolver = viewTypeResolver
-        smartRecyclerAdapter.viewEventMapper = viewEventMapper
+        viewHolderBinders.forEach {
+            smartRecyclerAdapter.addBinder(it)
+        }
         return smartRecyclerAdapter as T
     }
 }

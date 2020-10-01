@@ -5,13 +5,8 @@ package smartadapter
  * Copyright (c) All rights reserved.
  */
 
-import android.util.SparseArray
 import androidx.recyclerview.widget.RecyclerView
-import smartadapter.internal.mapper.ViewEventMapper
 import smartadapter.internal.mapper.ViewHolderMapper
-import smartadapter.listener.OnViewAttachedToWindowListener
-import smartadapter.listener.OnViewDetachedFromWindowListener
-import smartadapter.listener.OnViewEventListener
 import smartadapter.widget.ViewTypeResolver
 import kotlin.reflect.KClass
 
@@ -33,16 +28,17 @@ interface ISmartRecyclerAdapter {
     var viewHolderMapper: ViewHolderMapper
 
     /**
-     * Holder of all view event listeners.
-     * @see OnViewEventListener]
-     */
-    var viewEventMapper: ViewEventMapper
-
-    /**
      * Sets custom view type resolver. Used when basic class mapping is not possible.
-     * @see ViewTypeResolver].
+     * @see [ViewTypeResolver].
      */
     var viewTypeResolver: ViewTypeResolver?
+
+    /**
+     * Holder for all view holder binders.
+     *
+     * @see smartadapter.listener
+     */
+    val viewHolderBinders: MutableList<SmartViewHolderBinder>
 
     /**
      * Get item count for target class type.
@@ -247,21 +243,7 @@ interface ISmartRecyclerAdapter {
     fun map(itemType: KClass<*>, viewHolderType: SmartViewHolderType)
 
     /**
-     * Get ViewEventListeners for target ViewHolder.
-     * @param viewHolderType SmartViewHolder type
-     * @return map of ViewEventListeners
+     * Add binder for [smartadapter.viewholder.SmartViewHolder]
      */
-    fun getViewEventListenersForViewHolder(viewHolderType: SmartViewHolderType): SparseArray<SparseArray<OnViewEventListener>>?
-
-    /**
-     * Adds an [OnViewAttachedToWindowListener] to the [SmartRecyclerAdapter] that will be called from [SmartRecyclerAdapter.onViewAttachedToWindow].
-     * @param onViewAttachedToWindowListener listener
-     */
-    fun addOnViewAttachedToWindowListener(onViewAttachedToWindowListener: OnViewAttachedToWindowListener)
-
-    /**
-     * Adds an [smartadapter.listener.OnViewDetachedFromWindowListener] to the [SmartRecyclerAdapter] that will be called from [SmartRecyclerAdapter.onViewDetachedFromWindow].
-     * @param onViewDetachedFromWindowListener listener
-     */
-    fun addOnViewDetachedFromWindowListener(onViewDetachedFromWindowListener: OnViewDetachedFromWindowListener)
+    fun addBinder(viewHolderBinder: SmartViewHolderBinder)
 }
