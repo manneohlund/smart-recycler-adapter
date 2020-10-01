@@ -1,5 +1,7 @@
 package smartadapter
 
+import android.view.View
+import androidx.annotation.IdRes
 import io.github.manneohlund.smartrecycleradapter.R
 import smartadapter.viewholder.SmartViewHolder
 
@@ -21,4 +23,17 @@ interface SmartViewHolderBinder {
      */
     val viewIds: IntArray
         get() = intArrayOf(R.id.undefined)
+}
+
+fun SmartViewHolderBinder.findView(
+    @IdRes id: ViewId,
+    smartViewHolder: SmartViewHolder<Any>
+): View = when (id) {
+    R.id.undefined -> smartViewHolder.itemView
+    else -> smartViewHolder.itemView.findViewById<View>(id)
+}.also {
+    if (it == null) {
+        val viewIdName = smartViewHolder.itemView.resources.getResourceName(id)
+        throw RuntimeException("View not found by id '$viewIdName=$id' in ${smartViewHolder::class.java.simpleName}")
+    }
 }
