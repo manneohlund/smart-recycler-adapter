@@ -13,12 +13,12 @@ android {
         applicationId "io.github.manneohlund.smartrecycleradapter.sample"
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
-        versionCode VERSION_CODE
-        versionName VERSION_NAME
+        versionCode PROJ_VERSION_CODE
+        versionName PROJ_VERSION_NAME
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
-        setProperty("archivesBaseName", "$ARTIFACT_NAME-$VERSION_NAME")
+        setProperty("archivesBaseName", "$PROJ_ARTIFACT_ID-$PROJ_VERSION_NAME")
     }
 
     signingConfigs {
@@ -73,6 +73,8 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    // Test
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -88,16 +90,22 @@ dependencies {
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     testImplementation 'junit:junit:4.12'
 
+    // Project
+    //implementation 'io.github.manneohlund:smart-recycler-adapter:4.1.0'
+    implementation project(':smartadapter')
+    implementation project(path: ':extensions:viewevent')
+
+    // Androidx
     implementation "androidx.annotation:annotation:$annotation_version"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
     implementation "androidx.appcompat:appcompat:$appcompat_version"
+    implementation "androidx.activity:activity-ktx:$activity_ktx_version"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
     implementation "com.google.android.material:material:$material_version"
 
+    // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
+    // Other
     implementation 'com.github.bumptech.glide:glide:4.9.0'
-
-    //implementation 'io.github.manneohlund:smart-recycler-adapter:4.1.0'
-    implementation project(':smartadapter')
 }
