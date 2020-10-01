@@ -6,12 +6,16 @@ import org.junit.Assert.assertNotNull
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Matchers.any
-import org.mockito.Mockito.*
+import org.mockito.Mockito.eq
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.spy
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
 import org.robolectric.RobolectricTestRunner
 import smartadapter.viewholders.BindableTestViewHolder
 import smartadapter.viewholders.RecyclableTestViewHolder
 import smartadapter.viewholders.ViewAttachedToWindowTestViewHolder
-import java.util.*
+import java.util.ArrayList
 
 /*
  * Created by Manne Öhlund on 2019-07-02.
@@ -180,13 +184,13 @@ class SmartRecyclerAdapterImplTest {
     @Test
     fun testSmartRecyclerAdapterDataList_getItemCount() {
         // Given
-        val items = listOf("Test", "Test2", 1, 2, 3)
+        val items = listOf("Test", "Test2", 1, 2, 3, "test3")
 
         // When
         val adapter = SmartRecyclerAdapter.items(items).create<SmartRecyclerAdapter>()
 
         // Then
-        assertEquals(2, adapter.getItemCount(String::class))
+        assertEquals(3, adapter.getItemCount(String::class))
         assertEquals(3, adapter.getItemCount(Int::class))
     }
 
