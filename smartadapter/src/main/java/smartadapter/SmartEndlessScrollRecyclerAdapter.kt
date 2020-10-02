@@ -47,9 +47,9 @@ class SmartEndlessScrollRecyclerAdapter(items: MutableList<Any>) : SmartRecycler
         } else super.onCreateViewHolder(parent, viewType)
     }
 
-    override fun onBindViewHolder(holder: SmartViewHolder<Any>, position: Position) {
+    override fun onBindViewHolder(smartViewHolder: SmartViewHolder<Any>, position: Position) {
         if (position < itemCount - endlessScrollOffset) {
-            super.onBindViewHolder(holder, position)
+            super.onBindViewHolder(smartViewHolder, position)
         }
     }
 

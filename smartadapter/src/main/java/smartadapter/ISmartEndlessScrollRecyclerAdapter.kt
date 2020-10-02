@@ -35,10 +35,10 @@ interface ISmartEndlessScrollRecyclerAdapter {
      * [OnLoadMoreListener] callback for listening on when the [SmartEndlessScrollRecyclerAdapter]
      * is showing the [smartadapter.viewholder.LoadMoreViewHolder].
      */
-    val onLoadMoreListener: OnLoadMoreListener?
+    var onLoadMoreListener: OnLoadMoreListener?
 
     /**
      * Enables customization of the layout for the [smartadapter.viewholder.LoadMoreViewHolder].
      */
-    val loadMoreLayoutResource: Int
+    var loadMoreLayoutResource: Int
 }

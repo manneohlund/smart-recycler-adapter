@@ -240,7 +240,7 @@ interface ISmartRecyclerAdapter {
      * @param itemType data item type
      * @param viewHolderType view holder type
      */
-    fun map(itemType: KClass<*>, viewHolderType: SmartViewHolderType)
+    fun map(itemType: ItemType, viewHolderType: SmartViewHolderType)
 
     /**
      * Add binder for [smartadapter.viewholder.SmartViewHolder]
