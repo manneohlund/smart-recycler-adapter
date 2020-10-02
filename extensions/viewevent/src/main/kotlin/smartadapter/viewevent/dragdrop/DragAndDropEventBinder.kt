@@ -11,8 +11,8 @@ import smartadapter.SmartRecyclerAdapter
 import smartadapter.SmartViewHolderBinder
 import smartadapter.SmartViewHolderType
 import smartadapter.binders.ItemTouchBinder
-import smartadapter.viewevent.listeners.OnViewEventListener
-import smartadapter.viewevent.models.ViewEvent
+import smartadapter.viewevent.listener.OnViewEventListener
+import smartadapter.viewevent.model.ViewEvent
 
 /**
  * Defines basic functionality of the DragAndDropExtension.

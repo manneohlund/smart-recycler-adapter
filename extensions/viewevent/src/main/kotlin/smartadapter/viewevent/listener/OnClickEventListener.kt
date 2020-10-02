@@ -1,6 +1,5 @@
-package smartadapter.viewevent.listeners
+package smartadapter.viewevent.listener
 
-import android.annotation.SuppressLint
 import androidx.annotation.IdRes
 import io.github.manneohlund.smartrecycleradapter.viewevent.R
 import smartadapter.SmartRecyclerAdapter
@@ -9,20 +8,19 @@ import smartadapter.SmartViewHolderType
 import smartadapter.ViewId
 import smartadapter.findView
 import smartadapter.listener.OnCreateViewHolderListener
-import smartadapter.viewevent.models.ViewEvent
-import smartadapter.viewholder.OnItemTouchEventListener
+import smartadapter.viewevent.model.ViewEvent
+import smartadapter.viewholder.OnItemClickEventListener
 import smartadapter.viewholder.SmartViewHolder
 
 /**
  * Contains the logic for the multi view holder views click for recycler adapter positions.
  */
-@SuppressLint("ClickableViewAccessibility")
-class OnTouchEventListener(
+class OnClickEventListener(
     override val viewHolderType: SmartViewHolderType = SmartViewHolder::class,
     @IdRes
     override vararg val viewIds: ViewId = intArrayOf(R.id.undefined),
-    override var eventListener: (ViewEvent.OnTouchEvent) -> Unit
-) : OnViewEventListener<ViewEvent.OnTouchEvent>,
+    override var eventListener: (ViewEvent.OnClick) -> Unit
+) : OnViewEventListener<ViewEvent.OnClick>,
     SmartViewHolderBinder,
     OnCreateViewHolderListener {
 
@@ -32,19 +30,17 @@ class OnTouchEventListener(
     ) {
         viewIds.forEach {
             with(findView(it, viewHolder)) {
-                setOnTouchListener { view, motionEvent ->
-                    val event = ViewEvent.OnTouchEvent(
+                setOnClickListener { view ->
+                    val event = ViewEvent.OnClick(
                         adapter,
                         viewHolder,
                         viewHolder.adapterPosition,
-                        view,
-                        motionEvent
+                        view
                     )
-                    (viewHolder as? OnItemTouchEventListener)?.let {
+                    (viewHolder as? OnItemClickEventListener)?.let {
                         viewHolder.onViewEvent(event)
                     }
                     eventListener.invoke(event)
-                    false
                 }
             }
         }

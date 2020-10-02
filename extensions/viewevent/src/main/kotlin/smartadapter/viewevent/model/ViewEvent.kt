@@ -1,4 +1,4 @@
-package smartadapter.viewevent.models
+package smartadapter.viewevent.model
 
 import android.view.MotionEvent
 import android.view.View

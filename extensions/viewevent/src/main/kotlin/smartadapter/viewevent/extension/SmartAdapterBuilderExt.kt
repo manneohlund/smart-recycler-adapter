@@ -3,7 +3,7 @@ package smartadapter.viewevent.extension
 import smartadapter.SmartAdapterBuilder
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.SmartViewHolderBinder
-import smartadapter.viewevent.viewmodels.ViewEventViewModel
+import smartadapter.viewevent.viewmodel.ViewEventViewModel
 
 fun SmartAdapterBuilder.add(smartViewHolderBinder: ViewEventViewModel<*, *>): SmartAdapterBuilder {
     addBinder(smartViewHolderBinder.viewEventListener as SmartViewHolderBinder)

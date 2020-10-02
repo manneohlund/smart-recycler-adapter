@@ -1,6 +1,6 @@
 package smartadapter.viewholder
 
-import smartadapter.viewevent.models.ViewEvent
+import smartadapter.viewevent.model.ViewEvent
 import smartadapter.viewevent.swipe.SwipeEventBinder
 
 interface OnItemSwipedListener {

@@ -5,8 +5,8 @@ package smartadapter.viewholder
  * Copyright (c) All rights reserved.
  */
 
-import smartadapter.viewevent.listeners.OnCustomViewEventListener
-import smartadapter.viewevent.models.ViewEvent
+import smartadapter.viewevent.listener.OnCustomViewEventListener
+import smartadapter.viewevent.model.ViewEvent
 
 /**
  * Lets a view holder handle events with custom event ids.

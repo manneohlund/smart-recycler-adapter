@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.SmartViewHolderType
-import smartadapter.viewevent.models.ViewEvent
+import smartadapter.viewevent.model.ViewEvent
 import smartadapter.viewholder.SmartAdapterHolder
 import smartadapter.viewholder.SmartViewHolder
 

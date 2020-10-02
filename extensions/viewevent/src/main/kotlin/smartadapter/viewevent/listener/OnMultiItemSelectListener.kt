@@ -1,4 +1,4 @@
-package smartadapter.viewevent.listeners
+package smartadapter.viewevent.listener
 
 /*
  * Created by Manne Öhlund on 2020-09-23.
@@ -18,7 +18,7 @@ import smartadapter.extension.setBackgroundAttribute
 import smartadapter.findView
 import smartadapter.listener.OnBindViewHolderListener
 import smartadapter.listener.OnCreateViewHolderListener
-import smartadapter.viewevent.models.ViewEvent
+import smartadapter.viewevent.model.ViewEvent
 import smartadapter.viewevent.state.SmartStateHolder
 import smartadapter.viewholder.OnItemSelectedEventListener
 import smartadapter.viewholder.SmartViewHolder

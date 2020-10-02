@@ -1,9 +1,9 @@
-package smartadapter.viewevent.listeners
+package smartadapter.viewevent.listener
 
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.SmartViewHolderBinder
 import smartadapter.listener.OnCreateViewHolderListener
-import smartadapter.viewevent.models.ViewEvent
+import smartadapter.viewevent.model.ViewEvent
 import smartadapter.viewholder.CustomViewEventListenerHolder
 import smartadapter.viewholder.SmartViewHolder
 

@@ -1,4 +1,4 @@
-package smartadapter.viewevent.listeners
+package smartadapter.viewevent.listener
 
 import androidx.annotation.IdRes
 import io.github.manneohlund.smartrecycleradapter.viewevent.R
@@ -8,19 +8,18 @@ import smartadapter.SmartViewHolderType
 import smartadapter.ViewId
 import smartadapter.findView
 import smartadapter.listener.OnCreateViewHolderListener
-import smartadapter.viewevent.models.ViewEvent
-import smartadapter.viewholder.OnItemClickEventListener
+import smartadapter.viewevent.model.ViewEvent
+import smartadapter.viewholder.OnItemLongClickEventListener
 import smartadapter.viewholder.SmartViewHolder
 
 /**
  * Contains the logic for the multi view holder views click for recycler adapter positions.
  */
-class OnClickEventListener(
+class OnLongClickEventListener(
     override val viewHolderType: SmartViewHolderType = SmartViewHolder::class,
-    @IdRes
-    override vararg val viewIds: ViewId = intArrayOf(R.id.undefined),
-    override var eventListener: (ViewEvent.OnClick) -> Unit
-) : OnViewEventListener<ViewEvent.OnClick>,
+    @IdRes override vararg val viewIds: ViewId = intArrayOf(R.id.undefined),
+    override var eventListener: (ViewEvent.OnLongClick) -> Unit
+) : OnViewEventListener<ViewEvent.OnLongClick>,
     SmartViewHolderBinder,
     OnCreateViewHolderListener {
 
@@ -30,17 +29,18 @@ class OnClickEventListener(
     ) {
         viewIds.forEach {
             with(findView(it, viewHolder)) {
-                setOnClickListener { view ->
-                    val event = ViewEvent.OnClick(
+                setOnLongClickListener { view ->
+                    val event = ViewEvent.OnLongClick(
                         adapter,
                         viewHolder,
                         viewHolder.adapterPosition,
                         view
                     )
-                    (viewHolder as? OnItemClickEventListener)?.let {
+                    if (viewHolder is OnItemLongClickEventListener) {
                         viewHolder.onViewEvent(event)
                     }
                     eventListener.invoke(event)
+                    true
                 }
             }
         }

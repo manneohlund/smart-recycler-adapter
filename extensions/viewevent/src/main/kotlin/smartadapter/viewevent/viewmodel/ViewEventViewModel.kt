@@ -1,20 +1,18 @@
-package smartadapter.viewevent.viewmodels
+package smartadapter.viewevent.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import smartadapter.viewevent.listeners.OnViewEventListener
-import smartadapter.viewevent.models.ViewEvent
+import androidx.lifecycle.ViewModel
+import smartadapter.viewevent.listener.OnViewEventListener
+import smartadapter.viewevent.model.ViewEvent
 
 /**
- * Basic android view model that wraps an [OnViewEventListener].
+ * Basic view model that wraps an [OnViewEventListener].
  */
-open class ViewEventApplicationViewModel<VE : ViewEvent, T : OnViewEventListener<VE>>(
-    application: Application,
+open class ViewEventViewModel<VE : ViewEvent, T : OnViewEventListener<VE>>(
     val viewEventListener: T
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     init {
         viewEventListener.eventListener = {

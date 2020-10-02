@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.SmartViewHolderType
-import smartadapter.viewevent.models.ViewEvent
+import smartadapter.viewevent.model.ViewEvent
 import smartadapter.viewevent.swipe.Direction
 import smartadapter.viewholder.SmartViewHolder
 

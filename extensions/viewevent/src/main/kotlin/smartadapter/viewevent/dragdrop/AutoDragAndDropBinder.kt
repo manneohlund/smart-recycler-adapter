@@ -12,7 +12,7 @@ import smartadapter.SmartRecyclerAdapter
 import smartadapter.SmartViewHolderBinder
 import smartadapter.SmartViewHolderType
 import smartadapter.listener.OnCreateViewHolderListener
-import smartadapter.viewevent.models.ViewEvent
+import smartadapter.viewevent.model.ViewEvent
 import smartadapter.viewholder.DraggableViewHolder
 import smartadapter.viewholder.SmartAdapterHolder
 import smartadapter.viewholder.SmartViewHolder

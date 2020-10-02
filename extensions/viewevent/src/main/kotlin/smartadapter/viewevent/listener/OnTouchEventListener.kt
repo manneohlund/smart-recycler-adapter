@@ -1,5 +1,6 @@
-package smartadapter.viewevent.listeners
+package smartadapter.viewevent.listener
 
+import android.annotation.SuppressLint
 import androidx.annotation.IdRes
 import io.github.manneohlund.smartrecycleradapter.viewevent.R
 import smartadapter.SmartRecyclerAdapter
@@ -8,18 +9,20 @@ import smartadapter.SmartViewHolderType
 import smartadapter.ViewId
 import smartadapter.findView
 import smartadapter.listener.OnCreateViewHolderListener
-import smartadapter.viewevent.models.ViewEvent
-import smartadapter.viewholder.OnItemLongClickEventListener
+import smartadapter.viewevent.model.ViewEvent
+import smartadapter.viewholder.OnItemTouchEventListener
 import smartadapter.viewholder.SmartViewHolder
 
 /**
  * Contains the logic for the multi view holder views click for recycler adapter positions.
  */
-class OnLongClickEventListener(
+@SuppressLint("ClickableViewAccessibility")
+class OnTouchEventListener(
     override val viewHolderType: SmartViewHolderType = SmartViewHolder::class,
-    @IdRes override vararg val viewIds: ViewId = intArrayOf(R.id.undefined),
-    override var eventListener: (ViewEvent.OnLongClick) -> Unit
-) : OnViewEventListener<ViewEvent.OnLongClick>,
+    @IdRes
+    override vararg val viewIds: ViewId = intArrayOf(R.id.undefined),
+    override var eventListener: (ViewEvent.OnTouchEvent) -> Unit
+) : OnViewEventListener<ViewEvent.OnTouchEvent>,
     SmartViewHolderBinder,
     OnCreateViewHolderListener {
 
@@ -29,18 +32,19 @@ class OnLongClickEventListener(
     ) {
         viewIds.forEach {
             with(findView(it, viewHolder)) {
-                setOnLongClickListener { view ->
-                    val event = ViewEvent.OnLongClick(
+                setOnTouchListener { view, motionEvent ->
+                    val event = ViewEvent.OnTouchEvent(
                         adapter,
                         viewHolder,
                         viewHolder.adapterPosition,
-                        view
+                        view,
+                        motionEvent
                     )
-                    if (viewHolder is OnItemLongClickEventListener) {
+                    (viewHolder as? OnItemTouchEventListener)?.let {
                         viewHolder.onViewEvent(event)
                     }
                     eventListener.invoke(event)
-                    true
+                    false
                 }
             }
         }
