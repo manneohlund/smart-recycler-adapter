@@ -24,7 +24,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
-        setProperty("archivesBaseName", "$LIB_ARTIFACT_ID-$LIB_VERSION_NAME")
+        // setProperty("archivesBaseName", "$LIB_ARTIFACT_ID-$LIB_VERSION_NAME") TODO Not working with com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4
     }
 
     sourceSets {
