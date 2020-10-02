@@ -6,7 +6,6 @@ package smartrecycleradapter.feature
  */
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -15,9 +14,9 @@ import androidx.activity.viewModels
 import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.viewevent.extension.add
-import smartadapter.viewevent.listeners.OnMultiItemSelectListener
-import smartadapter.viewevent.models.ViewEvent
-import smartadapter.viewevent.viewmodels.ViewEventViewModel
+import smartadapter.viewevent.listener.OnMultiItemSelectListener
+import smartadapter.viewevent.model.ViewEvent
+import smartadapter.viewevent.viewmodel.ViewEventViewModel
 import smartadapter.viewholder.OnItemSelectedEventListener
 import smartadapter.viewholder.SmartViewHolder
 import smartrecycleradapter.R
@@ -52,10 +51,8 @@ class MultipleExpandableItemActivity : BaseSampleActivity() {
     }
 }
 
-class SimpleExpandableItemViewHolder(parentView: ViewGroup) : SmartViewHolder<Int>(
-    LayoutInflater.from(parentView.context)
-        .inflate(R.layout.simple_expandable_item, parentView, false)
-), OnItemSelectedEventListener {
+class SimpleExpandableItemViewHolder(parentView: ViewGroup) :
+    SmartViewHolder<Int>(parentView, R.layout.simple_expandable_item), OnItemSelectedEventListener {
 
     private val title: TextView = itemView.findViewById(R.id.itemTitle)
     private val subItem: LinearLayout = itemView.findViewById(R.id.subItemContainer)

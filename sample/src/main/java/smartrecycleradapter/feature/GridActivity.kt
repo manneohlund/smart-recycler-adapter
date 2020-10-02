@@ -8,7 +8,7 @@ import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.viewevent.dragdrop.AutoDragAndDropBinder
 import smartadapter.viewevent.extension.add
-import smartadapter.viewevent.listeners.OnClickEventListener
+import smartadapter.viewevent.listener.OnClickEventListener
 import smartrecycleradapter.data.MovieDataItems
 import smartrecycleradapter.extension.GridAutoLayoutManager
 import smartrecycleradapter.models.MovieModel

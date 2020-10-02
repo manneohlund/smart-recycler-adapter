@@ -5,7 +5,6 @@ package smartrecycleradapter.viewholder
  * Copyright (c) All rights reserved.
  */
 
-import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.TextView
@@ -20,13 +19,8 @@ import smartrecycleradapter.extension.GridAutoLayoutManager
 import smartrecycleradapter.models.NestedRecyclerViewModel
 
 open class NestedRecyclerViewHolder(parentView: ViewGroup) :
-    SmartViewHolder<NestedRecyclerViewModel>(
-        LayoutInflater.from(parentView.context).inflate(
-            R.layout.nested_recycler_view,
-            parentView,
-            false
-        )
-    ), SmartAdapterHolder {
+    SmartViewHolder<NestedRecyclerViewModel>(parentView, R.layout.nested_recycler_view),
+    SmartAdapterHolder {
 
     override var smartRecyclerAdapter: SmartRecyclerAdapter? = null
         set(value) {

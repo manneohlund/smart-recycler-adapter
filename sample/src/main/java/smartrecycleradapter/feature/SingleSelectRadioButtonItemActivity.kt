@@ -12,10 +12,10 @@ import androidx.activity.viewModels
 import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.viewevent.extension.add
-import smartadapter.viewevent.listeners.OnClickEventListener
-import smartadapter.viewevent.listeners.OnSingleItemCheckListener
-import smartadapter.viewevent.models.ViewEvent
-import smartadapter.viewevent.viewmodels.ViewEventViewModel
+import smartadapter.viewevent.listener.OnClickEventListener
+import smartadapter.viewevent.listener.OnSingleItemCheckListener
+import smartadapter.viewevent.model.ViewEvent
+import smartadapter.viewevent.viewmodel.ViewEventViewModel
 import smartrecycleradapter.R
 import smartrecycleradapter.utils.showToast
 import smartrecycleradapter.viewholder.SimpleSelectableRadioButtonViewHolder

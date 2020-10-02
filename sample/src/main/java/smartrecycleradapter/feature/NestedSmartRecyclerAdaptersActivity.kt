@@ -9,7 +9,7 @@ import smartadapter.SmartEndlessScrollRecyclerAdapter
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.internal.extension.name
 import smartadapter.viewevent.extension.add
-import smartadapter.viewevent.listeners.OnClickEventListener
+import smartadapter.viewevent.listener.OnClickEventListener
 import smartrecycleradapter.BuildConfig
 import smartrecycleradapter.R
 import smartrecycleradapter.data.MovieDataItems

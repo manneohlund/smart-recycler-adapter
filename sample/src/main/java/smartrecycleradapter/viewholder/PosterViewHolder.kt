@@ -5,7 +5,6 @@ package smartrecycleradapter.viewholder
  * Copyright © 2019. All rights reserved.
  */
 
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -13,7 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.viewevent.models.ViewEvent
+import smartadapter.viewevent.model.ViewEvent
 import smartadapter.viewholder.CustomViewEventListenerHolder
 import smartadapter.viewholder.SmartAdapterHolder
 import smartadapter.viewholder.SmartViewHolder
@@ -22,9 +21,10 @@ import smartrecycleradapter.models.MovieModel
 import smartrecycleradapter.utils.displayHeight
 import smartrecycleradapter.utils.displayWidth
 
-class PosterViewHolder(parentView: ViewGroup) : SmartViewHolder<MovieModel>(
-    LayoutInflater.from(parentView.context).inflate(R.layout.poster_item, parentView, false)
-), CustomViewEventListenerHolder, SmartAdapterHolder {
+class PosterViewHolder(parentView: ViewGroup) :
+    SmartViewHolder<MovieModel>(parentView, R.layout.poster_item),
+    CustomViewEventListenerHolder,
+    SmartAdapterHolder {
 
     private val imageView: ImageView = itemView.findViewById(R.id.imageView)
     private val playButton: ImageView = itemView.findViewById(R.id.playButton)

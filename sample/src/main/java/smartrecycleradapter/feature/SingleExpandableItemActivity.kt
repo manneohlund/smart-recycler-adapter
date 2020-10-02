@@ -5,9 +5,9 @@ import androidx.activity.viewModels
 import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.viewevent.extension.add
-import smartadapter.viewevent.listeners.OnSingleItemSelectListener
-import smartadapter.viewevent.models.ViewEvent
-import smartadapter.viewevent.viewmodels.ViewEventViewModel
+import smartadapter.viewevent.listener.OnSingleItemSelectListener
+import smartadapter.viewevent.model.ViewEvent
+import smartadapter.viewevent.viewmodel.ViewEventViewModel
 import smartrecycleradapter.R
 import smartrecycleradapter.utils.showToast
 

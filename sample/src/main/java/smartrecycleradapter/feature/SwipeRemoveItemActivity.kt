@@ -11,8 +11,8 @@ import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.SmartViewHolderBinder
 import smartadapter.viewevent.extension.add
-import smartadapter.viewevent.listeners.OnClickEventListener
-import smartadapter.viewevent.models.ViewEvent
+import smartadapter.viewevent.listener.OnClickEventListener
+import smartadapter.viewevent.model.ViewEvent
 import smartadapter.viewevent.swipe.BasicSwipeEventBinder
 import smartadapter.viewevent.swipe.SwipeFlags
 import smartrecycleradapter.R

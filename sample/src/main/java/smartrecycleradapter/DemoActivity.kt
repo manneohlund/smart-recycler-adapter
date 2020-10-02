@@ -20,9 +20,9 @@ import smartadapter.Position
 import smartadapter.SmartEndlessScrollRecyclerAdapter
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.viewevent.extension.add
-import smartadapter.viewevent.listeners.OnClickEventListener
-import smartadapter.viewevent.listeners.OnCustomViewEventListener
-import smartadapter.viewevent.listeners.OnLongClickEventListener
+import smartadapter.viewevent.listener.OnClickEventListener
+import smartadapter.viewevent.listener.OnCustomViewEventListener
+import smartadapter.viewevent.listener.OnLongClickEventListener
 import smartrecycleradapter.data.MovieDataItems
 import smartrecycleradapter.extension.PreCachingLinearLayoutManager
 import smartrecycleradapter.feature.CustomViewEventActivity

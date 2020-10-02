@@ -8,8 +8,8 @@ import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.viewevent.dragdrop.AutoDragAndDropBinder
 import smartadapter.viewevent.extension.add
-import smartadapter.viewevent.listeners.OnClickEventListener
-import smartadapter.viewevent.listeners.OnLongClickEventListener
+import smartadapter.viewevent.listener.OnClickEventListener
+import smartadapter.viewevent.listener.OnLongClickEventListener
 import smartadapter.viewevent.swipe.AutoRemoveItemSwipeEventBinder
 import smartrecycleradapter.feature.simpleitem.SimpleItemViewHolder
 import smartrecycleradapter.utils.showToast

@@ -20,10 +20,8 @@ private val requestOption = RequestOptions()
     .error(R.drawable.ic_broken_image_black_48dp)
     .transform(CenterCrop(), RoundedCorners(8))
 
-class SmallThumbViewHolder(parentView: ViewGroup) : SmartViewHolder<MovieModel>(
-    LayoutInflater.from(parentView.context)
-        .inflate(R.layout.thumb_small_item, parentView, false)
-) {
+class SmallThumbViewHolder(parentView: ViewGroup) :
+    SmartViewHolder<MovieModel>(parentView, R.layout.thumb_small_item) {
 
     private val imageView: ImageView = itemView as ImageView
 
@@ -58,10 +56,8 @@ open class ThumbViewHolder(parentView: ViewGroup) : SmartViewHolder<MovieModel>(
     }
 }
 
-class LargeThumbViewHolder(parentView: ViewGroup) : SmartViewHolder<MovieModel>(
-    LayoutInflater.from(parentView.context)
-        .inflate(R.layout.thumb_large_item, parentView, false)
-) {
+class LargeThumbViewHolder(parentView: ViewGroup) :
+    SmartViewHolder<MovieModel>(parentView, R.layout.thumb_large_item) {
 
     private val imageView: ImageView = itemView as ImageView
 

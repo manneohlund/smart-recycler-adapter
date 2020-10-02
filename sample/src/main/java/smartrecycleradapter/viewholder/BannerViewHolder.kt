@@ -5,7 +5,6 @@ package smartrecycleradapter.viewholder
  * Copyright © 2017. All rights reserved.
  */
 
-import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
@@ -18,9 +17,8 @@ import smartrecycleradapter.R
 import smartrecycleradapter.models.MovieBannerModel
 import smartrecycleradapter.utils.displayWidth
 
-class BannerViewHolder(parentView: ViewGroup) : SmartViewHolder<MovieBannerModel>(
-        LayoutInflater.from(parentView.context)
-                .inflate(R.layout.banner_item, parentView, false)) {
+class BannerViewHolder(parentView: ViewGroup) :
+    SmartViewHolder<MovieBannerModel>(parentView, R.layout.banner_item) {
 
     private val titleTextView: TextView = itemView.findViewById(R.id.title)
     private val imageView: ImageView = itemView.findViewById(R.id.imageView)
