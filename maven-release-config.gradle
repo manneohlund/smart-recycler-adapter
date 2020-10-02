@@ -11,6 +11,7 @@ ext {
 
     SITE_URL = 'https://manneohlund.github.io/smart-recycler-adapter'
     GIT_URL = 'https://github.com/manneohlund/smart-recycler-adapter'
+    ISSUE_URL = 'https://github.com/manneohlund/smart-recycler-adapter/issues'
 
     DEVELOPER_ID = 'manneohlund'
     DEVELOPER_NAME = 'Manne Öhlund'
