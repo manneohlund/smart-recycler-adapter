@@ -91,7 +91,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 
     // Project
-    //implementation 'io.github.manneohlund:smart-recycler-adapter:4.1.0'
+    //implementation 'io.github.manneohlund:smart-recycler-adapter:5.0.0-beta01'
+    //implementation 'io.github.manneohlund:smart-recycler-adapter-viewevent:1.0.0-alpha01'
     implementation project(':smartadapter')
     implementation project(path: ':extensions:viewevent')
 
