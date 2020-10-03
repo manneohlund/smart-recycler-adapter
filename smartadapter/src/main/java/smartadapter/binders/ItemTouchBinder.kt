@@ -3,6 +3,10 @@ package smartadapter.binders
 import androidx.recyclerview.widget.RecyclerView
 import smartadapter.SmartRecyclerAdapter
 
+/**
+ * ItemTouchBinder is the basic interface to implement in extension libraries
+ * to bind with [SmartRecyclerAdapter] & [RecyclerView] on adapter creation.
+ */
 interface ItemTouchBinder<T> {
 
     /**

@@ -12,7 +12,7 @@ import smartadapter.viewholder.SmartViewHolder
 /**
  * Listener for when a view holder created by the adapter should be bound with data.
  *
- * Invoked from [smartadapter.SmartRecyclerAdapter.onViewAttachedToWindow] and should be implemented in a [SmartViewHolder] extension.
+ * Invoked from [smartadapter.SmartRecyclerAdapter.onBindViewHolder] and should be implemented in a [SmartViewHolder] extension.
  *
  * @see RecyclerView.Adapter.onBindViewHolder
  */
