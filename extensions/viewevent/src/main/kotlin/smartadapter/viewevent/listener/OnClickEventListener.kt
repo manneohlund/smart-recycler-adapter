@@ -15,7 +15,7 @@ import smartadapter.viewholder.SmartViewHolder
 /**
  * Contains the logic for the multi view holder views click for recycler adapter positions.
  */
-class OnClickEventListener(
+open class OnClickEventListener(
     override val viewHolderType: SmartViewHolderType = SmartViewHolder::class,
     @IdRes
     override vararg val viewIds: ViewId = intArrayOf(R.id.undefined),

@@ -11,7 +11,7 @@ import smartadapter.viewholder.SmartViewHolder
  * Contains the logic for passing itself to a [SmartViewHolder]
  * via [CustomViewEventListenerHolder] interface to enable posting of custom [ViewEvent].
  */
-class OnCustomViewEventListener(
+open class OnCustomViewEventListener(
     override var eventListener: (ViewEvent) -> Unit
 ) : OnViewEventListener<ViewEvent>,
     SmartViewHolderBinder,
