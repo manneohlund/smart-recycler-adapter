@@ -20,6 +20,7 @@ import smartadapter.listener.OnBindViewHolderListener
 import smartadapter.listener.OnCreateViewHolderListener
 import smartadapter.viewevent.model.ViewEvent
 import smartadapter.viewevent.state.SmartStateHolder
+import smartadapter.viewevent.viewmodel.ViewEventViewModel
 import smartadapter.viewholder.OnItemSelectedEventListener
 import smartadapter.viewholder.SmartViewHolder
 import java.util.TreeSet
@@ -134,9 +135,10 @@ open class OnMultiItemCheckListener(
 /**
  * Contains the logic for the multi select states for recycler adapter positions.
  *
- * if [enableOnLongClick] is true multi select will be enabled after a long click.
- *
- * if [selectedItemsCount] is [R.id.undefined] and [enableOnLongClick] is true a regular [ViewEvent.OnClick] will be emitted.<br/>
+ * if [enableOnLongClick] is true multi select will be enabled after a long click, otherwise a regular [ViewEvent.OnClick] will be emitted when tapping.<br/>
+ * [viewId] is by default [R.id.undefined] to target all [SmartViewHolder.itemView].<br/>
+ * [viewHolderType] is by default [SmartViewHolder]::class to target all view holders.
+ * [eventListener] is by default noop in case of [OnMultiItemSelectListener] will be used with [ViewEventViewModel] along with live data observer.
  */
 open class OnMultiItemSelectListener(
     val enableOnLongClick: Boolean = true,

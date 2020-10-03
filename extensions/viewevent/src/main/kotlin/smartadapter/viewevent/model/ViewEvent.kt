@@ -4,6 +4,7 @@ import android.view.MotionEvent
 import android.view.View
 import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
+import smartadapter.viewevent.listener.OnViewEventListener
 import smartadapter.viewevent.swipe.Direction
 import smartadapter.viewholder.SmartViewHolder
 
