@@ -8,6 +8,7 @@ package smartrecycleradapter.feature
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.viewevent.extension.add
@@ -27,7 +28,7 @@ class MultiSelectItemsActivity : BaseSampleActivity() {
     )
 
     lateinit var smartRecyclerAdapter: SmartRecyclerAdapter
-    private val multiItemSelectViewModel by lazy { MultiItemSelectViewModel() }
+    private val multiItemSelectViewModel: MultiItemSelectViewModel by viewModels()
     private var deleteMenuItem: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

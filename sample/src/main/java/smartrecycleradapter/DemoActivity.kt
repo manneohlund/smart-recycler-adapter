@@ -10,6 +10,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -23,6 +24,9 @@ import smartadapter.viewevent.extension.add
 import smartadapter.viewevent.listener.OnClickEventListener
 import smartadapter.viewevent.listener.OnCustomViewEventListener
 import smartadapter.viewevent.listener.OnLongClickEventListener
+import smartadapter.viewevent.listener.OnTouchEventListener
+import smartadapter.viewholder.CustomViewEventListenerHolder
+import smartadapter.viewholder.SmartAdapterHolder
 import smartrecycleradapter.data.MovieDataItems
 import smartrecycleradapter.extension.PreCachingLinearLayoutManager
 import smartrecycleradapter.feature.CustomViewEventActivity
@@ -76,13 +80,13 @@ import kotlin.reflect.KClass
 class DemoActivity : AppCompatActivity() {
 
     internal lateinit var recyclerView: RecyclerView
-    internal lateinit var mainSmartMovieAdapter: SmartEndlessScrollRecyclerAdapter
-    internal lateinit var comingSoonSmartMovieAdapter: SmartEndlessScrollRecyclerAdapter
-    internal lateinit var myWatchListSmartMovieAdapter: SmartRecyclerAdapter
-    internal lateinit var actionMoviesSmartMovieAdapter: SmartRecyclerAdapter
-    internal lateinit var adventuresMoviesSmartMovieAdapter: SmartRecyclerAdapter
-    internal lateinit var animatedMoviesSmartMovieAdapter: SmartRecyclerAdapter
-    internal lateinit var sciFiMoviesSmartMovieAdapter: SmartRecyclerAdapter
+    private lateinit var mainSmartMovieAdapter: SmartEndlessScrollRecyclerAdapter
+    private lateinit var comingSoonSmartMovieAdapter: SmartEndlessScrollRecyclerAdapter
+    private lateinit var myWatchListSmartMovieAdapter: SmartRecyclerAdapter
+    private lateinit var actionMoviesSmartMovieAdapter: SmartRecyclerAdapter
+    private lateinit var adventuresMoviesSmartMovieAdapter: SmartRecyclerAdapter
+    private lateinit var animatedMoviesSmartMovieAdapter: SmartRecyclerAdapter
+    private lateinit var sciFiMoviesSmartMovieAdapter: SmartRecyclerAdapter
     private lateinit var recentlyPlayedMoviesSmartMovieAdapter: SmartRecyclerAdapter
     private lateinit var dialogAdapter: SmartRecyclerAdapter
 
@@ -151,7 +155,7 @@ class DemoActivity : AppCompatActivity() {
 
             .setLayoutManager(PreCachingLinearLayoutManager.getInstance(this))
 
-            // ViewHolder must implement CustomViewEventListenerHolder & SmartAdapterHolder
+            /** ViewHolder must implement [CustomViewEventListenerHolder] & [SmartAdapterHolder] */
             .add(OnCustomViewEventListener{
                 showToast(it::class.java.simpleName)
             })
@@ -162,6 +166,11 @@ class DemoActivity : AppCompatActivity() {
             /** Adds event listener and also automatically adds row item [View.OnLongClickListener] on all items root view  */
             .add(OnLongClickEventListener {
                 showToast("onItemLongClick ${it.position}")
+            })
+            .add(OnTouchEventListener(PosterViewHolder::class) {
+                when(it.event.action) {
+                    MotionEvent.ACTION_UP -> showToast("onTouchEvent ${it.position}")
+                }
             })
             .add(OnClickEventListener(PosterViewHolder::class) {
                 mainSmartMovieAdapter.replaceItem(
