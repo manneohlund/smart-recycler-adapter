@@ -28,8 +28,12 @@ android {
     }
 
     sourceSets {
+        main {
+            java.srcDirs = ['src/main/kotlin']
+            res.srcDirs = ['src/main/res']
+        }
         release {
-            java.srcDirs = ['src/main/java']
+            java.srcDirs = ['src/main/kotlin']
             res.srcDirs = ['src/main/res']
         }
     }
