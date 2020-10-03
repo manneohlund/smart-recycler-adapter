@@ -5,32 +5,44 @@ package smartrecycleradapter.viewholder
  * Copyright © 2019. All rights reserved.
  */
 
-import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import smartadapter.SmartViewHolderType
-import smartadapter.ViewId
-import smartadapter.listener.OnViewEventListener
+import smartadapter.Position
+import smartadapter.SmartRecyclerAdapter
+import smartadapter.viewevent.model.ViewEvent
+import smartadapter.viewholder.CustomViewEventListenerHolder
+import smartadapter.viewholder.SmartAdapterHolder
 import smartadapter.viewholder.SmartViewHolder
-import smartadapter.viewholder.ViewEventListenerHolder
 import smartrecycleradapter.R
 import smartrecycleradapter.models.MovieModel
 import smartrecycleradapter.utils.displayHeight
 import smartrecycleradapter.utils.displayWidth
 
-class PosterViewHolder(parentView: ViewGroup) : SmartViewHolder<MovieModel>(
-    LayoutInflater.from(parentView.context).inflate(R.layout.poster_item, parentView, false)
-), ViewEventListenerHolder {
+class PosterViewHolder(parentView: ViewGroup) :
+    SmartViewHolder<MovieModel>(parentView, R.layout.poster_item),
+    CustomViewEventListenerHolder,
+    SmartAdapterHolder {
 
     private val imageView: ImageView = itemView.findViewById(R.id.imageView)
     private val playButton: ImageView = itemView.findViewById(R.id.playButton)
-    override lateinit var viewEventListener: OnViewEventListener
+
+    override var smartRecyclerAdapter: SmartRecyclerAdapter? = null
+    override lateinit var customViewEventListener: (ViewEvent) -> Unit
 
     init {
-        playButton.setOnClickListener { playButton ->
-            viewEventListener.onViewEvent(playButton, R.id.event_play, adapterPosition)
+        playButton.setOnLongClickListener { playButton ->
+            customViewEventListener.invoke(
+                OnPlayLongClick(
+                    smartRecyclerAdapter!!,
+                    this@PosterViewHolder,
+                    adapterPosition,
+                    playButton
+                )
+            )
+            false
         }
     }
 
@@ -51,24 +63,10 @@ class PosterViewHolder(parentView: ViewGroup) : SmartViewHolder<MovieModel>(
         Glide.with(imageView).clear(imageView)
     }
 
-    // Event listeners
-    internal interface OnItemClickListener : smartadapter.listener.OnItemClickListener {
-        override val viewHolderType: SmartViewHolderType
-            get() = PosterViewHolder::class
-    }
-
-    internal interface OnPlayButtonClickListener : OnItemClickListener {
-        override val viewId: ViewId
-            get() = R.id.playButton
-    }
-
-    internal interface OnStarButtonClickListener : OnItemClickListener {
-        override val viewId: ViewId
-            get() = R.id.starButton
-    }
-
-    internal interface OnInfoButtonClickListener : OnItemClickListener {
-        override val viewId: ViewId
-            get() = R.id.infoButton
-    }
+    class OnPlayLongClick(
+        adapter: SmartRecyclerAdapter,
+        viewHolder: SmartViewHolder<*>,
+        position: Position /* = Int */,
+        view: View
+    ) : ViewEvent(adapter, viewHolder, position, view)
 }

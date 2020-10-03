@@ -1,28 +1,37 @@
 package smartrecycleradapter.feature
 
 /*
- * Created by Manne Öhlund on 2019-08-10.
+ * Created by Manne Öhlund on 2020-09-23.
  * Copyright (c) All rights reserved.
  */
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_simple_item.*
+import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.ViewEventId
-import smartadapter.listener.OnViewEventListener
+import smartadapter.viewevent.extension.add
+import smartadapter.viewevent.listener.OnCustomViewEventListener
+import smartadapter.viewevent.model.ViewEvent
+import smartadapter.viewholder.CustomViewEventListenerHolder
+import smartadapter.viewholder.SmartAdapterHolder
 import smartadapter.viewholder.SmartViewHolder
-import smartadapter.viewholder.ViewEventListenerHolder
 import smartrecycleradapter.R
+import smartrecycleradapter.utils.showToast
 
-const val CUSTOM_EVENT = R.id.custom_event
-
+@SuppressLint("ClickableViewAccessibility")
 class CustomViewEventActivity : BaseSampleActivity() {
+
+    class CustomEvent(
+        adapter: SmartRecyclerAdapter,
+        viewHolder: SmartViewHolder<*>,
+        position: Position,
+        view: View
+    ) : ViewEvent(adapter, viewHolder, position, view)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,30 +42,66 @@ class CustomViewEventActivity : BaseSampleActivity() {
 
         SmartRecyclerAdapter
             .items(items)
-            .map(Integer::class, SimpleItemViewHolder::class)
-            .addViewEventListener(object : OnViewEventListener {
-                override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
-                    if (viewEventId == CUSTOM_EVENT) {
-                        Toast.makeText(
-                            applicationContext,
-                            "CUSTOM_EVENT $position",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
+            .map(Integer::class, SimpleCustomViewEventListenerViewHolder::class)
+            .add(OnCustomViewEventListener { event ->
+                showToast(event)
             })
             .into<SmartRecyclerAdapter>(recyclerView)
     }
 
-    open class SimpleItemViewHolder(parentView: ViewGroup) : SmartViewHolder<Int>(
-        LayoutInflater.from(parentView.context).inflate(R.layout.simple_item, parentView, false)
-    ), ViewEventListenerHolder {
+    fun showToast(event: ViewEvent) {
+        val touchEvent =
+            (event as? ViewEvent.OnTouchEvent)?.run { "\n\n${this.event}" } ?: ""
+        showToast("${event.viewHolder::class.simpleName}\n${event::class.simpleName} ${event.position} $touchEvent")
+    }
 
-        override lateinit var viewEventListener: OnViewEventListener
+    open class SimpleCustomViewEventListenerViewHolder(parentView: ViewGroup) :
+        SmartViewHolder<Int>(parentView, R.layout.simple_item),
+        CustomViewEventListenerHolder,
+        SmartAdapterHolder {
+
+        override lateinit var customViewEventListener: (ViewEvent) -> Unit
+        override var smartRecyclerAdapter: SmartRecyclerAdapter? = null
 
         init {
+            itemView.setOnTouchListener { view: View, event: MotionEvent ->
+                when (event.action) {
+                    MotionEvent.ACTION_CANCEL -> {
+                        customViewEventListener.invoke(
+                            ViewEvent.OnTouchEvent(
+                                smartRecyclerAdapter!!,
+                                this,
+                                adapterPosition,
+                                view,
+                                event
+                            )
+                        )
+                    }
+                }
+                false
+            }
+
             itemView.setOnClickListener { view ->
-                viewEventListener.onViewEvent(view, CUSTOM_EVENT, adapterPosition)
+                customViewEventListener.invoke(
+                    ViewEvent.OnClick(
+                        smartRecyclerAdapter!!,
+                        this,
+                        adapterPosition,
+                        view
+                    )
+                )
+            }
+
+            itemView.setOnLongClickListener { view ->
+                customViewEventListener.invoke(
+                    CustomEvent(
+                        smartRecyclerAdapter!!,
+                        this,
+                        adapterPosition,
+                        view
+                    )
+                )
+                true
             }
         }
 

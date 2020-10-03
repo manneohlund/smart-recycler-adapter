@@ -1,1 +1,2 @@
+include ':extensions:viewevent'
 include ':sample', ':smartadapter'

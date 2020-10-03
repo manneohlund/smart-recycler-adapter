@@ -1,17 +1,16 @@
 package smartrecycleradapter.feature
 
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_simple_item.*
-import smartadapter.Position
+import androidx.activity.viewModels
+import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.ViewEventId
-import smartadapter.ViewId
-import smartadapter.listener.OnItemSelectedListener
-import smartadapter.state.SelectionStateHolder
-import smartadapter.state.SingleSelectionStateHolder
+import smartadapter.viewevent.extension.add
+import smartadapter.viewevent.listener.OnSingleItemSelectListener
+import smartadapter.viewevent.model.ViewEvent
+import smartadapter.viewevent.viewmodel.ViewEventViewModel
 import smartrecycleradapter.R
+import smartrecycleradapter.utils.showToast
+
 
 /*
  * Created by Manne Öhlund on 2019-08-23.
@@ -19,6 +18,15 @@ import smartrecycleradapter.R
  */
 
 class SingleExpandableItemActivity : BaseSampleActivity() {
+
+    class SingleItemSelectViewModel : ViewEventViewModel<ViewEvent, OnSingleItemSelectListener>(
+        OnSingleItemSelectListener(
+            viewHolderType = SimpleExpandableItemViewHolder::class,
+            viewId = R.id.itemTitle
+        )
+    )
+
+    private val singleItemSelectViewModel: SingleItemSelectViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,24 +36,11 @@ class SingleExpandableItemActivity : BaseSampleActivity() {
         val items = (0..100).toMutableList()
 
         SmartRecyclerAdapter
-                .items(items)
-                .map(Integer::class, SimpleExpandableItemViewHolder::class)
-                .addViewEventListener(object : OnSingleItemExpandedListener {
-                    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
-                        Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT).show()
-                    }
-                })
-                .into<SmartRecyclerAdapter>(recyclerView)
+            .items(items)
+            .map(Integer::class, SimpleExpandableItemViewHolder::class)
+            .add(singleItemSelectViewModel.observe(this) {
+                showToast("onSelect ${it.position}")
+            })
+            .into<SmartRecyclerAdapter>(recyclerView)
     }
-}
-
-var singleExpandedStateHolder = SingleSelectionStateHolder()
-
-interface OnSingleItemExpandedListener : OnItemSelectedListener {
-
-    override val selectionStateHolder: SelectionStateHolder
-        get() = singleExpandedStateHolder
-
-    override val viewId: ViewId
-        get() = R.id.itemTitle
 }

@@ -1,24 +1,20 @@
 package smartrecycleradapter.feature
 
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
-import kotlinx.android.synthetic.main.activity_simple_item.*
-import smartadapter.Position
+import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.ViewEventId
-import smartadapter.listener.OnItemClickListener
-import smartadapter.listener.OnItemLongClickListener
+import smartadapter.viewevent.dragdrop.AutoDragAndDropBinder
+import smartadapter.viewevent.extension.add
+import smartadapter.viewevent.listener.OnClickEventListener
+import smartadapter.viewevent.listener.OnLongClickEventListener
 import smartadapter.viewholder.DraggableViewHolder
 import smartadapter.viewholder.SmartViewHolder
-import smartadapter.widget.AutoDragAndDropExtension
-import smartadapter.widget.DragAndDropExtensionBuilder
 import smartrecycleradapter.R
+import smartrecycleradapter.utils.showToast
 
 /*
  * Created by Manne Öhlund on 2019-08-11.
@@ -35,32 +31,24 @@ class DragAndDropHandleItemActivity : BaseSampleActivity() {
         val items = (0..50).toMutableList()
 
         SmartRecyclerAdapter
-                .items(items)
-                .map(Integer::class, SimpleDragHandleItemViewHolder::class)
-                .addViewEventListener(object : OnItemClickListener {
-                    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
-                        Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT).show()
-                    }
-                })
-                .addViewEventListener(object : OnItemLongClickListener {
-                    override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
-                        Toast.makeText(applicationContext, "onLongClick $position", Toast.LENGTH_SHORT).show()
-                    }
-                })
-                .addExtensionBuilder(DragAndDropExtensionBuilder(AutoDragAndDropExtension()).apply {
-                    dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
-                    onItemMovedListener = { oldViewHolder, targetViewHolder ->
-                        Log.i(DragAndDropHandleItemActivity::class.java.name,
-                            "onItemMoved from ${oldViewHolder.adapterPosition} to ${targetViewHolder.adapterPosition}"
-                        )
-                    }
-                })
-                .into<SmartRecyclerAdapter>(recyclerView)
+            .items(items)
+            .map(Integer::class, SimpleDragHandleItemViewHolder::class)
+            .add(OnClickEventListener {
+                showToast("onClick ${it.position}")
+            })
+            .add(OnLongClickEventListener {
+                showToast("onLongClick ${it.position}")
+            })
+            .add(AutoDragAndDropBinder(ItemTouchHelper.UP or ItemTouchHelper.DOWN) {
+                supportActionBar?.subtitle =
+                    "onItemMoved from ${it.viewHolder.adapterPosition} to ${it.targetViewHolder.adapterPosition}"
+            })
+            .into<SmartRecyclerAdapter>(recyclerView)
     }
 
-    class SimpleDragHandleItemViewHolder(parentView: View) : SmartViewHolder<Int>(
-            LayoutInflater.from(parentView.context)
-                    .inflate(R.layout.simple_drag_handle_item, parentView as ViewGroup, false)), DraggableViewHolder {
+    class SimpleDragHandleItemViewHolder(parentView: ViewGroup) :
+        SmartViewHolder<Int>(parentView, R.layout.simple_drag_handle_item),
+        DraggableViewHolder {
 
         private var textView: TextView = itemView.findViewById(R.id.textView)
         private val dragHandle: View = itemView.findViewById(R.id.dragHandle)

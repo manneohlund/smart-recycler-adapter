@@ -5,16 +5,14 @@ package smartrecycleradapter.viewholder
  * Copyright © 2017. All rights reserved.
  */
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import smartadapter.viewholder.SmartViewHolder
 import smartrecycleradapter.R
 import smartrecycleradapter.models.CopyrightModel
 
-class CopyrightViewHolder(parentView: ViewGroup) : SmartViewHolder<CopyrightModel>(
-        LayoutInflater.from(parentView.context)
-                .inflate(R.layout.copyright, parentView, false)) {
+class CopyrightViewHolder(parentView: ViewGroup) :
+    SmartViewHolder<CopyrightModel>(parentView, R.layout.copyright) {
 
     private val summary: TextView = itemView as TextView
 

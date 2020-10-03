@@ -71,6 +71,7 @@ bintray {
         name = BINTRAY_NAME
         desc = LIBRARY_DESCRIPTION
         websiteUrl = SITE_URL
+        issueTrackerUrl = ISSUE_URL
         vcsUrl = GIT_URL
         licenses = ALL_LICENSES
         dryRun = false

@@ -4,18 +4,20 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_simple_item.*
+import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.listener.onItemClickListener
-import smartadapter.widget.BasicSwipeExtension
-import smartadapter.widget.Direction
-import smartadapter.widget.SwipeExtensionBuilder
+import smartadapter.SmartViewHolderBinder
+import smartadapter.viewevent.extension.add
+import smartadapter.viewevent.listener.OnClickEventListener
+import smartadapter.viewevent.model.ViewEvent
+import smartadapter.viewevent.swipe.BasicSwipeEventBinder
+import smartadapter.viewevent.swipe.SwipeFlags
 import smartrecycleradapter.R
 import smartrecycleradapter.feature.simpleitem.SimpleItemViewHolder
+import smartrecycleradapter.utils.showToast
 
 /*
  * Created by Manne Öhlund on 2019-08-11.
@@ -34,30 +36,38 @@ class SwipeRemoveItemActivity : BaseSampleActivity() {
         val items = (0..50).toMutableList()
 
         smartRecyclerAdapter = SmartRecyclerAdapter
-                .items(items)
-                .map(Integer::class, SimpleItemViewHolder::class)
-                .addViewEventListener(onItemClickListener { _, _, position ->
-                        Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT).show()
-                })
-                .addExtensionBuilder(SwipeExtensionBuilder(SwipeRemoveItemExtension()).apply {
-                    swipeFlags = ItemTouchHelper.LEFT
-                    onItemSwipedListener = { viewHolder, direction ->
-                        showToast(viewHolder, direction)
-                        // Remove item from SmartRecyclerAdapter data set
-                        smartRecyclerAdapter.removeItem(viewHolder.adapterPosition)
-                    }
-                })
-                .into(recyclerView)
+            .items(items)
+            .map(Integer::class, SimpleItemViewHolder::class)
+            .add(OnClickEventListener {
+                showToast("onClick ${it.position}")
+            })
+            .add(SwipeRemoveItemBinder(ItemTouchHelper.LEFT) {
+                // Remove item from SmartRecyclerAdapter data set
+                smartRecyclerAdapter.removeItem(it.viewHolder.adapterPosition)
+            })
+            .into(recyclerView)
     }
 
-    val showToast = { viewHolder: RecyclerView.ViewHolder, _: Direction ->
-        Toast.makeText(applicationContext, "onItemSwipeRemove @ ${viewHolder.adapterPosition}", Toast.LENGTH_SHORT).show()
-    }
-
-    class SwipeRemoveItemExtension : BasicSwipeExtension() {
-        override fun onChildDraw(canvas: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+    class SwipeRemoveItemBinder(
+        override var swipeFlags: SwipeFlags,
+        override var eventListener: (ViewEvent.OnItemSwiped) -> Unit
+    ) : BasicSwipeEventBinder(
+        eventListener = eventListener
+    ), SmartViewHolderBinder {
+        override fun onChildDraw(
+            canvas: Canvas,
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            dX: Float,
+            dY: Float,
+            actionState: Int,
+            isCurrentlyActive: Boolean
+        ) {
             val itemView = viewHolder.itemView
-            val icon = ContextCompat.getDrawable(viewHolder.itemView.context, R.drawable.ic_delete_black_24dp)
+            val icon = ContextCompat.getDrawable(
+                viewHolder.itemView.context,
+                R.drawable.ic_delete_black_24dp
+            )
             val background = ColorDrawable(Color.RED)
 
             val iconMargin = (itemView.height - icon!!.intrinsicHeight) / 2
@@ -68,16 +78,18 @@ class SwipeRemoveItemActivity : BaseSampleActivity() {
             val iconRight = itemView.right - iconMargin
 
             icon.setBounds(
-                    iconLeft,
-                    iconTop,
-                    iconRight,
-                    iconBottom)
+                iconLeft,
+                iconTop,
+                iconRight,
+                iconBottom
+            )
 
             background.setBounds(
-                    (itemView.right + dX).toInt(),
-                    itemView.top,
-                    itemView.right,
-                    itemView.bottom)
+                (itemView.right + dX).toInt(),
+                itemView.top,
+                itemView.right,
+                itemView.bottom
+            )
 
             if (dX.toInt() == 0) { // view is unSwiped
                 background.setBounds(0, 0, 0, 0)

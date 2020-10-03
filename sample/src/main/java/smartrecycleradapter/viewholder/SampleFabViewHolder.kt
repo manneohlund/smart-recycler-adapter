@@ -5,15 +5,13 @@ package smartrecycleradapter.viewholder
  * Copyright (c) All rights reserved.
  */
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import smartadapter.viewholder.SmartViewHolder
 import smartrecycleradapter.R
 
-class SampleFabViewHolder(parentView: ViewGroup) : SmartViewHolder<SampleFabViewHolder.SimpleFabItem>(
-        LayoutInflater.from(parentView.context)
-                .inflate(R.layout.efab, parentView, false)) {
+class SampleFabViewHolder(parentView: ViewGroup) :
+    SmartViewHolder<SampleFabViewHolder.SimpleFabItem>(parentView, R.layout.efab) {
 
     private val fab: ExtendedFloatingActionButton = itemView.findViewById(R.id.fabItem)
 

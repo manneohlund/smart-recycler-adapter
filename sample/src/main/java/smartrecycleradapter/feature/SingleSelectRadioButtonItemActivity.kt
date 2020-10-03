@@ -8,24 +8,27 @@ package smartrecycleradapter.feature
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_simple_item.*
-import smartadapter.Position
+import androidx.activity.viewModels
+import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.ViewEventId
-import smartadapter.ViewId
-import smartadapter.listener.OnItemClickListener
-import smartadapter.listener.OnItemSelectedListener
-import smartadapter.state.SelectionStateHolder
-import smartadapter.state.SingleSelectionStateHolder
+import smartadapter.viewevent.extension.add
+import smartadapter.viewevent.listener.OnClickEventListener
+import smartadapter.viewevent.listener.OnSingleItemCheckListener
+import smartadapter.viewevent.model.ViewEvent
+import smartadapter.viewevent.viewmodel.ViewEventViewModel
 import smartrecycleradapter.R
+import smartrecycleradapter.utils.showToast
+import smartrecycleradapter.viewholder.SimpleSelectableRadioButtonViewHolder
 
 class SingleSelectRadioButtonItemActivity : BaseSampleActivity() {
 
+    class SingleItemCheckedViewModel : ViewEventViewModel<ViewEvent, OnSingleItemCheckListener>(
+        OnSingleItemCheckListener(viewId = R.id.radioButton)
+    )
+
     lateinit var smartRecyclerAdapter: SmartRecyclerAdapter
-    lateinit var onSingleRadioButtonItemSelectedListener: OnSingleRadioButtonItemSelectedListener
-    var deleteMenuItem: MenuItem? = null
+    private val singleItemCheckedViewModel: SingleItemCheckedViewModel by viewModels()
+    private var deleteMenuItem: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,34 +37,14 @@ class SingleSelectRadioButtonItemActivity : BaseSampleActivity() {
 
         val items = (0..100).toMutableList()
 
-        onSingleRadioButtonItemSelectedListener = object : OnSingleRadioButtonItemSelectedListener {
-            override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
-                Toast.makeText(
-                    applicationContext,
-                    String.format(
-                        "Item click %d\n" +
-                                "%d of %d selected items",
-                        position,
-                        selectionStateHolder.selectedItemsCount,
-                        smartRecyclerAdapter.itemCount
-                    ),
-                    Toast.LENGTH_LONG
-                ).show()
-
-                deleteMenuItem?.isVisible =
-                    onSingleRadioButtonItemSelectedListener.selectionStateHolder.selectedItemsCount > 0
-            }
-        }
-
         smartRecyclerAdapter = SmartRecyclerAdapter
             .items(items)
             .map(Integer::class, SimpleSelectableRadioButtonViewHolder::class)
-            .addViewEventListener(onSingleRadioButtonItemSelectedListener)
-            .addViewEventListener(object : OnItemClickListener {
-                override fun onViewEvent(view: View, viewEventId: ViewEventId, position: Position) {
-                    Toast.makeText(applicationContext, "onClick $position", Toast.LENGTH_SHORT)
-                        .show()
-                }
+            .add(singleItemCheckedViewModel.observe(this) {
+                handleCheckEvent(it)
+            })
+            .add(OnClickEventListener {
+                showToast("onClick ${it.position}")
             })
             .into(recyclerView)
     }
@@ -75,20 +58,18 @@ class SingleSelectRadioButtonItemActivity : BaseSampleActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.delete -> {
-                onSingleRadioButtonItemSelectedListener.selectionStateHolder.removeSelections()
+                singleItemCheckedViewModel.viewEventListener.removeSelections()
                 item.isVisible = false
             }
         }
         return super.onOptionsItemSelected(item)
     }
-}
 
-var singleRadioButtonStateHolder = SingleSelectionStateHolder()
+    private fun handleCheckEvent(it: ViewEvent) {
+        showToast("Item click ${it.position}\n" +
+                "${singleItemCheckedViewModel.viewEventListener.selectedItemsCount} of " +
+                "${smartRecyclerAdapter.itemCount} selected items")
 
-interface OnSingleRadioButtonItemSelectedListener : OnItemSelectedListener {
-    override val selectionStateHolder: SelectionStateHolder
-        get() = singleRadioButtonStateHolder
-
-    override val viewId: ViewId
-        get() = R.id.radioButton
+        deleteMenuItem?.isVisible = singleItemCheckedViewModel.viewEventListener.selectedItemsCount > 0
+    }
 }

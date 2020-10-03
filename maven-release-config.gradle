@@ -1,16 +1,17 @@
 ext {
     BINTRAY_REPO = 'maven'
-    BINTRAY_NAME = 'smart-recycler-adapter'
+    BINTRAY_NAME = LIB_ARTIFACT_ID
 
-    LIBRARY_NAME = 'SmartRecyclerAdapter'
-    PUBLISHED_GROUP_ID = 'io.github.manneohlund'
-    ARTIFACT_ID = 'smart-recycler-adapter'
+    LIBRARY_NAME = LIB_ARTIFACT_NAME
+    PUBLISHED_GROUP_ID = PROJ_GROUP_ID
+    ARTIFACT_ID = LIB_ARTIFACT_ID
 
-    LIBRARY_VERSION = VERSION_NAME
-    LIBRARY_DESCRIPTION = 'Never code any boilerplate RecyclerAdapter again! This library will make it easy and painless to map your data item with a target ViewHolder.'
+    LIBRARY_VERSION = LIB_VERSION_NAME
+    LIBRARY_DESCRIPTION = LIB_DESCRIPTION
 
     SITE_URL = 'https://manneohlund.github.io/smart-recycler-adapter'
     GIT_URL = 'https://github.com/manneohlund/smart-recycler-adapter'
+    ISSUE_URL = 'https://github.com/manneohlund/smart-recycler-adapter/issues'
 
     DEVELOPER_ID = 'manneohlund'
     DEVELOPER_NAME = 'Manne Öhlund'
