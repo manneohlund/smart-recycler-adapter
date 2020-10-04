@@ -1,4 +1,4 @@
-package smartadapter.viewholder
+package smartadapter.viewevent.viewholder
 
 import smartadapter.viewevent.model.ViewEvent
 import smartadapter.viewevent.swipe.SwipeEventBinder

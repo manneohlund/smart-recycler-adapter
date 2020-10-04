@@ -25,7 +25,7 @@ import smartadapter.viewevent.listener.OnClickEventListener
 import smartadapter.viewevent.listener.OnCustomViewEventListener
 import smartadapter.viewevent.listener.OnLongClickEventListener
 import smartadapter.viewevent.listener.OnTouchEventListener
-import smartadapter.viewholder.CustomViewEventListenerHolder
+import smartadapter.viewevent.viewholder.CustomViewEventListenerHolder
 import smartadapter.viewholder.SmartAdapterHolder
 import smartrecycleradapter.data.MovieDataItems
 import smartrecycleradapter.extension.PreCachingLinearLayoutManager

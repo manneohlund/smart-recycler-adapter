@@ -1,4 +1,4 @@
-package smartadapter.viewholder
+package smartadapter.viewevent.viewholder
 
 /*
  * Created by Manne Öhlund on 2020-01-08.

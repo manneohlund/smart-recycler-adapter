@@ -9,8 +9,8 @@ import smartadapter.viewevent.extension.add
 import smartadapter.viewevent.listener.OnClickEventListener
 import smartadapter.viewevent.listener.OnLongClickEventListener
 import smartadapter.viewevent.model.ViewEvent
-import smartadapter.viewholder.OnItemClickEventListener
-import smartadapter.viewholder.OnItemLongClickEventListener
+import smartadapter.viewevent.viewholder.OnItemClickEventListener
+import smartadapter.viewevent.viewholder.OnItemLongClickEventListener
 import smartrecycleradapter.feature.simpleitem.SimpleItemViewHolder
 import smartrecycleradapter.utils.showToast
 

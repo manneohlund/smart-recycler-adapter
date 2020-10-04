@@ -10,7 +10,7 @@ import smartadapter.ViewId
 import smartadapter.findView
 import smartadapter.listener.OnCreateViewHolderListener
 import smartadapter.viewevent.model.ViewEvent
-import smartadapter.viewholder.OnItemTouchEventListener
+import smartadapter.viewevent.viewholder.OnItemTouchEventListener
 import smartadapter.viewholder.SmartViewHolder
 
 /**

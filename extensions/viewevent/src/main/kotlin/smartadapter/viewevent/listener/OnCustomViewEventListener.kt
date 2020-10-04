@@ -4,7 +4,7 @@ import smartadapter.SmartRecyclerAdapter
 import smartadapter.SmartViewHolderBinder
 import smartadapter.listener.OnCreateViewHolderListener
 import smartadapter.viewevent.model.ViewEvent
-import smartadapter.viewholder.CustomViewEventListenerHolder
+import smartadapter.viewevent.viewholder.CustomViewEventListenerHolder
 import smartadapter.viewholder.SmartViewHolder
 
 /**

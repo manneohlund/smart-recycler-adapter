@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.SmartViewHolderType
 import smartadapter.viewevent.model.ViewEvent
-import smartadapter.viewholder.OnItemSwipedListener
+import smartadapter.viewevent.viewholder.OnItemSwipedListener
 import smartadapter.viewholder.SmartViewHolder
 import kotlin.math.abs
 
