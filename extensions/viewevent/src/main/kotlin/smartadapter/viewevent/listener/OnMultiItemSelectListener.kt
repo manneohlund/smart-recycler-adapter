@@ -20,8 +20,8 @@ import smartadapter.listener.OnBindViewHolderListener
 import smartadapter.listener.OnCreateViewHolderListener
 import smartadapter.viewevent.model.ViewEvent
 import smartadapter.viewevent.state.SmartStateHolder
+import smartadapter.viewevent.viewholder.OnItemSelectedEventListener
 import smartadapter.viewevent.viewmodel.ViewEventViewModel
-import smartadapter.viewholder.OnItemSelectedEventListener
 import smartadapter.viewholder.SmartViewHolder
 import java.util.TreeSet
 

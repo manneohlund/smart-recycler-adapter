@@ -9,7 +9,7 @@ import smartadapter.ViewId
 import smartadapter.findView
 import smartadapter.listener.OnCreateViewHolderListener
 import smartadapter.viewevent.model.ViewEvent
-import smartadapter.viewholder.OnItemLongClickEventListener
+import smartadapter.viewevent.viewholder.OnItemLongClickEventListener
 import smartadapter.viewholder.SmartViewHolder
 
 /**
