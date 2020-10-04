@@ -17,7 +17,7 @@ import smartadapter.SmartRecyclerAdapter
 import smartadapter.viewevent.extension.add
 import smartadapter.viewevent.listener.OnCustomViewEventListener
 import smartadapter.viewevent.model.ViewEvent
-import smartadapter.viewholder.CustomViewEventListenerHolder
+import smartadapter.viewevent.viewholder.CustomViewEventListenerHolder
 import smartadapter.viewholder.SmartAdapterHolder
 import smartadapter.viewholder.SmartViewHolder
 import smartrecycleradapter.R
