@@ -4,8 +4,8 @@ ext {
     PROJ_NAME = 'SmartRecyclerAdapter'
     PROJ_GROUP_ID = 'io.github.manneohlund'
     PROJ_ARTIFACT_ID = 'smart-recycler-adapter'
-    PROJ_VERSION_CODE = 13
-    PROJ_VERSION_NAME = '5.0.0-beta02'
+    PROJ_VERSION_CODE = 14
+    PROJ_VERSION_NAME = '5.0.0-beta03'
 
     TARGET_SDK_VERSION = 28
     BUILD_TOOLS_VERSION = '29.0.2'
