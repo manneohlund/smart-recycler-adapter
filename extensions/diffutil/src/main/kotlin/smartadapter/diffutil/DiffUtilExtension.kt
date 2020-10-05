@@ -1,18 +1,21 @@
-package smartadapter.widget
+package smartadapter.diffutil
 
 /*
- * Created by Manne Öhlund on 2019-08-17.
+ * Created by Manne Öhlund on 2020-10-05.
  * Copyright (c) All rights reserved.
  */
 
 import androidx.recyclerview.widget.DiffUtil
-
-import smartadapter.viewholder.SmartAdapterHolder
+import smartadapter.SmartRecyclerAdapter
+import smartadapter.binders.SmartRecyclerAdapterExtension
 
 /**
  * Defines basic functionality of the DiffUtilExtension.
  */
-abstract class DiffUtilExtension : DiffUtil.Callback(), SmartAdapterHolder {
+abstract class DiffUtilExtension : DiffUtil.Callback(),
+    SmartRecyclerAdapterExtension {
+
+    abstract var smartRecyclerAdapter: SmartRecyclerAdapter
 
     /**
      * Sets the predicate that will be called to check if items are the same and content are the same.
@@ -26,7 +29,7 @@ abstract class DiffUtilExtension : DiffUtil.Callback(), SmartAdapterHolder {
      * Swaps the [smartadapter.SmartRecyclerAdapter] item list with new item list and animates the swap.
      * @param newList new item list
      */
-    abstract fun diffSwapList(newList: MutableList<*>)
+    abstract fun diffSwapList(newList: List<*>)
 
     /**
      * Old vs new item compare, can be typed if the [smartadapter.SmartRecyclerAdapter] only contains one type of items.
