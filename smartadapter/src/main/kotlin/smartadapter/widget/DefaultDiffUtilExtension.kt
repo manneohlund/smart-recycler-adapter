@@ -50,6 +50,7 @@ class DefaultDiffUtilExtension : DiffUtilExtension() {
             val diffResult = DiffUtil.calculateDiff(this)
             diffResult.dispatchUpdatesTo(smartRecyclerAdapter)
             smartRecyclerAdapter.setItems(newList, false)
+            smartRecyclerAdapter.updateItemCount()
         } ?: throw RuntimeException("SmartRecyclerAdapter is not set")
     }
 }
