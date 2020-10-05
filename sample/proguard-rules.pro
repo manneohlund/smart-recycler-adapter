@@ -24,6 +24,6 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keepclassmembers class **ViewHolder {
-    public <init>(**);
- }
+#-keepclassmembers class **ViewHolder {
+#    public <init>(**);
+# }
