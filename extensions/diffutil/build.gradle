@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'maven-publish'
 
 ext {
     LIB_ARTIFACT_NAME = 'SmartRecyclerAdapter DiffUtil'
@@ -59,4 +60,10 @@ dependencies {
     // Androidx
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
+}
+
+if (project.rootProject.file('local.properties').exists()) {
+    apply from: '../../maven-local-publish.gradle'
+    apply from: '../../maven-release-config.gradle'
+    apply from: '../../maven-release-script.gradle'
 }
