@@ -6,7 +6,7 @@ package smartrecycleradapter.data
  */
 
 import smartrecycleradapter.models.MovieModel
-import java.util.*
+import java.util.Random
 
 object MovieDataItems {
 

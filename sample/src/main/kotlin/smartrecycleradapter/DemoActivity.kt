@@ -335,7 +335,6 @@ class DemoActivity : AppCompatActivity() {
                 .map(MovieModel::class, SmallThumbViewHolder::class)
                 .add(OnClickEventListener(SmallThumbViewHolder::class) {
                     showToast("${it::class.java.simpleName} item: " + it.position)
-                    recentlyPlayedMoviesSmartMovieAdapter.removeItem(it.position)
                 })
                 .add(OnLongClickEventListener(SmallThumbViewHolder::class) {
                     showToast("Remove ${it::class.java.simpleName} item: " + it.position)
