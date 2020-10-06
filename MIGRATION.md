@@ -165,6 +165,42 @@ open class SimpleItemViewHolder(parentView: ViewGroup) : SmartViewHolder<Int>(
 })
 ```
 
+## Diff util
+
+#### NEW v5.0.0
+
+With smart-recycler-adapter-diffutil extension library
+
+```groovy
+dependencies {
+  implementation 'io.github.manneohlund:smart-recycler-adapter-diffutil:X.Y.Z'
+}
+```
+
+No `DiffUtilExtensionBuilder` needed anymore.
+
+```kotlin
+SmartRecyclerAdapter
+  .items(items)
+  .map(Integer::class, SimpleItemViewHolder::class)
+  .add(SimpleDiffUtilExtension(predicate))
+  .into(recyclerView)
+```
+
+#### OLD 4.X.X
+
+```kotlin
+val adapter = SmartRecyclerAdapter
+  .items(items)
+  .map(Integer::class, SimpleItemViewHolder::class)
+  .into(recyclerView)
+
+diffUtilExtension = DiffUtilExtensionBuilder().apply {
+  smartRecyclerAdapter = adapter
+  diffPredicate = predicate
+}.build()
+```
+
 # 4.X.X & 3.X.X
 
 ### ViewEvent Migration
