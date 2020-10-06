@@ -60,6 +60,17 @@ android {
         }
     }
 
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/kotlin']
+            res.srcDirs = ['src/main/res']
+        }
+        release {
+            java.srcDirs = ['src/main/kotlin']
+            res.srcDirs = ['src/main/res']
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -91,9 +102,12 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 
     // Project
-    //implementation 'io.github.manneohlund:smart-recycler-adapter:5.0.0-beta01'
-    //implementation 'io.github.manneohlund:smart-recycler-adapter-viewevent:1.0.0-alpha01'
+    // implementation 'io.github.manneohlund:smart-recycler-adapter:5.0.0-beta03'
+    // implementation 'io.github.manneohlund:smart-recycler-adapter-viewevent:1.0.0-alpha02'
+    // implementation 'io.github.manneohlund:smart-recycler-adapter-diffutil:1.0.0-alpha01'
+
     implementation project(':smartadapter')
+    implementation project(path: ':extensions:diffutil')
     implementation project(path: ':extensions:viewevent')
 
     // Androidx

@@ -6,7 +6,7 @@ package smartrecycleradapter.feature
  */
 
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_simple_item.*
+import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.SmartEndlessScrollRecyclerAdapter
 import smartrecycleradapter.feature.simpleitem.SimpleItemViewHolder
 import smartrecycleradapter.utils.runDelayed

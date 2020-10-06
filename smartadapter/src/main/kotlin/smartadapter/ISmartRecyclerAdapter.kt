@@ -6,6 +6,7 @@ package smartadapter
  */
 
 import androidx.recyclerview.widget.RecyclerView
+import smartadapter.binders.SmartRecyclerAdapterExtension
 import smartadapter.internal.mapper.ViewHolderMapper
 import smartadapter.widget.ViewTypeResolver
 import kotlin.reflect.KClass
@@ -246,4 +247,9 @@ interface ISmartRecyclerAdapter {
      * Add binder for [smartadapter.viewholder.SmartViewHolder]
      */
     fun addBinder(viewHolderBinder: SmartViewHolderBinder)
+
+    /**
+     * Add [SmartRecyclerAdapterExtension] for easy retention for extension libraries.
+     */
+    fun addExtension(extension: SmartRecyclerAdapterExtension)
 }

@@ -9,6 +9,7 @@ import android.content.Context
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import smartadapter.binders.ItemTouchBinder
+import smartadapter.binders.SmartRecyclerAdapterExtension
 import smartadapter.internal.extension.name
 import smartadapter.viewholder.SmartAdapterHolder
 import smartadapter.widget.ViewTypeResolver
@@ -24,6 +25,7 @@ class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter:
     private val viewHolderMapper = HashMap<String, SmartViewHolderType>()
     private val smartRecyclerAdapterMapper = HashMap<SmartViewHolderType, SmartRecyclerAdapter>()
     private val viewHolderBinders = mutableListOf<SmartViewHolderBinder>()
+    private val smartRecyclerAdapterExtensions = mutableMapOf<Any, SmartRecyclerAdapterExtension>()
 
     fun map(itemType: KClass<*>, viewHolderType: SmartViewHolderType): SmartAdapterBuilder {
         viewHolderMapper[itemType.name] = viewHolderType
@@ -63,6 +65,17 @@ class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter:
         return this
     }
 
+    /**
+     * Adds [SmartRecyclerAdapterExtension] to the adapter with [SmartRecyclerAdapterExtension.identifier] as key.
+     *
+     * @param extension extension
+     * @return SmartAdapterBuilder
+     */
+    fun addExtension(extension: SmartRecyclerAdapterExtension): SmartAdapterBuilder {
+        smartRecyclerAdapterExtensions[extension.identifier] = extension
+        return this
+    }
+
     @Suppress("UNCHECKED_CAST")
     fun <T> into(recyclerView: RecyclerView): T {
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper)
@@ -75,6 +88,9 @@ class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter:
             (it as? SmartAdapterHolder)?.smartRecyclerAdapter = smartRecyclerAdapter
             (it as? ItemTouchBinder<*>)?.bind(smartRecyclerAdapter, recyclerView)
         }
+        smartRecyclerAdapterExtensions.forEach {
+            smartRecyclerAdapter.addExtension(it.value)
+        }
         return smartRecyclerAdapter as T
     }
 
@@ -85,6 +101,10 @@ class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter:
         smartRecyclerAdapter.viewTypeResolver = viewTypeResolver
         viewHolderBinders.forEach {
             smartRecyclerAdapter.addBinder(it)
+            (it as? SmartAdapterHolder)?.smartRecyclerAdapter = smartRecyclerAdapter
+        }
+        smartRecyclerAdapterExtensions.forEach {
+            smartRecyclerAdapter.addExtension(it.value)
         }
         return smartRecyclerAdapter as T
     }

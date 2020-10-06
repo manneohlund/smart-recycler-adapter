@@ -7,6 +7,7 @@ package smartadapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import smartadapter.binders.SmartRecyclerAdapterExtension
 import smartadapter.internal.extension.isMutable
 import smartadapter.internal.mapper.ViewHolderMapper
 import smartadapter.listener.OnBindViewHolderListener
@@ -61,6 +62,7 @@ open class SmartRecyclerAdapter
     override var viewHolderMapper: ViewHolderMapper = ViewHolderMapper()
     override var viewTypeResolver: ViewTypeResolver? = null
     final override val viewHolderBinders = mutableListOf<SmartViewHolderBinder>()
+    val smartRecyclerAdapterExtensions = mutableMapOf<Any, SmartRecyclerAdapterExtension>()
 
     init {
         setItems(items, false)
@@ -299,6 +301,11 @@ open class SmartRecyclerAdapter
 
     override fun addBinder(viewHolderBinder: SmartViewHolderBinder) {
         viewHolderBinders.add(viewHolderBinder)
+    }
+
+    override fun addExtension(extension: SmartRecyclerAdapterExtension) {
+        extension.bind(this)
+        smartRecyclerAdapterExtensions[extension.identifier] = extension
     }
 
     companion object {

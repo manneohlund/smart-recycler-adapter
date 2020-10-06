@@ -1,2 +1,3 @@
+include ':extensions:diffutil'
 include ':extensions:viewevent'
 include ':sample', ':smartadapter'

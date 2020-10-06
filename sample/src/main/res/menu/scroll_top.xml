@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/scroll_top"
+        android:icon="@drawable/ic_baseline_vertical_align_top_24"
+        android:title="Scroll to top"
+        app:showAsAction="always" />
+</menu>

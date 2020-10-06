@@ -9,7 +9,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_simple_item.*
+import kotlinx.android.synthetic.main.activity_simple_item.toolbar
 import smartrecycleradapter.R
 
 @SuppressLint("Registered")
