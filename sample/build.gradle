@@ -107,13 +107,15 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 
     // Project
-    // implementation 'io.github.manneohlund:smart-recycler-adapter:5.0.0-beta03'
-    // implementation 'io.github.manneohlund:smart-recycler-adapter-viewevent:1.0.0-alpha02'
-    // implementation 'io.github.manneohlund:smart-recycler-adapter-diffutil:1.0.0-alpha01'
+    //implementation 'io.github.manneohlund:smart-recycler-adapter:5.0.0-beta03'
+    //implementation 'io.github.manneohlund:smart-recycler-adapter-viewevent:1.0.0-alpha02'
+    //implementation 'io.github.manneohlund:smart-recycler-adapter-diffutil:1.0.0-alpha01'
+    //implementation 'io.github.manneohlund:smart-recycler-adapter-nestedadapter:1.0.0-alpha01'
 
     implementation project(':smartadapter')
     implementation project(path: ':extensions:diffutil')
     implementation project(path: ':extensions:viewevent')
+    implementation project(path: ':extensions:nestedadapter')
 
     // Androidx
     implementation "androidx.annotation:annotation:$annotation_version"
@@ -128,4 +130,5 @@ dependencies {
 
     // Other
     implementation 'com.github.bumptech.glide:glide:4.9.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
 }

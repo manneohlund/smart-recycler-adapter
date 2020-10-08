@@ -14,21 +14,21 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import smartadapter.viewholder.SmartViewHolder
 import smartrecycleradapter.R
-import smartrecycleradapter.models.MovieBannerModel
+import smartrecycleradapter.models.MovieCategory
 import smartrecycleradapter.utils.displayWidth
 
 class BannerViewHolder(parentView: ViewGroup) :
-    SmartViewHolder<MovieBannerModel>(parentView, R.layout.banner_item) {
+    SmartViewHolder<MovieCategory>(parentView, R.layout.banner_item) {
 
     private val titleTextView: TextView = itemView.findViewById(R.id.title)
     private val imageView: ImageView = itemView.findViewById(R.id.imageView)
 
     private val requestOption = RequestOptions()
-            .error(R.drawable.ic_broken_image_black_48dp)
-            .override(imageView.context.displayWidth, imageView.context.displayWidth)
-            .centerInside()
+        .error(R.drawable.ic_broken_image_black_48dp)
+        .override(imageView.context.displayWidth, imageView.context.displayWidth)
+        .centerInside()
 
-    override fun bind(movie: MovieBannerModel) {
+    override fun bind(movie: MovieCategory) {
         titleTextView.text = movie.title
         when (movie.title) {
             "" -> titleTextView.visibility = GONE
@@ -36,8 +36,8 @@ class BannerViewHolder(parentView: ViewGroup) :
         }
 
         Glide.with(imageView)
-                .load(movie.iconUrl)
-                .apply(requestOption)
-                .into(imageView)
+            .load(movie.items.random().iconUrl)
+            .apply(requestOption)
+            .into(imageView)
     }
 }

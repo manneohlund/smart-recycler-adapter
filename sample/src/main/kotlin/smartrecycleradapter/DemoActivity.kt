@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import smartadapter.Position
 import smartadapter.SmartEndlessScrollRecyclerAdapter
 import smartadapter.SmartRecyclerAdapter
+import smartadapter.nestedadapter.SmartNestedAdapterBinder
 import smartadapter.viewevent.extension.add
 import smartadapter.viewevent.listener.OnClickEventListener
 import smartadapter.viewevent.listener.OnCustomViewEventListener
@@ -27,7 +28,6 @@ import smartadapter.viewevent.listener.OnLongClickEventListener
 import smartadapter.viewevent.listener.OnTouchEventListener
 import smartadapter.viewevent.viewholder.CustomViewEventListenerHolder
 import smartadapter.viewholder.SmartAdapterHolder
-import smartrecycleradapter.data.MovieDataItems
 import smartrecycleradapter.extension.PreCachingLinearLayoutManager
 import smartrecycleradapter.feature.CustomViewEventActivity
 import smartrecycleradapter.feature.DiffUtilActivity
@@ -48,17 +48,11 @@ import smartrecycleradapter.feature.SimpleItemOnClickOnLongClickActivity
 import smartrecycleradapter.feature.SingleExpandableItemActivity
 import smartrecycleradapter.feature.SingleSelectRadioButtonItemActivity
 import smartrecycleradapter.feature.SwipeRemoveItemActivity
-import smartrecycleradapter.models.ActionMoviesModel
-import smartrecycleradapter.models.AdventureMoviesModel
-import smartrecycleradapter.models.AnimatedMoviesModel
-import smartrecycleradapter.models.ComingSoonMoviesModel
 import smartrecycleradapter.models.CopyrightModel
-import smartrecycleradapter.models.MovieBannerModel
+import smartrecycleradapter.models.MovieCategory
+import smartrecycleradapter.models.MovieData
 import smartrecycleradapter.models.MovieModel
-import smartrecycleradapter.models.MoviePosterModel
-import smartrecycleradapter.models.MyWatchListModel
-import smartrecycleradapter.models.RecentlyPlayedMoviesModel
-import smartrecycleradapter.models.SciFiMoviesModel
+import smartrecycleradapter.utils.AssetsUtils
 import smartrecycleradapter.viewholder.ActionMoviesViewHolder
 import smartrecycleradapter.viewholder.AdventureMoviesViewHolder
 import smartrecycleradapter.viewholder.AnimatedMoviesViewHolder
@@ -68,6 +62,7 @@ import smartrecycleradapter.viewholder.CopyrightViewHolder
 import smartrecycleradapter.viewholder.HeaderViewHolder
 import smartrecycleradapter.viewholder.LargeThumbViewHolder
 import smartrecycleradapter.viewholder.MyWatchListViewHolder
+import smartrecycleradapter.viewholder.NestedRecyclerViewHolder
 import smartrecycleradapter.viewholder.PosterViewHolder
 import smartrecycleradapter.viewholder.RecentlyPlayedMoviesViewHolder
 import smartrecycleradapter.viewholder.SampleFabViewHolder
@@ -79,15 +74,15 @@ import kotlin.reflect.KClass
 
 class DemoActivity : AppCompatActivity() {
 
+    private val movieData: MovieData by lazy {
+        AssetsUtils.loadStyleFromAssets<MovieData>(this, "main-movie-data.json")
+    }
+    private val movieBannersData: MovieData  by lazy {
+        AssetsUtils.loadStyleFromAssets<MovieData>(this, "banner-movie-data.json")
+    }
+
     internal lateinit var recyclerView: RecyclerView
     private lateinit var mainSmartMovieAdapter: SmartEndlessScrollRecyclerAdapter
-    private lateinit var comingSoonSmartMovieAdapter: SmartEndlessScrollRecyclerAdapter
-    private lateinit var myWatchListSmartMovieAdapter: SmartRecyclerAdapter
-    private lateinit var actionMoviesSmartMovieAdapter: SmartRecyclerAdapter
-    private lateinit var adventuresMoviesSmartMovieAdapter: SmartRecyclerAdapter
-    private lateinit var animatedMoviesSmartMovieAdapter: SmartRecyclerAdapter
-    private lateinit var sciFiMoviesSmartMovieAdapter: SmartRecyclerAdapter
-    private lateinit var recentlyPlayedMoviesSmartMovieAdapter: SmartRecyclerAdapter
     private lateinit var dialogAdapter: SmartRecyclerAdapter
 
     private lateinit var moreSamplesDialog: AlertDialog
@@ -100,60 +95,102 @@ class DemoActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.recycler_view)
 
-        initNestedSmartRecyclerAdapters()
         initSmartRecyclerAdapter()
         initMoreDemosButton()
     }
 
     private fun initSmartRecyclerAdapter() {
-        val items = mutableListOf(
-            MoviePosterModel(MovieDataItems.randomPoster),
-            SampleFabViewHolder.SimpleFabItem(
+        val items = movieData.categories as MutableList<Any>
+        items.add(
+            1, SampleFabViewHolder.SimpleFabItem(
                 R.drawable.ic_widgets_black_24dp,
                 "More samples"
-            ),
-            ComingSoonMoviesModel("Coming soon"),
-            MyWatchListModel("My watch list"),
-            MovieBannerModel("Recommended", MovieDataItems.randomBanner),
-            ActionMoviesModel("Action"),
-            AdventureMoviesModel("Adventure"),
-            MovieBannerModel("Trending", MovieDataItems.randomBanner),
-            AnimatedMoviesModel("Animated"),
-            SciFiMoviesModel("Sci-Fi"),
-            MovieBannerModel("Promotion", MovieDataItems.randomBanner),
-            RecentlyPlayedMoviesModel("Recently played"),
+            )
+        )
+        items.add(
             CopyrightModel(
-                String.format(
-                    "SmartRecyclerAdapter v%s\n\nDeveloped by Manne Öhlund",
-                    BuildConfig.VERSION_NAME
-                )
+                "SmartRecyclerAdapter v%s\n\nDeveloped by Manne Öhlund"
+                    .format(BuildConfig.VERSION_NAME)
             )
         )
 
         mainSmartMovieAdapter = SmartEndlessScrollRecyclerAdapter
             .items(items)
-            .map(MoviePosterModel::class, PosterViewHolder::class)
+            .setViewTypeResolver { item, position ->
+                when(item) {
+                    is MovieCategory -> when(item.type) {
+                        "poster" -> PosterViewHolder::class
+                        "movie" -> when(item.id) {
+                            "coming-soon" -> ComingSoonMoviesViewHolder::class
+                            "watch-list" -> MyWatchListViewHolder::class
+                            "action" -> ActionMoviesViewHolder::class
+                            "adventure" -> AdventureMoviesViewHolder::class
+                            "anim" -> AnimatedMoviesViewHolder::class
+                            "sci-fi" -> SciFiMoviesViewHolder::class
+                            "recent" -> RecentlyPlayedMoviesViewHolder::class
+                            else -> null
+                        }
+                        "banner" -> BannerViewHolder::class
+                        else -> null
+                    }
+                    else -> null
+                }
+            }
             .map(SampleFabViewHolder.SimpleFabItem::class, SampleFabViewHolder::class)
-            .map(MovieBannerModel::class, BannerViewHolder::class)
-            .map(ComingSoonMoviesModel::class, ComingSoonMoviesViewHolder::class)
-            .map(MyWatchListModel::class, MyWatchListViewHolder::class)
-            .map(ActionMoviesModel::class, ActionMoviesViewHolder::class)
-            .map(AdventureMoviesModel::class, AdventureMoviesViewHolder::class)
-            .map(AnimatedMoviesModel::class, AnimatedMoviesViewHolder::class)
-            .map(SciFiMoviesModel::class, SciFiMoviesViewHolder::class)
-            .map(RecentlyPlayedMoviesModel::class, RecentlyPlayedMoviesViewHolder::class)
             .map(CopyrightModel::class, CopyrightViewHolder::class)
 
-            // Map nested SmartRecyclerAdapter
-            .map(ComingSoonMoviesViewHolder::class, comingSoonSmartMovieAdapter)
-            .map(MyWatchListViewHolder::class, myWatchListSmartMovieAdapter)
-            .map(ActionMoviesViewHolder::class, actionMoviesSmartMovieAdapter)
-            .map(AdventureMoviesViewHolder::class, adventuresMoviesSmartMovieAdapter)
-            .map(AnimatedMoviesViewHolder::class, animatedMoviesSmartMovieAdapter)
-            .map(SciFiMoviesViewHolder::class, sciFiMoviesSmartMovieAdapter)
-            .map(RecentlyPlayedMoviesViewHolder::class, recentlyPlayedMoviesSmartMovieAdapter)
-
             .setLayoutManager(PreCachingLinearLayoutManager.getInstance(this))
+
+            .add(
+                SmartNestedAdapterBinder(
+                    viewHolderType = NestedRecyclerViewHolder::class,
+                    smartRecyclerAdapterBuilder = SmartRecyclerAdapter.empty()
+                        .setViewTypeResolver { item, position ->
+                            when (item) {
+                                is MovieModel -> {
+                                    when (item.size) {
+                                        MovieModel.LARGE -> LargeThumbViewHolder::class
+                                        MovieModel.SMALL -> SmallThumbViewHolder::class
+                                        else -> ThumbViewHolder::class
+                                    }
+                                }
+                                else -> null
+                            }
+                        }
+                        .add(OnClickEventListener {
+                            showToast(
+                                "${it.adapter::class.java.simpleName}\n%s \nindex %d",
+                                getMovieTitle(it.adapter, it.position),
+                                it.position
+                            )
+                        })
+                )
+            )
+            .add(
+                SmartNestedAdapterBinder(
+                    viewHolderType = ComingSoonMoviesViewHolder::class,
+                    smartRecyclerAdapterBuilder = SmartEndlessScrollRecyclerAdapter.empty()
+                        .setViewTypeResolver { item, position ->
+                            when (item) {
+                                is MovieModel -> {
+                                    when (item.size) {
+                                        MovieModel.LARGE -> LargeThumbViewHolder::class
+                                        MovieModel.SMALL -> SmallThumbViewHolder::class
+                                        else -> ThumbViewHolder::class
+                                    }
+                                }
+                                else -> null
+                            }
+                        }
+                        .add(OnClickEventListener {
+                            showToast(
+                                "${it.adapter::class.java.simpleName}\n%s \nindex %d",
+                                getMovieTitle(it.adapter, it.position),
+                                it.position
+                            )
+                        })
+                )
+            )
 
             /** ViewHolder must implement [CustomViewEventListenerHolder] & [SmartAdapterHolder] */
             .add(OnCustomViewEventListener{
@@ -173,10 +210,7 @@ class DemoActivity : AppCompatActivity() {
                 }
             })
             .add(OnClickEventListener(PosterViewHolder::class) {
-                mainSmartMovieAdapter.replaceItem(
-                    0,
-                    MoviePosterModel(MovieDataItems.randomPoster)
-                )
+                mainSmartMovieAdapter.smartNotifyItemChanged(0)
             })
             .add(OnClickEventListener(PosterViewHolder::class, R.id.playButton) {
                 showToast("PLAY")
@@ -217,130 +251,11 @@ class DemoActivity : AppCompatActivity() {
             Handler().postDelayed({
                 mainSmartMovieAdapter.addItem(
                     mainSmartMovieAdapter.itemCount - indexBeforeCopyright,
-                    MovieBannerModel("More items loaded", MovieDataItems.randomBanner)
+                    movieBannersData.categories.first()
                 )
                 loadMoreViewHolder.toggleLoading(false)
             }, 800)
         }
-    }
-
-    private fun initNestedSmartRecyclerAdapters() {
-        comingSoonSmartMovieAdapter =
-            SmartEndlessScrollRecyclerAdapter.items(MovieDataItems.comingSoonItems)
-                .map(MovieModel::class, LargeThumbViewHolder::class)
-                .add(OnClickEventListener(LargeThumbViewHolder::class) {
-                    showToast(
-                        "Coming soon \n%s \n%s index: %d",
-                        getMovieTitle(comingSoonSmartMovieAdapter, it.position),
-                        it::class.java.simpleName,
-                        it.position
-                    )
-                })
-                .add(OnLongClickEventListener(LargeThumbViewHolder::class) {
-                    showToast(
-                        "Add \n%s \nto My watch list",
-                        getMovieTitle(comingSoonSmartMovieAdapter, it.position)
-                    )
-                    myWatchListSmartMovieAdapter.addItem(
-                        1,
-                        comingSoonSmartMovieAdapter.getItem(it.position)
-                    )
-                })
-                .create()
-
-        comingSoonSmartMovieAdapter.autoLoadMoreEnabled = true
-        // Set custom load more view
-        comingSoonSmartMovieAdapter.loadMoreLayoutResource = R.layout.custom_loadmore_view
-
-        // Pagination ends after 3 loads
-        comingSoonSmartMovieAdapter.onLoadMoreListener = {
-            Handler().postDelayed({
-                comingSoonSmartMovieAdapter.addItems(
-                    comingSoonSmartMovieAdapter.itemCount - 1,
-                    MovieDataItems.loadMoreItems
-                )
-                if (moreItemsLoadedCount++ == 2)
-                    comingSoonSmartMovieAdapter.isEndlessScrollEnabled = false
-            }, 1000)
-        }
-
-        myWatchListSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.myWatchListItems)
-            .map(MovieModel::class, ThumbViewHolder::class)
-            .add(OnClickEventListener(ThumbViewHolder::class) {
-                showToast(
-                    "My watch list \n%s \n%s index: %d",
-                    getMovieTitle(myWatchListSmartMovieAdapter, it.position),
-                    it::class.java.simpleName,
-                    it.position
-                )
-            })
-            .add(OnLongClickEventListener(ThumbViewHolder::class) {
-                showToast("Remove ${it::class.java.simpleName} item: " + it.position)
-                myWatchListSmartMovieAdapter.removeItem(it.position)
-            })
-            .create()
-
-        actionMoviesSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.nestedActionItems)
-            .map(MovieModel::class, ThumbViewHolder::class)
-            .add(OnClickEventListener(ThumbViewHolder::class) {
-                showToast(
-                    "Action \n%s \n%s index: %d",
-                    getMovieTitle(actionMoviesSmartMovieAdapter, it.position),
-                    it::class.java.simpleName,
-                    it.position
-                )
-            })
-            .create()
-
-        adventuresMoviesSmartMovieAdapter =
-            SmartRecyclerAdapter.items(MovieDataItems.nestedAdventureItems)
-                .map(MovieModel::class, ThumbViewHolder::class)
-                .add(OnClickEventListener(ThumbViewHolder::class) {
-                    showToast(
-                        "Adventure \n%s \n%s index: %d",
-                        getMovieTitle(adventuresMoviesSmartMovieAdapter, it.position),
-                        it::class.java.simpleName,
-                        it.position
-                    )
-                })
-                .create()
-
-        animatedMoviesSmartMovieAdapter =
-            SmartRecyclerAdapter.items(MovieDataItems.nestedAnimatedItems)
-                .map(MovieModel::class, ThumbViewHolder::class)
-                .add(OnClickEventListener(ThumbViewHolder::class) {
-                    showToast(
-                        "Animated \n%s \n%s index: %d",
-                        getMovieTitle(adventuresMoviesSmartMovieAdapter, it.position),
-                        it::class.java.simpleName,
-                        it.position
-                    )
-                })
-                .create()
-
-        sciFiMoviesSmartMovieAdapter = SmartRecyclerAdapter.items(MovieDataItems.nestedSciFiItems)
-            .map(MovieModel::class, ThumbViewHolder::class)
-            .add(OnClickEventListener(ThumbViewHolder::class) {
-                showToast(
-                    "Sci-Fi \n%s \n%s index: %d",
-                    getMovieTitle(adventuresMoviesSmartMovieAdapter, it.position),
-                    it::class.java.simpleName,
-                    it.position
-                )
-            })
-            .create()
-
-        recentlyPlayedMoviesSmartMovieAdapter =
-            SmartRecyclerAdapter.items(MovieDataItems.nestedRecentViewedItems)
-                .map(MovieModel::class, SmallThumbViewHolder::class)
-                .add(OnClickEventListener(SmallThumbViewHolder::class) {
-                    showToast("${it::class.java.simpleName} item: " + it.position)
-                })
-                .add(OnLongClickEventListener(SmallThumbViewHolder::class) {
-                    showToast("Remove ${it::class.java.simpleName} item: " + it.position)
-                    recentlyPlayedMoviesSmartMovieAdapter.removeItem(it.position)
-                })
-                .create()
     }
 
     @SuppressLint("InflateParams")

@@ -1,48 +1,65 @@
 package smartrecycleradapter.models
 
-import smartrecycleradapter.data.MovieDataItems.BANNER_BASE_URL
-import smartrecycleradapter.data.MovieDataItems.POSTER_BASE_URL
-import smartrecycleradapter.data.MovieDataItems.THUMBS_BASE_URL
+import com.google.gson.annotations.SerializedName
+import smartadapter.nestedadapter.SmartNestedItem
 
 /*
  * Created by Manne Öhlund on 2019-06-22.
  * Copyright (c) All rights reserved.
  */
 
-class ComingSoonMoviesModel(title: String) : NestedRecyclerViewModel(title)
+data class MovieData(
+    @SerializedName("categories")
+    val categories: MutableList<MovieCategory>
+)
 
-class MyWatchListModel(title: String) : NestedRecyclerViewModel(title)
-
-class ActionMoviesModel(title: String) : NestedRecyclerViewModel(title)
-
-class AdventureMoviesModel(title: String) : NestedRecyclerViewModel(title)
-
-class AnimatedMoviesModel(title: String) : NestedRecyclerViewModel(title)
-
-class SciFiMoviesModel(title: String) : NestedRecyclerViewModel(title)
-
-class RecentlyPlayedMoviesModel(title: String) : NestedRecyclerViewModel(title)
-
-open class NestedRecyclerViewModel(var title: String) {
+data class MovieCategory(
+    @SerializedName("id")
+    val id: String,
+    @SerializedName("title")
+    val title: String,
+    @SerializedName("type")
+    val type: String,
+    @SerializedName("items")
+    override var items: MutableList<MovieModel>
+) : SmartNestedItem<MovieModel> {
 
     override fun toString(): String {
         return title
     }
 }
 
-class MoviePosterModel(icon: String) : MovieModel("", icon) {
-    override val iconUrl: String
-        get() = "$POSTER_BASE_URL$icon.jpg"
-}
+data class MovieModel(
+    @SerializedName("title")
+    val title: String,
+    @SerializedName("icon")
+    internal val icon: String,
+    @SerializedName("category")
+    val category: String,
+    @SerializedName("size")
+    val size: Int = MEDIUM
+) {
+    val iconUrl: String
+        get() = when (size) {
+            POSTER -> "$POSTER_BASE_URL$icon.jpg"
+            BANNER -> "$BANNER_BASE_URL$icon.jpg"
+            else -> "$THUMBS_BASE_URL$icon.jpg"
+        }
 
-class MovieBannerModel(title: String, icon: String) : MovieModel(title, icon) {
-    override val iconUrl: String
-        get() = "$BANNER_BASE_URL$icon.jpg"
-}
+    companion object {
+        const val POSTER = 4
+        const val BANNER = 3
+        const val LARGE = 2
+        const val MEDIUM = 1
+        const val SMALL = 0
 
-open class MovieModel(val title: String, internal val icon: String) {
-    open val iconUrl: String
-        get() = "$THUMBS_BASE_URL$icon.jpg"
+        const val POSTER_BASE_URL =
+            "https://raw.githubusercontent.com/manneohlund/smart-recycler-adapter-resources/master/posters/"
+        const val BANNER_BASE_URL =
+            "https://raw.githubusercontent.com/manneohlund/smart-recycler-adapter-resources/master/banners/"
+        const val THUMBS_BASE_URL =
+            "https://raw.githubusercontent.com/manneohlund/smart-recycler-adapter-resources/master/thumbs/"
+    }
 }
 
 class CopyrightModel(private var summary: String) {

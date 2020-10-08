@@ -9,9 +9,10 @@ import smartadapter.SmartRecyclerAdapter
 import smartadapter.viewevent.dragdrop.AutoDragAndDropBinder
 import smartadapter.viewevent.extension.add
 import smartadapter.viewevent.listener.OnClickEventListener
-import smartrecycleradapter.data.MovieDataItems
 import smartrecycleradapter.extension.GridAutoLayoutManager
+import smartrecycleradapter.models.MovieData
 import smartrecycleradapter.models.MovieModel
+import smartrecycleradapter.utils.AssetsUtils
 import smartrecycleradapter.utils.showToast
 import smartrecycleradapter.viewholder.HeaderViewHolder
 import smartrecycleradapter.viewholder.ThumbViewHolder
@@ -22,6 +23,10 @@ import smartrecycleradapter.viewholder.ThumbViewHolder
  */
 
 class GridActivity : BaseSampleActivity() {
+
+    private val movieData: MovieData by lazy {
+        AssetsUtils.loadStyleFromAssets<MovieData>(this, "main-movie-data.json")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,10 +42,18 @@ class GridActivity : BaseSampleActivity() {
 
         val smartAdapter: SmartRecyclerAdapter = SmartRecyclerAdapter.empty()
             .map(String::class, HeaderViewHolder::class)
-            .map(ComingSoonMovieModel::class, ComingSoonThumbViewHolder::class)
-            .map(ActionMovieModel::class, ActionThumbViewHolder::class)
-            .map(AnimatedMovieModel::class, AnimateThumbViewHolder::class)
-            .map(SciFiMovieModel::class, SciFiThumbViewHolder::class)
+            .setViewTypeResolver { item, position ->
+                when(item) {
+                    is MovieModel -> when(item.category) {
+                        "coming-soon" -> ComingSoonThumbViewHolder::class
+                        "action" -> ActionThumbViewHolder::class
+                        "anim" -> AnimateThumbViewHolder::class
+                        "sci-fi" -> SciFiThumbViewHolder::class
+                        else -> null
+                    }
+                    else -> null
+                }
+            }
             .setLayoutManager(gridAutoLayoutManager)
             .add(OnClickEventListener(ThumbViewHolder::class) {
                 showToast("Movie ${it.position}")
@@ -63,27 +76,14 @@ class GridActivity : BaseSampleActivity() {
 
         // Set adapter data
         smartAdapter.addItem("Coming soon")
-        smartAdapter.addItems(MovieDataItems.comingSoonItems.map {
-            ComingSoonMovieModel(it.title, it.icon)
-        })
+        smartAdapter.addItems(movieData.categories.find { it.id == "coming-soon" }!!.items)
         smartAdapter.addItem("Action")
-        smartAdapter.addItems(MovieDataItems.nestedActionItems.map {
-            ActionMovieModel(it.title, it.icon)
-        })
+        smartAdapter.addItems(movieData.categories.find { it.id == "action" }!!.items)
         smartAdapter.addItem("Animated")
-        smartAdapter.addItems(MovieDataItems.nestedAnimatedItems.map {
-            AnimatedMovieModel(it.title, it.icon)
-        })
+        smartAdapter.addItems(movieData.categories.find { it.id == "anim" }!!.items)
         smartAdapter.addItem("Sci-Fi")
-        smartAdapter.addItems(MovieDataItems.nestedSciFiItems.map {
-            SciFiMovieModel(it.title, it.icon)
-        })
+        smartAdapter.addItems(movieData.categories.find { it.id == "sci-fi" }!!.items)
     }
-
-    class ComingSoonMovieModel(title: String, icon: String) : MovieModel(title, icon)
-    class ActionMovieModel(title: String, icon: String) : MovieModel(title, icon)
-    class AnimatedMovieModel(title: String, icon: String) : MovieModel(title, icon)
-    class SciFiMovieModel(title: String, icon: String) : MovieModel(title, icon)
 
     class ComingSoonThumbViewHolder(parentView: ViewGroup) : ThumbViewHolder(parentView)
     class ActionThumbViewHolder(parentView: ViewGroup) : ThumbViewHolder(parentView)

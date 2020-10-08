@@ -13,13 +13,26 @@ import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.rule.ActivityTestRule
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
-import smartrecycleradapter.models.*
-import smartrecycleradapter.viewholder.*
+import smartrecycleradapter.models.CopyrightModel
+import smartrecycleradapter.models.MovieCategory
+import smartrecycleradapter.viewholder.ActionMoviesViewHolder
+import smartrecycleradapter.viewholder.AdventureMoviesViewHolder
+import smartrecycleradapter.viewholder.AnimatedMoviesViewHolder
+import smartrecycleradapter.viewholder.BannerViewHolder
+import smartrecycleradapter.viewholder.ComingSoonMoviesViewHolder
+import smartrecycleradapter.viewholder.CopyrightViewHolder
+import smartrecycleradapter.viewholder.MyWatchListViewHolder
+import smartrecycleradapter.viewholder.PosterViewHolder
+import smartrecycleradapter.viewholder.RecentlyPlayedMoviesViewHolder
+import smartrecycleradapter.viewholder.SampleFabViewHolder
+import smartrecycleradapter.viewholder.SciFiMoviesViewHolder
 import kotlin.reflect.KClass
 
 class DemoActivityTest {
@@ -31,15 +44,16 @@ class DemoActivityTest {
     fun testSmartRecyclerAdapter_getItems() {
         val adapter = rule.activity.recyclerView.adapter as SmartRecyclerAdapter
         assertNotNull("Check SmartRecyclerAdapter is not null", adapter)
-        assertEquals("MoviePosterModel count", 1, adapter.getItems(MoviePosterModel::class).size.toLong())
-        assertEquals("MovieBannerModel count", 3, adapter.getItems(MovieBannerModel::class).size.toLong())
-        assertEquals("ComingSoonMoviesModel count", 1, adapter.getItems(ComingSoonMoviesModel::class).size.toLong())
-        assertEquals("MyWatchListModel count", 1, adapter.getItems(MyWatchListModel::class).size.toLong())
-        assertEquals("ActionMoviesModel count", 1, adapter.getItems(ActionMoviesModel::class).size.toLong())
-        assertEquals("AdventureMoviesModel count", 1, adapter.getItems(AdventureMoviesModel::class).size.toLong())
-        assertEquals("AnimatedMoviesModel count", 1, adapter.getItems(AnimatedMoviesModel::class).size.toLong())
-        assertEquals("SciFiMoviesModel count", 1, adapter.getItems(SciFiMoviesModel::class).size.toLong())
-        assertEquals("RecentlyPlayedMoviesModel count", 1, adapter.getItems(RecentlyPlayedMoviesModel::class).size.toLong())
+        val moviewCategories = adapter.getItems(MovieCategory::class)
+        assertEquals("MoviePosterModel count", 1, moviewCategories.filter { it.type == "poster" }.size)
+        assertEquals("MovieBannerModel count", 3, moviewCategories.filter { it.type == "banner" }.size)
+        assertEquals("ComingSoonMoviesModel count", 1, moviewCategories.filter { it.id == "coming-soon" }.size)
+        assertEquals("MyWatchListModel count", 1, moviewCategories.filter { it.id == "watch-list" }.size)
+        assertEquals("ActionMoviesModel count", 1, moviewCategories.filter { it.id == "action" }.size)
+        assertEquals("AdventureMoviesModel count", 1, moviewCategories.filter { it.id == "adventure" }.size)
+        assertEquals("AnimatedMoviesModel count", 1, moviewCategories.filter { it.id == "anim" }.size)
+        assertEquals("SciFiMoviesModel count", 1, moviewCategories.filter { it.id == "sci-fi" }.size)
+        assertEquals("RecentlyPlayedMoviesModel count", 1, moviewCategories.filter { it.id == "recent" }.size)
         assertEquals("CopyrightModel count", 1, adapter.getItems(CopyrightModel::class).size.toLong())
     }
 
