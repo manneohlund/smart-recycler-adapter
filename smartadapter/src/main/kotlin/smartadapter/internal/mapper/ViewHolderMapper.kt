@@ -29,6 +29,7 @@ class ViewHolderMapper {
     private val viewTypeMapper = SparseArray<SmartViewHolderType>()
     private val viewHolderConstructorMapper = ViewHolderConstructorMapper()
     private var dataTypeViewHolderMapper = HashMap<String, SmartViewHolderType>()
+    @Deprecated("Use nested adapter")
     private var smartRecyclerAdapterMapper = HashMap<SmartViewHolderType, SmartRecyclerAdapter>()
 
     /**
@@ -84,6 +85,7 @@ class ViewHolderMapper {
             throw RuntimeException(String.format("Could not invoke constructor for '%s', '%s'", smartViewHolderClass!!.toString(), e.message), e)
         }
 
+        // TODO Remove this
         val smartRecyclerAdapter = smartRecyclerAdapterMapper[viewHolder::class]
         if (viewHolder is SmartAdapterHolder && smartRecyclerAdapter != null) {
             viewHolder.smartRecyclerAdapter = smartRecyclerAdapter
@@ -102,6 +104,7 @@ class ViewHolderMapper {
         viewHolderConstructorMapper.add(dataTypeViewHolderMapper.values)
     }
 
+    @Deprecated("Use nested adapter")
     fun setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper: HashMap<SmartViewHolderType, SmartRecyclerAdapter>) {
         this.smartRecyclerAdapterMapper = smartRecyclerAdapterMapper
     }
