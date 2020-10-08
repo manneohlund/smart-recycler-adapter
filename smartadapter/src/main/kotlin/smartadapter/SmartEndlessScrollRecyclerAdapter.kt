@@ -8,7 +8,6 @@ package smartadapter
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import io.github.manneohlund.smartrecycleradapter.R
-import smartadapter.internal.extension.isMutable
 import smartadapter.listener.OnLoadMoreListener
 import smartadapter.viewholder.LoadMoreViewHolder
 import smartadapter.viewholder.SmartViewHolder
@@ -82,16 +81,12 @@ class SmartEndlessScrollRecyclerAdapter(items: MutableList<Any>) : SmartRecycler
          * Builder of [SmartRecyclerAdapter] for easy implementation.
          * @return SmartAdapterBuilder
          */
-        fun items(items: List<*>): SmartAdapterBuilder =
-            SmartAdapterBuilder(SmartEndlessScrollRecyclerAdapter(items.let {
-                (if (it.isMutable()) it else it.toMutableList()) as MutableList<Any>
-            }))
+        fun items(items: List<Any>): SmartAdapterBuilder = SmartEndlessScrollAdapterBuilder().setItems(items)
 
         /**
          * Builder of [SmartRecyclerAdapter] for easy implementation.
          * @return SmartAdapterBuilder
          */
-        fun empty(): SmartAdapterBuilder =
-            SmartAdapterBuilder(SmartEndlessScrollRecyclerAdapter(mutableListOf()))
+        fun empty(): SmartAdapterBuilder = SmartEndlessScrollAdapterBuilder()
     }
 }

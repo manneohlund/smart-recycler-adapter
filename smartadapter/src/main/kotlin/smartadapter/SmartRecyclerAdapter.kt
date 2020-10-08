@@ -314,16 +314,12 @@ open class SmartRecyclerAdapter
          * Builder of [SmartRecyclerAdapter] for easy implementation.
          * @return SmartAdapterBuilder
          */
-        fun items(items: List<*>): SmartAdapterBuilder =
-            SmartAdapterBuilder(SmartRecyclerAdapter(items.let {
-                (if (it.isMutable()) it else it.toMutableList()) as MutableList<Any>
-            }))
+        fun items(items: List<Any>): SmartAdapterBuilder = SmartAdapterBuilder().setItems(items)
 
         /**
          * Builder of [SmartRecyclerAdapter] for easy implementation.
          * @return SmartAdapterBuilder
          */
-        fun empty(): SmartAdapterBuilder =
-                SmartAdapterBuilder(SmartRecyclerAdapter(mutableListOf()))
+        fun empty(): SmartAdapterBuilder = SmartAdapterBuilder()
     }
 }
