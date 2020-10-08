@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/extensions/diffutil/diffutil.iml" filepath="$PROJECT_DIR$/.idea/modules/extensions/diffutil/diffutil.iml" group="smart-recycler-adapter/extensions/diffutil" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/extensions/extensions.iml" filepath="$PROJECT_DIR$/.idea/modules/extensions/extensions.iml" group="smart-recycler-adapter/extensions" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/extensions/nestedadapter/nestedadapter.iml" filepath="$PROJECT_DIR$/.idea/modules/extensions/nestedadapter/nestedadapter.iml" group="smart-recycler-adapter/extensions/nestedadapter" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/sample/sample.iml" filepath="$PROJECT_DIR$/.idea/modules/sample/sample.iml" group="smart-recycler-adapter/sample" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/smart-recycler-adapter.iml" filepath="$PROJECT_DIR$/.idea/modules/smart-recycler-adapter.iml" group="smart-recycler-adapter" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/smartadapter/smartadapter.iml" filepath="$PROJECT_DIR$/.idea/modules/smartadapter/smartadapter.iml" group="smart-recycler-adapter/smartadapter" />
