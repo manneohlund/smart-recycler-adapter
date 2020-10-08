@@ -25,8 +25,6 @@ open class SmartAdapterBuilder {
     internal var layoutManager: RecyclerView.LayoutManager? = null
     internal var viewTypeResolver: ViewTypeResolver? = null
     internal val viewHolderMapper = HashMap<String, SmartViewHolderType>()
-    @Deprecated("Use nested adapter")
-    internal val smartRecyclerAdapterMapper = HashMap<SmartViewHolderType, SmartRecyclerAdapter>()
     internal val viewHolderBinders = mutableListOf<SmartViewHolderBinder>()
     internal val smartRecyclerAdapterExtensions = mutableMapOf<Any, SmartRecyclerAdapterExtension>()
 
@@ -41,12 +39,6 @@ open class SmartAdapterBuilder {
 
     fun setItems(items: List<Any>): SmartAdapterBuilder {
         this.items = (if (items.isMutable()) items else items.toMutableList()) as MutableList<Any>
-        return this
-    }
-
-    @Deprecated("Use nested adapter")
-    fun map(viewHolderType: SmartViewHolderType, smartRecyclerAdapter: SmartRecyclerAdapter): SmartAdapterBuilder {
-        smartRecyclerAdapterMapper[viewHolderType] = smartRecyclerAdapter
         return this
     }
 
@@ -93,7 +85,6 @@ open class SmartAdapterBuilder {
     fun <T> into(recyclerView: RecyclerView): T {
         val smartRecyclerAdapter = getSmartRecyclerAdapter()
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper)
-        smartRecyclerAdapter.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper)
         smartRecyclerAdapter.viewTypeResolver = viewTypeResolver
         recyclerView.adapter = smartRecyclerAdapter
         recyclerView.layoutManager = getLayoutManager(recyclerView.context)
@@ -112,7 +103,6 @@ open class SmartAdapterBuilder {
     fun <T> create(): T {
         val smartRecyclerAdapter = getSmartRecyclerAdapter()
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper)
-        smartRecyclerAdapter.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper)
         smartRecyclerAdapter.viewTypeResolver = viewTypeResolver
         viewHolderBinders.forEach {
             smartRecyclerAdapter.addBinder(it)

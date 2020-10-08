@@ -294,11 +294,6 @@ open class SmartRecyclerAdapter
         viewHolderMapper.setDataTypeViewHolderMapper(dataTypeViewHolderMapper)
     }
 
-    @Deprecated("Use nested adapter")
-    internal fun setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper: HashMap<SmartViewHolderType, SmartRecyclerAdapter>) {
-        viewHolderMapper.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper)
-    }
-
     override fun addBinder(viewHolderBinder: SmartViewHolderBinder) {
         viewHolderBinders.add(viewHolderBinder)
     }
