@@ -61,13 +61,13 @@ class SmartEndlessScrollRecyclerAdapter(items: MutableList<Any>) : SmartRecycler
         if (holder is LoadMoreViewHolder) {
             if (autoLoadMoreEnabled) {
                 holder.itemView.post {
-                    onLoadMoreListener?.invoke(holder)
+                    onLoadMoreListener?.invoke(this, holder)
                 }
             } else {
                 holder.toggleLoading(false)
                 holder.loadMoreButton?.setOnClickListener {
                     holder.itemView.post {
-                        onLoadMoreListener?.invoke(holder)
+                        onLoadMoreListener?.invoke(this, holder)
                         holder.toggleLoading(true)
                     }
                 }
