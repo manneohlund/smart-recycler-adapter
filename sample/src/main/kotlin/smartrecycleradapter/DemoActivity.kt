@@ -27,7 +27,9 @@ import smartadapter.viewevent.listener.OnCustomViewEventListener
 import smartadapter.viewevent.listener.OnLongClickEventListener
 import smartadapter.viewevent.listener.OnTouchEventListener
 import smartadapter.viewevent.viewholder.CustomViewEventListenerHolder
+import smartadapter.viewholder.LoadMoreViewHolder
 import smartadapter.viewholder.SmartAdapterHolder
+import smartadapter.widget.ViewTypeResolver
 import smartrecycleradapter.extension.PreCachingLinearLayoutManager
 import smartrecycleradapter.feature.CustomViewEventActivity
 import smartrecycleradapter.feature.DiffUtilActivity
@@ -53,6 +55,7 @@ import smartrecycleradapter.models.MovieCategory
 import smartrecycleradapter.models.MovieData
 import smartrecycleradapter.models.MovieModel
 import smartrecycleradapter.utils.AssetsUtils
+import smartrecycleradapter.utils.runDelayed
 import smartrecycleradapter.viewholder.ActionMoviesViewHolder
 import smartrecycleradapter.viewholder.AdventureMoviesViewHolder
 import smartrecycleradapter.viewholder.AnimatedMoviesViewHolder
@@ -100,7 +103,8 @@ class DemoActivity : AppCompatActivity() {
     }
 
     private fun initSmartRecyclerAdapter() {
-        val items = movieData.categories as MutableList<Any>
+        val items = mutableListOf<Any>()
+        items.addAll(movieData.categories)
         items.add(
             1, SampleFabViewHolder.SimpleFabItem(
                 R.drawable.ic_widgets_black_24dp,
@@ -114,8 +118,25 @@ class DemoActivity : AppCompatActivity() {
             )
         )
 
+        val thumbViewHolderResolver: ViewTypeResolver = { item, position ->
+            when (item) {
+                is MovieModel -> {
+                    when (item.size) {
+                        MovieModel.LARGE -> LargeThumbViewHolder::class
+                        MovieModel.SMALL -> SmallThumbViewHolder::class
+                        else -> ThumbViewHolder::class
+                    }
+                }
+                else -> null
+            }
+        }
+
         mainSmartMovieAdapter = SmartEndlessScrollRecyclerAdapter
             .items(items)
+            .setAutoLoadMoreEnabled(false)
+            .setOnLoadMoreListener { adapter,  loadMoreViewHolder ->
+                mainLoadMoreItems(adapter, loadMoreViewHolder)
+            }
             .setViewTypeResolver { item, position ->
                 when(item) {
                     is MovieCategory -> when(item.type) {
@@ -145,18 +166,7 @@ class DemoActivity : AppCompatActivity() {
                 SmartNestedAdapterBinder(
                     viewHolderType = NestedRecyclerViewHolder::class,
                     smartRecyclerAdapterBuilder = SmartRecyclerAdapter.empty()
-                        .setViewTypeResolver { item, position ->
-                            when (item) {
-                                is MovieModel -> {
-                                    when (item.size) {
-                                        MovieModel.LARGE -> LargeThumbViewHolder::class
-                                        MovieModel.SMALL -> SmallThumbViewHolder::class
-                                        else -> ThumbViewHolder::class
-                                    }
-                                }
-                                else -> null
-                            }
-                        }
+                        .setViewTypeResolver(thumbViewHolderResolver)
                         .add(OnClickEventListener {
                             showToast(
                                 "${it.adapter::class.java.simpleName}\n%s \nindex %d",
@@ -170,18 +180,12 @@ class DemoActivity : AppCompatActivity() {
                 SmartNestedAdapterBinder(
                     viewHolderType = ComingSoonMoviesViewHolder::class,
                     smartRecyclerAdapterBuilder = SmartEndlessScrollRecyclerAdapter.empty()
-                        .setViewTypeResolver { item, position ->
-                            when (item) {
-                                is MovieModel -> {
-                                    when (item.size) {
-                                        MovieModel.LARGE -> LargeThumbViewHolder::class
-                                        MovieModel.SMALL -> SmallThumbViewHolder::class
-                                        else -> ThumbViewHolder::class
-                                    }
-                                }
-                                else -> null
-                            }
+                        .setAutoLoadMoreEnabled(true)
+                        .setLoadMoreLayoutResource(R.layout.custom_loadmore_view)
+                        .setOnLoadMoreListener { adapter, loadMoreViewHolder ->
+                            nestedLoadMoreComingSoonItems(adapter)
                         }
+                        .setViewTypeResolver(thumbViewHolderResolver)
                         .add(OnClickEventListener {
                             showToast(
                                 "${it.adapter::class.java.simpleName}\n%s \nindex %d",
@@ -243,19 +247,30 @@ class DemoActivity : AppCompatActivity() {
                 moreSamplesDialog.show()
             })
             .into(recyclerView)
+    }
 
-        // Endless pagination
-        mainSmartMovieAdapter.autoLoadMoreEnabled = false
-        mainSmartMovieAdapter.onLoadMoreListener = { loadMoreViewHolder ->
-            val indexBeforeCopyright = 2
-            Handler().postDelayed({
-                mainSmartMovieAdapter.addItem(
-                    mainSmartMovieAdapter.itemCount - indexBeforeCopyright,
-                    movieBannersData.categories.first()
-                )
-                loadMoreViewHolder.toggleLoading(false)
-            }, 800)
+    private fun mainLoadMoreItems(
+        adapter: SmartEndlessScrollRecyclerAdapter,
+        loadMoreViewHolder: LoadMoreViewHolder
+    ) {
+        val indexBeforeCopyright = 2
+        Handler().postDelayed({
+            adapter.addItem(
+                adapter.itemCount - indexBeforeCopyright,
+                movieBannersData.categories.first()
+            )
+            loadMoreViewHolder.toggleLoading(false)
+        }, 800)
+    }
+
+    private fun nestedLoadMoreComingSoonItems(adapter: SmartEndlessScrollRecyclerAdapter) {
+        runDelayed {
+            adapter.addItems(movieData.categories.first {
+                it.id == "coming-soon"
+            }.items.shuffled())
         }
+        if (moreItemsLoadedCount++ == 2)
+            adapter.isEndlessScrollEnabled = false
     }
 
     @SuppressLint("InflateParams")

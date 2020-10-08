@@ -81,33 +81,31 @@ class MovieCategoryDetailsActivity : AppCompatActivity() {
                     .into(recyclerView)
             }
             MovieType.ACTION, MovieType.ADVENTURE, MovieType.ANIMATED, MovieType.SCI_FI -> {
-                val endlessScrollAdapter: SmartEndlessScrollRecyclerAdapter =
-                    SmartEndlessScrollRecyclerAdapter.items(adapterItems)
-                        .map(String::class, HeaderViewHolder::class)
-                        .map(MovieModel::class, ThumbViewHolder::class)
-                        .setLayoutManager(gridAutoLayoutManager)
-                        .add(OnClickEventListener(ThumbViewHolder::class) {
-                            showToast("Movie ${it.position}")
-                        })
-                        .into(recyclerView)
+                SmartEndlessScrollRecyclerAdapter.items(adapterItems)
+                    .setAutoLoadMoreEnabled(true)
+                    .setOnLoadMoreListener { adapter, loadMoreViewHolder ->
+                        if (!adapter.isLoading) {
+                            adapter.isLoading = true
 
-                endlessScrollAdapter.autoLoadMoreEnabled = true
-                endlessScrollAdapter.onLoadMoreListener = {
-                    if (!endlessScrollAdapter.isLoading) {
-                        endlessScrollAdapter.isLoading = true
-
-                        Handler().postDelayed(
-                            {
-                                endlessScrollAdapter.addItems(movieItems)
-                                if (endlessScrollCount++ == 3) {
-                                    endlessScrollAdapter.isEndlessScrollEnabled = false
-                                }
-                                endlessScrollAdapter.isLoading = false
-                            },
-                            3000
-                        )
+                            Handler().postDelayed(
+                                {
+                                    adapter.addItems(movieItems)
+                                    if (endlessScrollCount++ == 3) {
+                                        adapter.isEndlessScrollEnabled = false
+                                    }
+                                    adapter.isLoading = false
+                                },
+                                3000
+                            )
+                        }
                     }
-                }
+                    .map(String::class, HeaderViewHolder::class)
+                    .map(MovieModel::class, ThumbViewHolder::class)
+                    .setLayoutManager(gridAutoLayoutManager)
+                    .add(OnClickEventListener(ThumbViewHolder::class) {
+                        showToast("Movie ${it.position}")
+                    })
+                    .into<SmartEndlessScrollRecyclerAdapter>(recyclerView)
             }
         }
     }
