@@ -81,12 +81,15 @@ class SmartEndlessScrollRecyclerAdapter(items: MutableList<Any>) : SmartRecycler
          * Builder of [SmartRecyclerAdapter] for easy implementation.
          * @return SmartAdapterBuilder
          */
-        fun items(items: List<Any>): SmartAdapterBuilder = SmartEndlessScrollAdapterBuilder().setItems(items)
+        fun items(items: List<Any>): SmartEndlessScrollAdapterBuilder =
+            SmartEndlessScrollAdapterBuilder().also {
+                it.setItems(items)
+            }
 
         /**
          * Builder of [SmartRecyclerAdapter] for easy implementation.
          * @return SmartAdapterBuilder
          */
-        fun empty(): SmartAdapterBuilder = SmartEndlessScrollAdapterBuilder()
+        fun empty(): SmartEndlessScrollAdapterBuilder = SmartEndlessScrollAdapterBuilder()
     }
 }
