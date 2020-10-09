@@ -153,9 +153,9 @@ SmartRecyclerAdapter
 A popular feature in apps is to have endless scrolling with pagination, in other words load more items when user has scrolled to bottom.
 With SmartEndlessScrollRecyclerAdapter you can achieve this.
 
-`setAutoLoadMoreEnabled` defines if false `load more` button should be visible before loading.
-`setLoadMoreLayoutResource` can also set your custom loading/loadmore view.<br/>
-`OnLoadMoreListener` is called when scrolled to the last item and loading view is visible.<br/>
+* `setAutoLoadMoreEnabled` defines if false `load more` button should be visible before loading.
+* `setLoadMoreLayoutResource` can also set your custom loading/loadmore view.
+* `OnLoadMoreListener` is called when scrolled to the last item and loading view is visible.
 
 
 #### Create SmartEndlessScrollRecyclerAdapter
@@ -181,6 +181,7 @@ Enable/Disable endless scrolling and thus removing the loading view.
 ## smart-recycler-adapter-viewevent
 
 As of `smart-recycler-adapter:v5.0.0` all ViewEvent listeners have been removed from `SmartRecyclerAdapter` and added in this extension library `smart-recycler-adapter-viewevent`.
+
 Essentially the `SmartRecyclerAdapter` will now hold a list of `SmartViewHolderBinder` that can implement any of these interfaces to listen to the adapter view holder stages:
 * `OnSmartRecycleAdapterCreatedListener` Invoked from `SmartRecyclerAdapter` init
 * `OnCreateViewHolderListener` Invoked from `SmartRecyclerAdapter.onCreateViewHolder`
@@ -261,7 +262,7 @@ SmartRecyclerAdapter
 
 ### Drag & Drop
 
-`AutoDragAndDropBinder` will be activated on long press if longPressDragEnabled = true 
+`AutoDragAndDropBinder` will be activated on long press if `longPressDragEnabled = true`<br/>
 and on release the `AutoDragAndDropBinder` will automatically notify the `SmartRecyclerAdapter` about the item move.<br/>
 You can extend the `BasicDragAndDropBinder` or `DragAndDropEventBinder` and create your custom implementation.
 
@@ -297,6 +298,7 @@ SmartRecyclerAdapter
 # smart-recycler-adapter-diffutil
 
 As of `smart-recycler-adapter:v5.0.0` diff util have been removed from `SmartRecyclerAdapter` and is added in this extension library `smart-recycler-adapter-diffutil`.
+
 Essentially the `SmartRecyclerAdapter` will now hold a map of `SmartRecyclerAdapterExtension` that is the basic interface for `SmartRecyclerAdapter` binding extensions.
 
 ```kotlin
@@ -324,10 +326,11 @@ smartRecyclerAdapter.diffSwapList((0..100).shuffled().toMutableList())
 
 # smart-recycler-adapter-nestedadapter
 
-As of `smart-recycler-adapter:v5.0.0` static nested adapter mapping have been removed from `SmartRecyclerAdapter` and is added in this extension library `smart-recycler-adapter-nestedadapter`.
-Default binder in nestedadapter is `SmartNestedAdapterBinder` implements `SmartViewHolderBinder` for basic view holder mapping functionality.
-`SmartRecyclerAdapter` will hold the `SmartNestedAdapterBinder` references and call the default implemented interfaces `OnCreateViewHolderListener`, `OnBindViewHolderListener`, `OnViewRecycledListener` on ViewHolder lifecycle stages.
+As of `smart-recycler-adapter:v5.0.0` static nested adapter mapping have been removed from `SmartRecyclerAdapter` and is added in this extension library `smart-recycler-adapter-nestedadapter`.<br/>
+Default binder in nestedadapter is `SmartNestedAdapterBinder` implements `SmartViewHolderBinder` for basic view holder mapping functionality.<br/>
+`SmartRecyclerAdapter` will hold the `SmartNestedAdapterBinder` references and call the default implemented interfaces `OnCreateViewHolderListener`, `OnBindViewHolderListener`, `OnViewRecycledListener` on ViewHolder lifecycle stages.<br/>
 `SmartViewHolder` subclasses must implement `SmartNestedRecyclerViewHolder` in order for `SmartNestedAdapterBinder` to get the target recyclerView.
+
 How does it work? 👇
 
 ### SmartViewHolder
@@ -357,7 +360,7 @@ class NestedRecyclerViewHolder(parentView: ViewGroup) :
 
 ### SmartRecyclerAdapter
 
-`SmartNestedAdapterBinder` will only target `NestedRecyclerViewHolder`.
+`SmartNestedAdapterBinder` will only target `NestedRecyclerViewHolder`.<br/>
 Supply a `SmartAdapterBuilder` or `SmartEndlessScrollAdapterBuilder` that will be build a new nested adapter for each `NestedRecyclerViewHolder`. 
 
 ```kotlin
@@ -385,7 +388,7 @@ For more samples test out the sample app and see the [source code](https://githu
 
 ### RecyclableViewHolder
 
-Sometimes a ViewHolder created by the Adapter cannot be recycled due to its transient state.
+Sometimes a ViewHolder created by the Adapter cannot be recycled due to its transient state.<br/>
 In order to fix this is to implement `RecyclableViewHolder` in your `SmartViewHolder` extension so that upon receiving this callback, 
 Adapter can clear the animation(s) that effect the View's transient state and return <code>true</code> so that the View can be recycled.
 
@@ -398,6 +401,7 @@ class MovieViewHolder : SmartViewHolder, RecyclableViewHolder {
 ### OnViewAttachedToWindowListener and OnViewDetachedFromWindowListener
 
 If you want to catch when the view is attached and detached from the window in your ViewHolder you can implement `OnViewAttachedToWindowListener` and `OnViewDetachedFromWindowListener` in your `SmartViewHolder` extension.
+
 Becoming detached from the window is not necessarily a permanent condition the consumer of an Adapter's views may choose to cache views offscreen while they are not visible, attaching and detaching them as appropriate.
 
 ```kotlin
