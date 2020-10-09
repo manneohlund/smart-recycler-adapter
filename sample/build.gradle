@@ -107,7 +107,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 
     // Project
-    //implementation 'io.github.manneohlund:smart-recycler-adapter:5.0.0-beta03'
+    //implementation 'io.github.manneohlund:smart-recycler-adapter:5.0.0-beta04'
     //implementation 'io.github.manneohlund:smart-recycler-adapter-viewevent:1.0.0-alpha02'
     //implementation 'io.github.manneohlund:smart-recycler-adapter-diffutil:1.0.0-alpha01'
     //implementation 'io.github.manneohlund:smart-recycler-adapter-nestedadapter:1.0.0-alpha01'
