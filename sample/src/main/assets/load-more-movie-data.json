@@ -1,0 +1,75 @@
+{
+  "categories": [
+    {
+      "id": "load-more",
+      "title": "load-more",
+      "movieModels": [
+        {
+          "title": "Terminator dark fate",
+          "icon": "terminator_dark_fate",
+          "size": 1
+        },
+        {
+          "title": "Joker",
+          "icon": "joker",
+          "size": 1
+        },
+        {
+          "title": "Fist man",
+          "icon": "first_man",
+          "size": 1
+        },
+        {
+          "title": "The Lion king",
+          "icon": "lion_king",
+          "size": 1
+        },
+        {
+          "title": "John Wick 3",
+          "icon": "john_wick_3",
+          "size": 1
+        },
+        {
+          "title": "Grinch",
+          "icon": "grinch",
+          "size": 1
+        },
+        {
+          "title": "Wonder Woman",
+          "icon": "woderwoman",
+          "size": 1
+        },
+        {
+          "title": "Hellboy",
+          "icon": "hellboy",
+          "size": 1
+        },
+        {
+          "title": "Predator",
+          "icon": "predator",
+          "size": 1
+        },
+        {
+          "title": "It 2",
+          "icon": "it_2",
+          "size": 1
+        },
+        {
+          "title": "Once upon a time in Hollywood",
+          "icon": "once_hollywood",
+          "size": 1
+        },
+        {
+          "title": "Age of uprising",
+          "icon": "age_of_uprising",
+          "size": 1
+        },
+        {
+          "title": "Murder Mystery",
+          "icon": "murder_mystery",
+          "size": 1
+        }
+      ]
+    }
+  ]
+}

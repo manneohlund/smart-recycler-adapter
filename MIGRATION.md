@@ -120,6 +120,119 @@ open class SimpleItemViewHolder(parentView: ViewGroup) : SmartViewHolder<Int>(
 }
 ```
 
+### Nested adapter
+
+#### NEW v5.0.0 with smart-recycler-adapter-nestedadapter library
+
+As of `smart-recycler-adapter:v5.0.0` static nested adapter mapping have been removed from `SmartRecyclerAdapter` and is added in this extension library `smart-recycler-adapter-nestedadapter`.
+Default binder in nestedadapter is `SmartNestedAdapterBinder` implements `SmartViewHolderBinder` for basic view holder mapping functionality.
+`SmartRecyclerAdapter` will hold the `SmartNestedAdapterBinder` references and call the default implemented interfaces `OnCreateViewHolderListener`, `OnBindViewHolderListener`, `OnViewRecycledListener` on ViewHolder lifecycle stages.
+`SmartViewHolder` subclasses must implement `SmartNestedRecyclerViewHolder` in order for `SmartNestedAdapterBinder` to get the target recyclerView.
+How does it work? 👇
+
+### SmartViewHolder
+
+Sample uses kotlin synthetic view property import!
+
+```kotlin
+class NestedRecyclerViewHolder(parentView: ViewGroup) :
+    SmartViewHolder<MovieCategory>(parentView, R.layout.nested_recycler_view),
+    SmartNestedRecyclerViewHolder {
+
+    override val recyclerView: RecyclerView = itemView.nestedRecyclerView
+
+    init {
+        itemView.nestedRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
+            isNestedScrollingEnabled = false
+            setHasFixedSize(true)
+        }
+    }
+
+    override fun bind(item: MovieCategory) {
+        itemView.title.text = item.title
+    }
+}
+```
+
+### SmartRecyclerAdapter
+
+`SmartNestedAdapterBinder` will only target `NestedRecyclerViewHolder`.
+Supply a `SmartAdapterBuilder` or `SmartEndlessScrollAdapterBuilder` that will be build a new nested adapter for each `NestedRecyclerViewHolder`. 
+
+```kotlin
+SmartRecyclerAdapter
+    .items(items)
+    .add(
+        SmartNestedAdapterBinder(
+            viewHolderType = NestedRecyclerViewHolder::class,
+            smartRecyclerAdapterBuilder = SmartRecyclerAdapter.empty()
+                .map(MovieModel::class, ThumbViewHolder::class)
+                .add(OnClickEventListener { event: ViewEvent.OnClick ->
+                    // Handle nested adapter item click event
+                })
+        )
+    )
+    .add(OnClickEventListener(NestedRecyclerViewHolder::class, R.id.more) {
+        // Handle parent adapter click event
+    })
+    .into(recyclerView)
+```
+
+#### OLD 4.X.X
+
+##### Nested SmartRecyclerAdapter
+
+New in `SmartRecyclerAdapter` v2.0.0 is support for statically resolved nested recycler adapter.
+Now you can easily build complex nested adapters without hustle and have full control of the adapter in your view controlling `Fragment` or `Activity`. 
+Use the new `create()` method instead of the `into(recyclerView)` to create just the `SmartRecyclerAdapter` then set the adapter to the recycler view in your `ViewHolder`.
+Just implement the `SmartAdapterHolder` interface in your `ViewHolder` and `SmartRecyclerAdapter` will handle the mapping.
+
+##### 1. Create your nested SmartRecyclerAdapter
+
+```kotlin
+val myWatchListSmartMovieAdapter: SmartRecyclerAdapter = SmartRecyclerAdapter
+  .items(myWatchListItems)
+  .map(MovieModel::class, ThumbViewHolder::class)
+  .addViewEventListener(onItemClickListener { view, viewEventId, position -> playMovie() })
+  .create()
+````
+
+##### 2. Map myWatchListSmartMovieAdapter with MyWatchListViewHolder
+
+```kotlin
+SmartRecyclerAdapter
+  .items(items)
+  .map(MoviePosterModel::class, PosterViewHolder::class)
+  .map(MyWatchListModel::class, MyWatchListViewHolder::class)
+  .map(MyWatchListViewHolder::class, myWatchListSmartMovieAdapter)
+  .into(recyclerView)
+```
+
+##### 3. Map myWatchListSmartMovieAdapter to MyWatchListViewHolder
+
+```kotlin
+class MyWatchListViewHolder :
+  SmartViewHolder<MyWatchListModel>,
+  SmartAdapterHolder {
+  
+  override var smartRecyclerAdapter: SmartRecyclerAdapter? = null
+    set(value) {
+      field = value
+      recyclerView.layoutManager = LinearLayoutManager(recyclerView.context, HORIZONTAL, false)
+      recyclerView.adapter = value
+    }
+
+  override fun bind(myWatchListModel: MyWatchListModel) {
+    // bind model data to views
+  }
+  
+  override fun unbind() {
+    // optional unbinding of view data model
+  }
+}
+```
+
 ### Drag & Drop
 
 #### NEW v5.0.0 with smart-recycler-adapter-viewevent library

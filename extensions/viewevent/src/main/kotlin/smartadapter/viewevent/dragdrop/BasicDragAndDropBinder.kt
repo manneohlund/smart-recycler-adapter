@@ -8,6 +8,7 @@ package smartadapter.viewevent.dragdrop
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.SmartViewHolderType
@@ -70,13 +71,15 @@ open class BasicDragAndDropBinder(
     @SuppressLint("ClickableViewAccessibility")
     override fun setupDragAndDrop(recyclerView: RecyclerView) {
         if (dragFlags == 0) {
-            val gridDragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
-            val linearDragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
-
             dragFlags = if (recyclerView.layoutManager is GridLayoutManager) {
-                gridDragFlags
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END
             } else {
-                linearDragFlags
+                val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
+                if (linearLayoutManager.orientation == LinearLayoutManager.HORIZONTAL) {
+                    ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+                } else {
+                    ItemTouchHelper.UP or ItemTouchHelper.DOWN
+                }
             }
         }
     }

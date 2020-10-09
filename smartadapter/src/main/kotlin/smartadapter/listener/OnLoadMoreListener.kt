@@ -5,6 +5,7 @@ package smartadapter.listener
  * Copyright © 2019. All rights reserved.
  */
 
+import smartadapter.SmartEndlessScrollRecyclerAdapter
 import smartadapter.viewholder.LoadMoreViewHolder
 
 /**
@@ -12,4 +13,4 @@ import smartadapter.viewholder.LoadMoreViewHolder
  * has scrolled to the last item. The [smartadapter.viewholder.LoadMoreViewHolder] will show without any
  * mapped data type.
  */
-typealias OnLoadMoreListener = (loadMoreViewHolder: LoadMoreViewHolder) -> Unit
+typealias OnLoadMoreListener = (adapter: SmartEndlessScrollRecyclerAdapter, loadMoreViewHolder: LoadMoreViewHolder) -> Unit

@@ -8,11 +8,9 @@ package smartadapter.internal.mapper
 import android.util.SparseArray
 import android.view.ViewGroup
 import smartadapter.Position
-import smartadapter.SmartRecyclerAdapter
 import smartadapter.SmartViewHolderType
 import smartadapter.internal.extension.name
 import smartadapter.internal.utils.ReflectionUtils
-import smartadapter.viewholder.SmartAdapterHolder
 import smartadapter.viewholder.SmartViewHolder
 import smartadapter.widget.ViewTypeResolver
 import java.util.HashMap
@@ -29,7 +27,6 @@ class ViewHolderMapper {
     private val viewTypeMapper = SparseArray<SmartViewHolderType>()
     private val viewHolderConstructorMapper = ViewHolderConstructorMapper()
     private var dataTypeViewHolderMapper = HashMap<String, SmartViewHolderType>()
-    private var smartRecyclerAdapterMapper = HashMap<SmartViewHolderType, SmartRecyclerAdapter>()
 
     /**
      * Will first check if viewTypeResolver is assigned and contains the smartViewHolderClass.
@@ -84,11 +81,6 @@ class ViewHolderMapper {
             throw RuntimeException(String.format("Could not invoke constructor for '%s', '%s'", smartViewHolderClass!!.toString(), e.message), e)
         }
 
-        val smartRecyclerAdapter = smartRecyclerAdapterMapper[viewHolder::class]
-        if (viewHolder is SmartAdapterHolder && smartRecyclerAdapter != null) {
-            viewHolder.smartRecyclerAdapter = smartRecyclerAdapter
-        }
-
         return viewHolder
     }
 
@@ -100,10 +92,6 @@ class ViewHolderMapper {
     fun setDataTypeViewHolderMapper(dataTypeViewHolderMapper: HashMap<String, SmartViewHolderType>) {
         this.dataTypeViewHolderMapper = dataTypeViewHolderMapper
         viewHolderConstructorMapper.add(dataTypeViewHolderMapper.values)
-    }
-
-    fun setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper: HashMap<SmartViewHolderType, SmartRecyclerAdapter>) {
-        this.smartRecyclerAdapterMapper = smartRecyclerAdapterMapper
     }
 }
 

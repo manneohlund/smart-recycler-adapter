@@ -4,11 +4,11 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'maven-publish'
 
 ext {
-    LIB_ARTIFACT_NAME = 'SmartRecyclerAdapter ViewEvent'
-    LIB_ARTIFACT_ID = 'smart-recycler-adapter-viewevent'
-    LIB_VERSION_CODE = 3
-    LIB_VERSION_NAME = '1.0.0-beta01'
-    LIB_DESCRIPTION = 'View Event listeners extension library for SmartRecyclerAdapter'
+    LIB_ARTIFACT_NAME = 'SmartRecyclerAdapter NestedAdapter'
+    LIB_ARTIFACT_ID = 'smart-recycler-adapter-nestedadapter'
+    LIB_VERSION_CODE = 1
+    LIB_VERSION_NAME = '1.0.0-alpha01'
+    LIB_DESCRIPTION = 'Nested Adapter extension library for SmartRecyclerAdapter'
 }
 
 android {
@@ -63,8 +63,6 @@ dependencies {
     // Androidx
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_extensions_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_viewmodel_ktx_version"
 }
 
 if (project.rootProject.file('local.properties').exists()) {

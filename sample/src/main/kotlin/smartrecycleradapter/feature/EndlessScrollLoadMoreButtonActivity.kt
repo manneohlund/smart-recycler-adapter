@@ -21,18 +21,15 @@ class EndlessScrollLoadMoreButtonActivity : BaseSampleActivity() {
         var itemCount = 50
         val items = (0..itemCount).toMutableList()
 
-        val smartAdapter: SmartEndlessScrollRecyclerAdapter = SmartEndlessScrollRecyclerAdapter
+        SmartEndlessScrollRecyclerAdapter
             .items(items)
-            .map(Integer::class, SimpleItemViewHolder::class)
-            .into(recyclerView)
-
-        smartAdapter.autoLoadMoreEnabled = false
-
-        smartAdapter.onLoadMoreListener = {
-            runDelayed {
-                smartAdapter.addItems((itemCount + 1..itemCount + 20).toList())
-                itemCount += 20
+            .setOnLoadMoreListener { adapter, loadMoreViewHolder ->
+                runDelayed {
+                    adapter.addItems((itemCount + 1..itemCount + 20).toList())
+                    itemCount += 20
+                }
             }
-        }
+            .map(Integer::class, SimpleItemViewHolder::class)
+            .into<SmartEndlessScrollRecyclerAdapter>(recyclerView)
     }
 }

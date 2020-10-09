@@ -16,6 +16,7 @@ import smartadapter.viewevent.model.ViewEvent
 import smartadapter.viewholder.DraggableViewHolder
 import smartadapter.viewholder.SmartAdapterHolder
 import smartadapter.viewholder.SmartViewHolder
+import java.util.Collections
 import java.util.HashSet
 
 /**
@@ -45,9 +46,10 @@ class AutoDragAndDropBinder(
             val oldPosition = viewHolder.adapterPosition
             val newPosition = target.adapterPosition
             with (smartRecyclerAdapter) {
-                val targetItem = getItems()[oldPosition]
-                getItems().removeAt(oldPosition)
-                getItems().add(newPosition, targetItem)
+                //val targetItem = getItems()[oldPosition]
+                //getItems().removeAt(oldPosition)
+                //getItems().add(newPosition, targetItem)
+                Collections.swap(getItems(), oldPosition, newPosition)
                 notifyItemMoved(oldPosition, newPosition)
             }
         }

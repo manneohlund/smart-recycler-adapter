@@ -1,0 +1,1095 @@
+{
+  "categories": [
+    {
+      "id": "poster",
+      "title": "Promotion",
+      "type": "poster",
+      "items": [
+        {
+          "title": "Guardians of the galaxy",
+          "icon": "guardians_of_the_galaxy_vol_two",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "Spiderman far from home",
+          "icon": "spiderman_far_from_home",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "Start Wars the last jedi",
+          "icon": "the_last_jedi",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "Han solo",
+          "icon": "han_solo",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "Terminator",
+          "icon": "terminator_dark_fate",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "Thor ragnarok",
+          "icon": "thor_ragnarok",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "Grinch",
+          "icon": "grinch",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "Logan",
+          "icon": "logan",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "Alien covenant",
+          "icon": "alien_covenant_alt",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "Fist man",
+          "icon": "first_man",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "Avengers endgame",
+          "icon": "avengers_endgame",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "Jurassic Park",
+          "icon": "jurassic_park_red_big",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "Ice age",
+          "icon": "ice_age_collision",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "John wick 3",
+          "icon": "john_wick3",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "Predator",
+          "icon": "predator",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "Rambo 4",
+          "icon": "rambo4",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "Aladdin",
+          "icon": "aladdin",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "Aladdin",
+          "icon": "aladdin_alt",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "Joker",
+          "icon": "joker",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "Murder mystery",
+          "icon": "murder_mystery",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "Pokemon detective Pikachu",
+          "icon": "pokemon_detective_pikachu",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "The Lion King",
+          "icon": "the_lion_king",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "Toy Story 4",
+          "icon": "toy_story_4",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "XMen Dark Phoenix",
+          "icon": "xmen_dark_phoenix",
+          "category": "poster",
+          "size": 4
+        },
+        {
+          "title": "Dora",
+          "icon": "dora",
+          "category": "poster",
+          "size": 4
+        }
+      ]
+    },
+    {
+      "id": "coming-soon",
+      "title": "Coming soon",
+      "type": "movie",
+      "items": [
+        {
+          "title": "Terminator dark fate",
+          "icon": "terminator_dark_fate",
+          "category": "coming-soon",
+          "size": 2
+        },
+        {
+          "title": "Murder Mystery",
+          "icon": "murder_mystery",
+          "category": "coming-soon",
+          "size": 2
+        },
+        {
+          "title": "Joker",
+          "icon": "joker",
+          "category": "coming-soon",
+          "size": 2
+        },
+        {
+          "title": "The Lion king",
+          "icon": "lion_king",
+          "category": "coming-soon",
+          "size": 2
+        },
+        {
+          "title": "Wonder Woman",
+          "icon": "woderwoman",
+          "category": "coming-soon",
+          "size": 2
+        },
+        {
+          "title": "It 2",
+          "icon": "it_2",
+          "category": "coming-soon",
+          "size": 2
+        },
+        {
+          "title": "John Wick 3",
+          "icon": "john_wick_3",
+          "category": "coming-soon",
+          "size": 2
+        },
+        {
+          "title": "Grinch",
+          "icon": "grinch",
+          "category": "coming-soon",
+          "size": 2
+        },
+        {
+          "title": "Hellboy",
+          "icon": "hellboy",
+          "category": "coming-soon",
+          "size": 2
+        },
+        {
+          "title": "Age of uprising",
+          "icon": "age_of_uprising",
+          "category": "coming-soon",
+          "size": 2
+        },
+        {
+          "title": "Beachbum",
+          "icon": "beachbumposter",
+          "category": "coming-soon",
+          "size": 2
+        },
+        {
+          "title": "Bernadette",
+          "icon": "bernadette",
+          "category": "coming-soon",
+          "size": 2
+        },
+        {
+          "title": "Bohemian rhapsody",
+          "icon": "bohemian_rhapsody",
+          "category": "coming-soon",
+          "size": 2
+        },
+        {
+          "title": "Once upon a time in Hollywood",
+          "icon": "once_hollywood",
+          "category": "coming-soon",
+          "size": 2
+        },
+        {
+          "title": "Rambo last blood",
+          "icon": "rambo_last_blood",
+          "category": "coming-soon",
+          "size": 2
+        },
+        {
+          "title": "Predator",
+          "icon": "predator",
+          "category": "coming-soon",
+          "size": 2
+        },
+        {
+          "title": "Godzilla king of the mosters",
+          "icon": "godzilla_king_of_the_monsters",
+          "category": "coming-soon",
+          "size": 2
+        },
+        {
+          "title": "Godzilla",
+          "icon": "godzilla",
+          "category": "coming-soon",
+          "size": 2
+        },
+        {
+          "title": "Abominable",
+          "icon": "abominable",
+          "category": "coming-soon",
+          "size": 2
+        }
+      ]
+    },
+    {
+      "id": "watch-list",
+      "title": "My watch list",
+      "type": "movie",
+      "items": [
+        {
+          "title": "Joker",
+          "icon": "joker",
+          "category": "watch-list",
+          "size": 1
+        },
+        {
+          "title": "Terminator dark fate",
+          "icon": "terminator_dark_fate",
+          "category": "watch-list",
+          "size": 1
+        },
+        {
+          "title": "John Wick 3",
+          "icon": "john_wick_3",
+          "category": "watch-list",
+          "size": 1
+        },
+        {
+          "title": "Bohemian rhapsody",
+          "icon": "bohemian_rhapsody",
+          "category": "watch-list",
+          "size": 1
+        },
+        {
+          "title": "Fist man",
+          "icon": "first_man",
+          "category": "watch-list",
+          "size": 1
+        },
+        {
+          "title": "Once upon a time in Hollywood",
+          "icon": "once_hollywood",
+          "category": "watch-list",
+          "size": 1
+        },
+        {
+          "title": "Murder Mystery",
+          "icon": "murder_mystery",
+          "category": "watch-list",
+          "size": 1
+        },
+        {
+          "title": "It 2",
+          "icon": "it_2",
+          "category": "watch-list",
+          "size": 1
+        },
+        {
+          "title": "Hellboy",
+          "icon": "hellboy",
+          "category": "watch-list",
+          "size": 1
+        },
+        {
+          "title": "Beachbum",
+          "icon": "beachbumposter",
+          "category": "watch-list",
+          "size": 1
+        },
+        {
+          "title": "Predator",
+          "icon": "predator",
+          "category": "watch-list",
+          "size": 1
+        },
+        {
+          "title": "Rambo last blood",
+          "icon": "rambo_last_blood",
+          "category": "watch-list",
+          "size": 1
+        }
+      ]
+    },
+    {
+      "id": "recommended",
+      "title": "Recommended",
+      "type": "banner",
+      "items": [
+        {
+          "title": "Joker",
+          "icon": "300_rise_of_an_empire",
+          "category": "recommended",
+          "size": 3
+        },
+        {
+          "title": "Alien coventant",
+          "icon": "alien_covenant",
+          "category": "recommended",
+          "size": 3
+        },
+        {
+          "title": "Alien coventant",
+          "icon": "alien_easter",
+          "category": "recommended",
+          "size": 3
+        },
+        {
+          "title": "Blade Runner 2049",
+          "icon": "blaerunner",
+          "category": "recommended",
+          "size": 3
+        },
+        {
+          "title": "Bond",
+          "icon": "bond",
+          "category": "recommended",
+          "size": 3
+        },
+        {
+          "title": "The Dark Knight",
+          "icon": "dark_knight",
+          "category": "recommended",
+          "size": 3
+        },
+        {
+          "title": "Expendables",
+          "icon": "expendables",
+          "category": "recommended",
+          "size": 3
+        },
+        {
+          "title": "Finding dory",
+          "icon": "finding_dory",
+          "category": "recommended",
+          "size": 3
+        },
+        {
+          "title": "Interstellar",
+          "icon": "interstellar",
+          "category": "recommended",
+          "size": 3
+        },
+        {
+          "title": "Interstellar",
+          "icon": "interstellar_quad",
+          "category": "recommended",
+          "size": 3
+        },
+        {
+          "title": "Iron man",
+          "icon": "iron_man_alt",
+          "category": "recommended",
+          "size": 3
+        },
+        {
+          "title": "Jurassic Park",
+          "icon": "jurassic_park_red_big",
+          "category": "recommended",
+          "size": 3
+        },
+        {
+          "title": "Jurassic Park",
+          "icon": "jurassic_park_redironman",
+          "category": "recommended",
+          "size": 3
+        },
+        {
+          "title": "Lord of the rings",
+          "icon": "lort",
+          "category": "recommended",
+          "size": 3
+        },
+        {
+          "title": "Man of steel",
+          "icon": "man_of_steel",
+          "category": "recommended",
+          "size": 3
+        },
+        {
+          "title": "MI Fallout",
+          "icon": "mi_fallout",
+          "category": "recommended",
+          "size": 3
+        },
+        {
+          "title": "Star Wars",
+          "icon": "new_star_wars",
+          "category": "recommended",
+          "size": 3
+        },
+        {
+          "title": "Terminator",
+          "icon": "terminator",
+          "category": "recommended",
+          "size": 3
+        },
+        {
+          "title": "Thor Ragnarok",
+          "icon": "thor_ragnarok",
+          "category": "recommended",
+          "size": 3
+        }
+      ]
+    },
+    {
+      "id": "action",
+      "title": "Action",
+      "type": "movie",
+      "items": [
+        {
+          "title": "Fury",
+          "icon": "fury",
+          "category": "action",
+          "size": 1
+        },
+        {
+          "title": "Edge of tomorrow",
+          "icon": "edge_of_tomorrow",
+          "category": "action",
+          "size": 1
+        },
+        {
+          "title": "Godzilla king of the monsters",
+          "icon": "godzilla_king_of_the_monsters",
+          "category": "action",
+          "size": 1
+        },
+        {
+          "title": "Predator",
+          "icon": "predator",
+          "category": "action",
+          "size": 1
+        },
+        {
+          "title": "Godzilla",
+          "icon": "godzilla",
+          "category": "action",
+          "size": 1
+        },
+        {
+          "title": "Rambo last blood",
+          "icon": "rambo_last_blood",
+          "category": "action",
+          "size": 1
+        },
+        {
+          "title": "Hellboy",
+          "icon": "hellboy",
+          "category": "action",
+          "size": 1
+        },
+        {
+          "title": "Terminator dark fate",
+          "icon": "terminator_dark_fate",
+          "category": "action",
+          "size": 1
+        },
+        {
+          "title": "300 Rise of an empire",
+          "icon": "threehundred",
+          "category": "action",
+          "size": 1
+        },
+        {
+          "title": "Guardians of the galaxy",
+          "icon": "guardians_of_the_galaxy",
+          "category": "action",
+          "size": 1
+        },
+        {
+          "title": "Age of uprising",
+          "icon": "age_of_uprising",
+          "category": "action",
+          "size": 1
+        },
+        {
+          "title": "Deadsnow",
+          "icon": "deadsnow",
+          "category": "action",
+          "size": 1
+        },
+        {
+          "title": "Matrix",
+          "icon": "matrix",
+          "category": "action",
+          "size": 1
+        },
+        {
+          "title": "Mummy",
+          "icon": "mummy",
+          "category": "action",
+          "size": 1
+        },
+        {
+          "title": "Hercules",
+          "icon": "hercules",
+          "category": "action",
+          "size": 1
+        },
+        {
+          "title": "Hobbit",
+          "icon": "hobbit",
+          "category": "action",
+          "size": 1
+        },
+        {
+          "title": "Dracula untold",
+          "icon": "dracula_untold",
+          "category": "action",
+          "size": 1
+        }
+      ]
+    },
+    {
+      "id": "adventure",
+      "title": "Adventure",
+      "type": "movie",
+      "items": [
+        {
+          "title": "Hercules",
+          "icon": "hercules",
+          "category": "adventure",
+          "size": 1
+        },
+        {
+          "title": "Mummy",
+          "icon": "mummy",
+          "category": "adventure",
+          "size": 1
+        },
+        {
+          "title": "Age of uprising",
+          "icon": "age_of_uprising",
+          "category": "adventure",
+          "size": 1
+        },
+        {
+          "title": "Matrix",
+          "icon": "matrix",
+          "category": "adventure",
+          "size": 1
+        },
+        {
+          "title": "Hellboy",
+          "icon": "hellboy",
+          "category": "adventure",
+          "size": 1
+        },
+        {
+          "title": "Dracula untold",
+          "icon": "dracula_untold",
+          "category": "adventure",
+          "size": 1
+        },
+        {
+          "title": "300 Rise of an empire",
+          "icon": "threehundred",
+          "category": "adventure",
+          "size": 1
+        },
+        {
+          "title": "Guardians of the galaxy",
+          "icon": "guardians_of_the_galaxy",
+          "category": "adventure",
+          "size": 1
+        },
+        {
+          "title": "Godzilla king of the mosters",
+          "icon": "godzilla_king_of_the_monsters",
+          "category": "adventure",
+          "size": 1
+        },
+        {
+          "title": "Godzilla",
+          "icon": "godzilla",
+          "category": "adventure",
+          "size": 1
+        }
+      ]
+    },
+    {
+      "id": "trending",
+      "title": "Trending",
+      "type": "banner",
+      "items": [
+        {
+          "title": "Joker",
+          "icon": "300_rise_of_an_empire",
+          "category": "trending",
+          "size": 3
+        },
+        {
+          "title": "Alien coventant",
+          "icon": "alien_covenant",
+          "category": "trending",
+          "size": 3
+        },
+        {
+          "title": "Alien coventant",
+          "icon": "alien_easter",
+          "category": "trending",
+          "size": 3
+        },
+        {
+          "title": "Blade Runner 2049",
+          "icon": "blaerunner",
+          "category": "trending",
+          "size": 3
+        },
+        {
+          "title": "Bond",
+          "icon": "bond",
+          "category": "trending",
+          "size": 3
+        },
+        {
+          "title": "The Dark Knight",
+          "icon": "dark_knight",
+          "category": "trending",
+          "size": 3
+        },
+        {
+          "title": "Expendables",
+          "icon": "expendables",
+          "category": "trending",
+          "size": 3
+        },
+        {
+          "title": "Finding dory",
+          "icon": "finding_dory",
+          "category": "trending",
+          "size": 3
+        },
+        {
+          "title": "Interstellar",
+          "icon": "interstellar",
+          "category": "trending",
+          "size": 3
+        },
+        {
+          "title": "Interstellar",
+          "icon": "interstellar_quad",
+          "category": "trending",
+          "size": 3
+        },
+        {
+          "title": "Iron man",
+          "icon": "iron_man_alt",
+          "category": "trending",
+          "size": 3
+        },
+        {
+          "title": "Jurassic Park",
+          "icon": "jurassic_park_red_big",
+          "category": "trending",
+          "size": 3
+        },
+        {
+          "title": "Jurassic Park",
+          "icon": "jurassic_park_redironman",
+          "category": "trending",
+          "size": 3
+        },
+        {
+          "title": "Lord of the rings",
+          "icon": "lort",
+          "category": "trending",
+          "size": 3
+        },
+        {
+          "title": "Man of steel",
+          "icon": "man_of_steel",
+          "category": "trending",
+          "size": 3
+        },
+        {
+          "title": "MI Fallout",
+          "icon": "mi_fallout",
+          "category": "trending",
+          "size": 3
+        },
+        {
+          "title": "Star Wars",
+          "icon": "new_star_wars",
+          "category": "trending",
+          "size": 3
+        },
+        {
+          "title": "Terminator",
+          "icon": "terminator",
+          "category": "trending",
+          "size": 3
+        },
+        {
+          "title": "Thor Ragnarok",
+          "icon": "thor_ragnarok",
+          "category": "trending",
+          "size": 3
+        }
+      ]
+    },
+    {
+      "id": "anim",
+      "title": "Animated",
+      "type": "movie",
+      "items": [
+        {
+          "title": "The Lion king",
+          "icon": "lion_king",
+          "category": "anim",
+          "size": 1
+        },
+        {
+          "title": "Dora",
+          "icon": "dora",
+          "category": "anim",
+          "size": 1
+        },
+        {
+          "title": "Frozen 2",
+          "icon": "frozen2",
+          "category": "anim",
+          "size": 1
+        },
+        {
+          "title": "Ferdinand",
+          "icon": "ferdinand",
+          "category": "anim",
+          "size": 1
+        },
+        {
+          "title": "The Grinch",
+          "icon": "grinch",
+          "category": "anim",
+          "size": 1
+        },
+        {
+          "title": "Incredibles 2",
+          "icon": "incredibles_2",
+          "category": "anim",
+          "size": 1
+        },
+        {
+          "title": "Abominable",
+          "icon": "abominable",
+          "category": "anim",
+          "size": 1
+        },
+        {
+          "title": "How to train your dragon 2",
+          "icon": "how_to_train_your_dragon_two",
+          "category": "anim",
+          "size": 1
+        },
+        {
+          "title": "Incredibles 2",
+          "icon": "incredibles",
+          "category": "anim",
+          "size": 1
+        },
+        {
+          "title": "Angry birds 2",
+          "icon": "angry_birds_movie_two",
+          "category": "anim",
+          "size": 1
+        }
+      ]
+    },
+    {
+      "id": "sci-fi",
+      "title": "Sci-Fi",
+      "type": "movie",
+      "items": [
+        {
+          "title": "Godzilla",
+          "icon": "interstellar",
+          "category": "sci-fi",
+          "size": 1
+        },
+        {
+          "title": "Matrix",
+          "icon": "matrix",
+          "category": "sci-fi",
+          "size": 1
+        },
+        {
+          "title": "Edge of tomorrow",
+          "icon": "edge_of_tomorrow",
+          "category": "sci-fi",
+          "size": 1
+        },
+        {
+          "title": "Ad Astra",
+          "icon": "adastra",
+          "category": "sci-fi",
+          "size": 1
+        },
+        {
+          "title": "Avengers endgame",
+          "icon": "avengers_endgame1",
+          "category": "sci-fi",
+          "size": 1
+        },
+        {
+          "title": "Avengers endgame",
+          "icon": "avengers_endgame2",
+          "category": "sci-fi",
+          "size": 1
+        },
+        {
+          "title": "Avengers endgame",
+          "icon": "avengers_endgame3",
+          "category": "sci-fi",
+          "size": 1
+        }
+      ]
+    },
+    {
+      "id": "promotion",
+      "title": "Promotion",
+      "type": "banner",
+      "items": [
+        {
+          "title": "Joker",
+          "icon": "300_rise_of_an_empire",
+          "category": "promotion",
+          "size": 3
+        },
+        {
+          "title": "Alien coventant",
+          "icon": "alien_covenant",
+          "category": "promotion",
+          "size": 3
+        },
+        {
+          "title": "Alien coventant",
+          "icon": "alien_easter",
+          "category": "promotion",
+          "size": 3
+        },
+        {
+          "title": "Blade Runner 2049",
+          "icon": "blaerunner",
+          "category": "promotion",
+          "size": 3
+        },
+        {
+          "title": "Bond",
+          "icon": "bond",
+          "category": "promotion",
+          "size": 3
+        },
+        {
+          "title": "The Dark Knight",
+          "icon": "dark_knight",
+          "category": "promotion",
+          "size": 3
+        },
+        {
+          "title": "Expendables",
+          "icon": "expendables",
+          "category": "promotion",
+          "size": 3
+        },
+        {
+          "title": "Finding dory",
+          "icon": "finding_dory",
+          "category": "promotion",
+          "size": 3
+        },
+        {
+          "title": "Interstellar",
+          "icon": "interstellar",
+          "category": "promotion",
+          "size": 3
+        },
+        {
+          "title": "Interstellar",
+          "icon": "interstellar_quad",
+          "category": "promotion",
+          "size": 3
+        },
+        {
+          "title": "Iron man",
+          "icon": "iron_man_alt",
+          "category": "promotion",
+          "size": 3
+        },
+        {
+          "title": "Jurassic Park",
+          "icon": "jurassic_park_red_big",
+          "category": "promotion",
+          "size": 3
+        },
+        {
+          "title": "Jurassic Park",
+          "icon": "jurassic_park_redironman",
+          "category": "promotion",
+          "size": 3
+        },
+        {
+          "title": "Lord of the rings",
+          "icon": "lort",
+          "category": "promotion",
+          "size": 3
+        },
+        {
+          "title": "Man of steel",
+          "icon": "man_of_steel",
+          "category": "promotion",
+          "size": 3
+        },
+        {
+          "title": "MI Fallout",
+          "icon": "mi_fallout",
+          "category": "promotion",
+          "size": 3
+        },
+        {
+          "title": "Star Wars",
+          "icon": "new_star_wars",
+          "category": "promotion",
+          "size": 3
+        },
+        {
+          "title": "Terminator",
+          "icon": "terminator",
+          "category": "promotion",
+          "size": 3
+        },
+        {
+          "title": "Thor Ragnarok",
+          "icon": "thor_ragnarok",
+          "category": "promotion",
+          "size": 3
+        }
+      ]
+    },
+    {
+      "id": "recent",
+      "title": "Recently played",
+      "type": "movie",
+      "items": [
+        {
+          "title": "Joker",
+          "icon": "joker",
+          "category": "zzzzzzzz",
+          "size": 0
+        },
+        {
+          "title": "Terminator dark fate",
+          "icon": "terminator_dark_fate",
+          "category": "zzzzzzzz",
+          "size": 0
+        },
+        {
+          "title": "John Wick 3",
+          "icon": "john_wick_3",
+          "category": "zzzzzzzz",
+          "size": 0
+        },
+        {
+          "title": "Bohemian rhapsody",
+          "icon": "bohemian_rhapsody",
+          "category": "zzzzzzzz",
+          "size": 0
+        },
+        {
+          "title": "Fist man",
+          "icon": "first_man",
+          "category": "zzzzzzzz",
+          "size": 0
+        },
+        {
+          "title": "Once upon a time in Hollywood",
+          "icon": "once_hollywood",
+          "category": "zzzzzzzz",
+          "size": 0
+        },
+        {
+          "title": "Murder Mystery",
+          "icon": "murder_mystery",
+          "category": "zzzzzzzz",
+          "size": 0
+        },
+        {
+          "title": "It 2",
+          "icon": "it_2",
+          "category": "zzzzzzzz",
+          "size": 0
+        },
+        {
+          "title": "Hellboy",
+          "icon": "hellboy",
+          "category": "zzzzzzzz",
+          "size": 0
+        },
+        {
+          "title": "Beachbum",
+          "icon": "beachbumposter",
+          "category": "zzzzzzzz",
+          "size": 0
+        },
+        {
+          "title": "Predator",
+          "icon": "predator",
+          "category": "zzzzzzzz",
+          "size": 0
+        },
+        {
+          "title": "Rambo last blood",
+          "icon": "rambo_last_blood",
+          "category": "zzzzzzzz",
+          "size": 0
+        }
+      ]
+    }
+  ]
+}

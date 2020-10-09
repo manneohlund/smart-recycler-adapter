@@ -10,9 +10,10 @@ import smartadapter.SmartEndlessScrollRecyclerAdapter
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.viewevent.extension.add
 import smartadapter.viewevent.listener.OnClickEventListener
-import smartrecycleradapter.data.MovieDataItems
 import smartrecycleradapter.extension.GridAutoLayoutManager
+import smartrecycleradapter.models.MovieData
 import smartrecycleradapter.models.MovieModel
+import smartrecycleradapter.utils.AssetsUtils
 import smartrecycleradapter.utils.showToast
 import smartrecycleradapter.viewholder.HeaderViewHolder
 import smartrecycleradapter.viewholder.ThumbViewHolder
@@ -27,6 +28,10 @@ enum class MovieType(val title: String) {
 }
 
 class MovieCategoryDetailsActivity : AppCompatActivity() {
+
+    private val movieData: MovieData by lazy {
+        AssetsUtils.loadStyleFromAssets<MovieData>(this, "main-movie-data.json")
+    }
 
     private lateinit var movieType: MovieType
     private var endlessScrollCount = 0
@@ -44,12 +49,12 @@ class MovieCategoryDetailsActivity : AppCompatActivity() {
 
     private fun initSmartRecyclerAdapter() {
         val movieItems: List<Any> = when (movieType) {
-            MovieType.COMING_SOON -> MovieDataItems.comingSoonItems
-            MovieType.MY_WATCH_LIST -> MovieDataItems.myWatchListItems
-            MovieType.ACTION -> MovieDataItems.nestedActionItems
-            MovieType.ADVENTURE -> MovieDataItems.nestedAdventureItems
-            MovieType.ANIMATED -> MovieDataItems.nestedAnimatedItems
-            MovieType.SCI_FI -> MovieDataItems.nestedSciFiItems
+            MovieType.COMING_SOON -> movieData.categories.find { it.id == "coming-soon" }!!.items
+            MovieType.MY_WATCH_LIST -> movieData.categories.find { it.id == "watch-list" }!!.items
+            MovieType.ACTION -> movieData.categories.find { it.id == "action" }!!.items
+            MovieType.ADVENTURE -> movieData.categories.find { it.id == "adventure" }!!.items
+            MovieType.ANIMATED -> movieData.categories.find { it.id == "anim" }!!.items
+            MovieType.SCI_FI -> movieData.categories.find { it.id == "sci-fi" }!!.items
         }
 
         val adapterItems = mutableListOf(
@@ -76,33 +81,31 @@ class MovieCategoryDetailsActivity : AppCompatActivity() {
                     .into(recyclerView)
             }
             MovieType.ACTION, MovieType.ADVENTURE, MovieType.ANIMATED, MovieType.SCI_FI -> {
-                val endlessScrollAdapter: SmartEndlessScrollRecyclerAdapter =
-                    SmartEndlessScrollRecyclerAdapter.items(adapterItems)
-                        .map(String::class, HeaderViewHolder::class)
-                        .map(MovieModel::class, ThumbViewHolder::class)
-                        .setLayoutManager(gridAutoLayoutManager)
-                        .add(OnClickEventListener(ThumbViewHolder::class) {
-                            showToast("Movie ${it.position}")
-                        })
-                        .into(recyclerView)
+                SmartEndlessScrollRecyclerAdapter.items(adapterItems)
+                    .setAutoLoadMoreEnabled(true)
+                    .setOnLoadMoreListener { adapter, loadMoreViewHolder ->
+                        if (!adapter.isLoading) {
+                            adapter.isLoading = true
 
-                endlessScrollAdapter.autoLoadMoreEnabled = true
-                endlessScrollAdapter.onLoadMoreListener = {
-                    if (!endlessScrollAdapter.isLoading) {
-                        endlessScrollAdapter.isLoading = true
-
-                        Handler().postDelayed(
-                            {
-                                endlessScrollAdapter.addItems(movieItems)
-                                if (endlessScrollCount++ == 3) {
-                                    endlessScrollAdapter.isEndlessScrollEnabled = false
-                                }
-                                endlessScrollAdapter.isLoading = false
-                            },
-                            3000
-                        )
+                            Handler().postDelayed(
+                                {
+                                    adapter.addItems(movieItems)
+                                    if (endlessScrollCount++ == 3) {
+                                        adapter.isEndlessScrollEnabled = false
+                                    }
+                                    adapter.isLoading = false
+                                },
+                                3000
+                            )
+                        }
                     }
-                }
+                    .map(String::class, HeaderViewHolder::class)
+                    .map(MovieModel::class, ThumbViewHolder::class)
+                    .setLayoutManager(gridAutoLayoutManager)
+                    .add(OnClickEventListener(ThumbViewHolder::class) {
+                        showToast("Movie ${it.position}")
+                    })
+                    .into<SmartEndlessScrollRecyclerAdapter>(recyclerView)
             }
         }
     }

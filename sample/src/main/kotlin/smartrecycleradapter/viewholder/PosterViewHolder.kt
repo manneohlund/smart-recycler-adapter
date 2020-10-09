@@ -17,12 +17,12 @@ import smartadapter.viewevent.viewholder.CustomViewEventListenerHolder
 import smartadapter.viewholder.SmartAdapterHolder
 import smartadapter.viewholder.SmartViewHolder
 import smartrecycleradapter.R
-import smartrecycleradapter.models.MovieModel
+import smartrecycleradapter.models.MovieCategory
 import smartrecycleradapter.utils.displayHeight
 import smartrecycleradapter.utils.displayWidth
 
 class PosterViewHolder(parentView: ViewGroup) :
-    SmartViewHolder<MovieModel>(parentView, R.layout.poster_item),
+    SmartViewHolder<MovieCategory>(parentView, R.layout.poster_item),
     CustomViewEventListenerHolder,
     SmartAdapterHolder {
 
@@ -50,9 +50,9 @@ class PosterViewHolder(parentView: ViewGroup) :
         .error(R.drawable.ic_broken_image_black_48dp)
         .centerInside()
 
-    override fun bind(movie: MovieModel) {
+    override fun bind(movie: MovieCategory) {
         Glide.with(imageView)
-            .load(movie.iconUrl)
+            .load(movie.items.random().iconUrl)
             .apply(requestOption)
             .override(imageView.context.displayWidth, imageView.context.displayHeight)
             .centerInside()

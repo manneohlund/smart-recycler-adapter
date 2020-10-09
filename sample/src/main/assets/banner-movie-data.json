@@ -1,0 +1,106 @@
+{
+  "categories": [
+    {
+      "id": "promotion",
+      "title": "Promotion",
+      "type": "banner",
+      "items": [
+        {
+          "title": "Joker",
+          "icon": "300_rise_of_an_empire",
+          "size": 3
+        },
+        {
+          "title": "Alien coventant",
+          "icon": "alien_covenant",
+          "size": 3
+        },
+        {
+          "title": "Alien coventant",
+          "icon": "alien_easter",
+          "size": 3
+        },
+        {
+          "title": "Blade Runner 2049",
+          "icon": "blaerunner",
+          "size": 3
+        },
+        {
+          "title": "Bond",
+          "icon": "bond",
+          "size": 3
+        },
+        {
+          "title": "The Dark Knight",
+          "icon": "dark_knight",
+          "size": 3
+        },
+        {
+          "title": "Expendables",
+          "icon": "expendables",
+          "size": 3
+        },
+        {
+          "title": "Finding dory",
+          "icon": "finding_dory",
+          "size": 3
+        },
+        {
+          "title": "Interstellar",
+          "icon": "interstellar",
+          "size": 3
+        },
+        {
+          "title": "Interstellar",
+          "icon": "interstellar_quad",
+          "size": 3
+        },
+        {
+          "title": "Iron man",
+          "icon": "iron_man_alt",
+          "size": 3
+        },
+        {
+          "title": "Jurassic Park",
+          "icon": "jurassic_park_red_big",
+          "size": 3
+        },
+        {
+          "title": "Jurassic Park",
+          "icon": "jurassic_park_redironman",
+          "size": 3
+        },
+        {
+          "title": "Lord of the rings",
+          "icon": "lort",
+          "size": 3
+        },
+        {
+          "title": "Man of steel",
+          "icon": "man_of_steel",
+          "size": 3
+        },
+        {
+          "title": "MI Fallout",
+          "icon": "mi_fallout",
+          "size": 3
+        },
+        {
+          "title": "Star Wars",
+          "icon": "new_star_wars",
+          "size": 3
+        },
+        {
+          "title": "Terminator",
+          "icon": "terminator",
+          "size": 3
+        },
+        {
+          "title": "Thor Ragnarok",
+          "icon": "thor_ragnarok",
+          "size": 3
+        }
+      ]
+    }
+  ]
+}

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import smartadapter.binders.ItemTouchBinder
 import smartadapter.binders.SmartRecyclerAdapterExtension
+import smartadapter.internal.extension.isMutable
 import smartadapter.internal.extension.name
 import smartadapter.viewholder.SmartAdapterHolder
 import smartadapter.widget.ViewTypeResolver
@@ -19,21 +20,25 @@ import kotlin.reflect.KClass
 /**
  * Builder for [SmartRecyclerAdapter].
  */
-class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter: SmartRecyclerAdapter) {
-    private var layoutManager: RecyclerView.LayoutManager? = null
-    private var viewTypeResolver: ViewTypeResolver? = null
-    private val viewHolderMapper = HashMap<String, SmartViewHolderType>()
-    private val smartRecyclerAdapterMapper = HashMap<SmartViewHolderType, SmartRecyclerAdapter>()
-    private val viewHolderBinders = mutableListOf<SmartViewHolderBinder>()
-    private val smartRecyclerAdapterExtensions = mutableMapOf<Any, SmartRecyclerAdapterExtension>()
+open class SmartAdapterBuilder {
+    internal var items: MutableList<Any> = mutableListOf()
+    internal var layoutManager: RecyclerView.LayoutManager? = null
+    internal var viewTypeResolver: ViewTypeResolver? = null
+    internal val viewHolderMapper = HashMap<String, SmartViewHolderType>()
+    internal val viewHolderBinders = mutableListOf<SmartViewHolderBinder>()
+    internal val smartRecyclerAdapterExtensions = mutableMapOf<Any, SmartRecyclerAdapterExtension>()
+
+    internal open fun getSmartRecyclerAdapter() = SmartRecyclerAdapter(items.let {
+        (if (it.isMutable()) it else it.toMutableList())
+    })
 
     fun map(itemType: KClass<*>, viewHolderType: SmartViewHolderType): SmartAdapterBuilder {
         viewHolderMapper[itemType.name] = viewHolderType
         return this
     }
 
-    fun map(viewHolderType: SmartViewHolderType, smartRecyclerAdapter: SmartRecyclerAdapter): SmartAdapterBuilder {
-        smartRecyclerAdapterMapper[viewHolderType] = smartRecyclerAdapter
+    fun setItems(items: List<Any>): SmartAdapterBuilder {
+        this.items = (if (items.isMutable()) items else items.toMutableList()) as MutableList<Any>
         return this
     }
 
@@ -78,8 +83,8 @@ class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter:
 
     @Suppress("UNCHECKED_CAST")
     fun <T> into(recyclerView: RecyclerView): T {
+        val smartRecyclerAdapter = getSmartRecyclerAdapter()
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper)
-        smartRecyclerAdapter.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper)
         smartRecyclerAdapter.viewTypeResolver = viewTypeResolver
         recyclerView.adapter = smartRecyclerAdapter
         recyclerView.layoutManager = getLayoutManager(recyclerView.context)
@@ -96,8 +101,8 @@ class SmartAdapterBuilder internal constructor(private val smartRecyclerAdapter:
 
     @Suppress("UNCHECKED_CAST")
     fun <T> create(): T {
+        val smartRecyclerAdapter = getSmartRecyclerAdapter()
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper)
-        smartRecyclerAdapter.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper)
         smartRecyclerAdapter.viewTypeResolver = viewTypeResolver
         viewHolderBinders.forEach {
             smartRecyclerAdapter.addBinder(it)

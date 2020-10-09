@@ -5,7 +5,6 @@ package smartrecycleradapter.viewholder
  * Copyright © 2017. All rights reserved.
  */
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.bumptech.glide.Glide
@@ -37,10 +36,8 @@ class SmallThumbViewHolder(parentView: ViewGroup) :
     }
 }
 
-open class ThumbViewHolder(parentView: ViewGroup) : SmartViewHolder<MovieModel>(
-    LayoutInflater.from(parentView.context)
-        .inflate(R.layout.thumb_item, parentView, false)
-) {
+open class ThumbViewHolder(parentView: ViewGroup) :
+    SmartViewHolder<MovieModel>(parentView, R.layout.thumb_item) {
 
     private val imageView: ImageView = itemView as ImageView
 

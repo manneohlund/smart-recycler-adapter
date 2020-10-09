@@ -27,19 +27,16 @@ class EndlessScrollActivity : BaseSampleActivity() {
 
         smartAdapter = SmartEndlessScrollRecyclerAdapter
             .items(items)
+            .setAutoLoadMoreEnabled(true)
+            .setLoadMoreLayoutResource(R.layout.custom_load_more_view)
+            .setOnLoadMoreListener { adapter, loadMoreViewHolder ->
+                when {
+                    itemCount < 100 -> addMoreStuff()
+                    else -> disableScroll()
+                }
+            }
             .map(Integer::class, SimpleItemViewHolder::class)
             .into(recyclerView)
-
-        smartAdapter.autoLoadMoreEnabled = true
-
-        smartAdapter.loadMoreLayoutResource = R.layout.custom_load_more_view
-
-        smartAdapter.onLoadMoreListener = {
-            when {
-                itemCount < 100 -> addMoreStuff()
-                else -> disableScroll()
-            }
-        }
     }
 
     private fun addMoreStuff() {

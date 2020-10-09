@@ -8,7 +8,6 @@ package smartadapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import smartadapter.binders.SmartRecyclerAdapterExtension
-import smartadapter.internal.extension.isMutable
 import smartadapter.internal.mapper.ViewHolderMapper
 import smartadapter.listener.OnBindViewHolderListener
 import smartadapter.listener.OnCreateViewHolderListener
@@ -95,7 +94,7 @@ open class SmartRecyclerAdapter
     override fun onBindViewHolder(smartViewHolder: SmartViewHolder<Any>, position: Position) {
         smartViewHolder.bind(items[position])
         viewHolderBinders.forEach {
-            if ((it.viewHolderType == SmartViewHolder::class || it.viewHolderType == smartViewHolder::class) && it is OnBindViewHolderListener) {
+            if ((it.viewHolderType == SmartViewHolder::class || it.viewHolderType.isInstance(smartViewHolder)) && it is OnBindViewHolderListener) {
                 it.onBindViewHolder(this, smartViewHolder)
             }
         }
@@ -116,7 +115,7 @@ open class SmartRecyclerAdapter
         super.onViewRecycled(smartViewHolder)
         smartViewHolder.unbind()
         viewHolderBinders.forEach {
-            if ((it.viewHolderType == SmartViewHolder::class || it.viewHolderType == smartViewHolder::class) && it is OnViewRecycledListener) {
+            if ((it.viewHolderType == SmartViewHolder::class || it.viewHolderType.isInstance(smartViewHolder)) && it is OnViewRecycledListener) {
                 it.onViewRecycled(this, smartViewHolder)
             }
         }
@@ -295,10 +294,6 @@ open class SmartRecyclerAdapter
         viewHolderMapper.setDataTypeViewHolderMapper(dataTypeViewHolderMapper)
     }
 
-    internal fun setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper: HashMap<SmartViewHolderType, SmartRecyclerAdapter>) {
-        viewHolderMapper.setSmartRecyclerAdapterMapper(smartRecyclerAdapterMapper)
-    }
-
     override fun addBinder(viewHolderBinder: SmartViewHolderBinder) {
         viewHolderBinders.add(viewHolderBinder)
     }
@@ -314,16 +309,12 @@ open class SmartRecyclerAdapter
          * Builder of [SmartRecyclerAdapter] for easy implementation.
          * @return SmartAdapterBuilder
          */
-        fun items(items: List<*>): SmartAdapterBuilder =
-            SmartAdapterBuilder(SmartRecyclerAdapter(items.let {
-                (if (it.isMutable()) it else it.toMutableList()) as MutableList<Any>
-            }))
+        fun items(items: List<Any>): SmartAdapterBuilder = SmartAdapterBuilder().setItems(items)
 
         /**
          * Builder of [SmartRecyclerAdapter] for easy implementation.
          * @return SmartAdapterBuilder
          */
-        fun empty(): SmartAdapterBuilder =
-                SmartAdapterBuilder(SmartRecyclerAdapter(mutableListOf()))
+        fun empty(): SmartAdapterBuilder = SmartAdapterBuilder()
     }
 }
