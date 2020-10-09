@@ -6,8 +6,8 @@ apply plugin: 'maven-publish'
 ext {
     LIB_ARTIFACT_NAME = 'SmartRecyclerAdapter ViewEvent'
     LIB_ARTIFACT_ID = 'smart-recycler-adapter-viewevent'
-    LIB_VERSION_CODE = 2
-    LIB_VERSION_NAME = '1.0.0-alpha02'
+    LIB_VERSION_CODE = 3
+    LIB_VERSION_NAME = '1.0.0-beta01'
     LIB_DESCRIPTION = 'View Event listeners extension library for SmartRecyclerAdapter'
 }
 

@@ -62,7 +62,7 @@ dependencies {
 ```groovy
 dependencies {
   // ViewEvent click listeners, multi select, swipe dismiss and drag & drop
-  implementation 'io.github.manneohlund:smart-recycler-adapter-viewevent:1.0.0-alpha02'
+  implementation 'io.github.manneohlund:smart-recycler-adapter-viewevent:1.0.0-beta01'
   // DiffUtil extension library
   implementation 'io.github.manneohlund:smart-recycler-adapter-diffutil:1.0.0-alpha01'
   // Nested adapter extension library
@@ -193,7 +193,7 @@ You can create any type of `SmartViewHolderBinder` extension and implement any n
 
 ### View Events
 
-`io.github.manneohlund:smart-recycler-adapter-viewevent:1.0.0-alpha02` comes with a range of ViewEvent listeners.<br/>
+In `io.github.manneohlund:smart-recycler-adapter-viewevent:1.0.0-beta01` comes with a range of ViewEvent listeners.<br/>
 Default `viewId` is `R.id.undefined` that targets root view of the ViewHolder (ViewHolder.itemView).
 
 ```kotlin
