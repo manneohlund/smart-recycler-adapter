@@ -86,7 +86,6 @@ open class SmartAdapterBuilder {
         val smartRecyclerAdapter = getSmartRecyclerAdapter()
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper)
         smartRecyclerAdapter.viewTypeResolver = viewTypeResolver
-        recyclerView.adapter = smartRecyclerAdapter
         recyclerView.layoutManager = getLayoutManager(recyclerView.context)
         viewHolderBinders.forEach {
             smartRecyclerAdapter.addBinder(it)
@@ -96,6 +95,7 @@ open class SmartAdapterBuilder {
         smartRecyclerAdapterExtensions.forEach {
             smartRecyclerAdapter.addExtension(it.value)
         }
+        recyclerView.adapter = smartRecyclerAdapter
         return smartRecyclerAdapter as T
     }
 
