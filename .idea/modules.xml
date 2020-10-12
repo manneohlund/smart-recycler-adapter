@@ -8,6 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/sample/sample.iml" filepath="$PROJECT_DIR$/.idea/modules/sample/sample.iml" group="smart-recycler-adapter/sample" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/smart-recycler-adapter.iml" filepath="$PROJECT_DIR$/.idea/modules/smart-recycler-adapter.iml" group="smart-recycler-adapter" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/smartadapter/smartadapter.iml" filepath="$PROJECT_DIR$/.idea/modules/smartadapter/smartadapter.iml" group="smart-recycler-adapter/smartadapter" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/extensions/stickyheader/stickyheader.iml" filepath="$PROJECT_DIR$/.idea/modules/extensions/stickyheader/stickyheader.iml" group="smart-recycler-adapter/extensions/stickyheader" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/extensions/viewevent/viewevent.iml" filepath="$PROJECT_DIR$/.idea/modules/extensions/viewevent/viewevent.iml" group="smart-recycler-adapter/extensions/viewevent" />
     </modules>
   </component>

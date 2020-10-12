@@ -1,51 +1,116 @@
-package smartadapter
+package smartadapter.stickyheader
 
+/*
+ * Created by Manne Öhlund on 2020-10-11.
+ * Copyright (c) All rights reserved.
+ */
+
+import android.annotation.SuppressLint
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.RectF
+import android.graphics.drawable.Drawable
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import smartadapter.SmartRecyclerAdapter
+import smartadapter.binders.SmartRecyclerAdapterExtension
+import smartadapter.listener.OnAttachedToRecyclerViewListener
+import smartadapter.listener.OnDetachedFromRecyclerViewListener
+import kotlin.reflect.KClass
 
-class StickyHeaderItemDecoration(
-    parent: RecyclerView,
+/**
+ * Defining the basic sticky header for linear layout.
+ *
+ * Code and inspiration from https://gist.github.com/filipkowicz/1a769001fae407b8813ab4387c42fcbd
+ */
+@SuppressLint("ClickableViewAccessibility")
+class StickyHeaderItemDecorationExtension(
+    override val identifier: Any = StickyHeaderItemDecorationExtension::class,
     private val shouldFadeOutHeader: Boolean = false,
-    private val isHeader: (itemPosition: Int) -> Boolean,
-    private val onHeaderTouchListener: (itemPosition: Int) -> Unit
-) : RecyclerView.ItemDecoration() {
+    private val headerItemType: KClass<*>,
+    private var isHeader: ((itemPosition: Int) -> Boolean)? = null,
+    private val headerBackground: Drawable? = null,
+    private val onHeaderTouchListener: (motionEvent: MotionEvent, itemPosition: Int) -> Unit = { motionEvent, itemPosition -> }
+) : RecyclerView.ItemDecoration(),
+    SmartRecyclerAdapterExtension,
+    OnAttachedToRecyclerViewListener,
+    OnDetachedFromRecyclerViewListener {
 
-    private var headerCount = 0
-    private var currentHeaderPosition: Int = 0
+    private var headerCount = fun (): Int = 0
     private var currentHeader: Pair<Int, RecyclerView.ViewHolder>? = null
 
-    init {
-        parent.adapter?.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onChanged() {
-                // clear saved header as it can be outdated now
-                currentHeader = null
-            }
-        })
-
-        parent.doOnEachNextLayout {
-            // clear saved layout as it may need layout update
+    private val dataObserver = object : RecyclerView.AdapterDataObserver() {
+        override fun onChanged() {
+            // clear saved header as it can be outdated now
             currentHeader = null
         }
-        // handle click on sticky header
-        parent.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
-            override fun onInterceptTouchEvent(
-                recyclerView: RecyclerView,
-                motionEvent: MotionEvent
-            ): Boolean {
-                return if (motionEvent.action == MotionEvent.ACTION_DOWN) {
-                    (motionEvent.y <= currentHeader?.second?.itemView?.bottom ?: 0).also { isWithinHeaderBounds ->
-                        if (isWithinHeaderBounds) {
-                            currentHeader?.let { onHeaderTouchListener.invoke(it.first - headerCount - 1) }
-                        }
-                    }
-                } else false
+    }
+
+    private val itemTouchListener = object : RecyclerView.SimpleOnItemTouchListener() {
+        override fun onInterceptTouchEvent(
+            recyclerView: RecyclerView,
+            motionEvent: MotionEvent
+        ): Boolean {
+            val isWithinHeaderBounds =
+                motionEvent.y <= currentHeader?.second?.itemView?.bottom ?: 0
+            return if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                isWithinHeaderBounds
+            } else false
+        }
+    }
+
+    private val onLayoutChangeListener = View.OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+        // clear saved layout as it may need layout update
+        currentHeader = null
+    }
+
+    override fun bind(smartRecyclerAdapter: SmartRecyclerAdapter) {
+        isHeader = isHeader ?: { position ->
+            headerItemType.isInstance(smartRecyclerAdapter.getItem(position))
+        }
+
+        headerCount = fun (): Int {
+            var count = 0
+            for (position in (currentHeader?.first ?: 0) downTo 0) {
+                if (isHeader?.invoke(position) == true) {
+                    count++
+                }
             }
-        })
+            return count
+        }
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        recyclerView.addItemDecoration(this)
+        recyclerView.adapter?.registerAdapterDataObserver(dataObserver)
+        recyclerView.addOnLayoutChangeListener(onLayoutChangeListener)
+        // handle click on sticky header
+        recyclerView.addOnItemTouchListener(itemTouchListener)
+        recyclerView.setOnTouchListener { view, motionEvent ->
+            val isWithinHeaderBounds =
+                motionEvent.y <= currentHeader?.second?.itemView?.bottom ?: 0
+            if (isWithinHeaderBounds) {
+                currentHeader?.let {
+                    onHeaderTouchListener.invoke(
+                        motionEvent,
+                        it.first - headerCount() + 1
+                    )
+                }
+            }
+            if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                isWithinHeaderBounds
+            } else false
+        }
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        recyclerView.removeItemDecoration(this)
+        recyclerView.adapter?.unregisterAdapterDataObserver(dataObserver)
+        recyclerView.removeOnLayoutChangeListener(onLayoutChangeListener)
+        // handle click on sticky header
+        recyclerView.removeOnItemTouchListener(itemTouchListener)
     }
 
     override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
@@ -55,17 +120,23 @@ class StickyHeaderItemDecoration(
             parent.paddingLeft.toFloat(),
             parent.paddingTop.toFloat() /*+ (currentHeader?.second?.itemView?.height ?: 0 )*/
         ) ?: return
+
         val topChildPosition = parent.getChildAdapterPosition(topChild)
         if (topChildPosition == RecyclerView.NO_POSITION) {
             return
         }
 
         val headerView = getHeaderViewForItem(topChildPosition, parent) ?: return
+        headerBackground?.let {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                headerView.background = it
+            }
+        }
 
         val contactPoint = headerView.bottom + parent.paddingTop
         val childInContact = getChildInContact(parent, contactPoint) ?: return
 
-        if (isHeader(parent.getChildAdapterPosition(childInContact))) {
+        if (isHeader?.invoke(parent.getChildAdapterPosition(childInContact)) == true) {
             moveHeader(c, headerView, childInContact, parent.paddingTop)
             return
         }
@@ -90,7 +161,11 @@ class StickyHeaderItemDecoration(
             parent.adapter?.onBindViewHolder(headerHolder, headerPosition)
             fixLayoutSize(parent, headerHolder.itemView)
             // save for next draw
-            headerCount += if (currentHeader?.first ?: 0 < headerPosition) 1 else -1
+            /*headerCount += when {
+                currentHeader?.first ?: 0 == itemPosition -> 0
+                currentHeader?.first ?: 0 < headerPosition -> 1
+                else -> -1
+            }*/
             currentHeader = headerPosition to headerHolder
         }
         return headerHolder?.itemView
@@ -180,20 +255,12 @@ class StickyHeaderItemDecoration(
         var headerPosition = RecyclerView.NO_POSITION
         var currentPosition = itemPosition
         do {
-            if (isHeader(currentPosition)) {
+            if (isHeader?.invoke(currentPosition) == true) {
                 headerPosition = currentPosition
                 break
             }
             currentPosition -= 1
         } while (currentPosition >= 0)
         return headerPosition
-    }
-}
-
-inline fun View.doOnEachNextLayout(crossinline action: (view: View) -> Unit) {
-    addOnLayoutChangeListener { view, _, _, _, _, _, _, _, _ ->
-        action(
-            view
-        )
     }
 }
