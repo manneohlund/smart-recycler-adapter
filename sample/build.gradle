@@ -111,6 +111,7 @@ dependencies {
     //implementation 'io.github.manneohlund:smart-recycler-adapter-viewevent:1.0.0-beta02'
     //implementation 'io.github.manneohlund:smart-recycler-adapter-diffutil:1.0.0-alpha01'
     //implementation 'io.github.manneohlund:smart-recycler-adapter-nestedadapter:1.0.0-alpha01'
+    //implementation 'io.github.manneohlund:smart-recycler-adapter-stickyheader:1.0.0-alpha01'
 
     implementation project(':smartadapter')
     implementation project(path: ':extensions:diffutil')
