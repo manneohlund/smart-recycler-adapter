@@ -62,21 +62,11 @@ dependencies {
 ```groovy
 dependencies {
   // ViewEvent click listeners, multi select, swipe dismiss and drag & drop
-  implementation 'io.github.manneohlund:smart-recycler-adapter-viewevent:1.0.0-beta01'
+  implementation 'io.github.manneohlund:smart-recycler-adapter-viewevent:1.0.0-beta02'
   // DiffUtil extension library
   implementation 'io.github.manneohlund:smart-recycler-adapter-diffutil:1.0.0-alpha01'
   // Nested adapter extension library
   implementation 'io.github.manneohlund:smart-recycler-adapter-nestedadapter:1.0.0-alpha01'
-}
-```
-
-# Proguard
-
-Only known rule is to keep constructor for all ViewHolders.
-
-```proguard
--keepclassmembers class **ViewHolder {
-    public <init>(**);
 }
 ```
 
@@ -295,6 +285,27 @@ SmartRecyclerAdapter
 
 **See sample app section:** [#SmartStateHolder](#smartstateholder)
 
+# smart-recycler-adapter-stickyheader
+
+With `smart-recycler-adapter-stickyheader` `v1.0.0-alpha01` it's super easy to add a sticky header recycler view item decoration.<br/>
+Just set the target `headerItemType` and the `StickyHeaderItemDecorationExtension` will do the rest.<br/>
+You can even add a sticky header item touch event listener.
+
+```kotlin
+SmartRecyclerAdapter
+  .items(items)
+  .map(String::class, SimpleHeaderViewHolder::class)
+  .map(Integer::class, SimpleItemViewHolder::class)
+  .addExtension(StickyHeaderItemDecorationExtension(
+    headerItemType = HeaderViewHolder::class
+  ) { motionEvent, itemPosition ->
+    if (motionEvent.action == MotionEvent.ACTION_UP) {
+      showToast("Header $itemPosition clicked")
+    }
+  })
+  .into(recyclerView)
+```
+
 # smart-recycler-adapter-diffutil
 
 As of `smart-recycler-adapter:v5.0.0` diff util have been removed from `SmartRecyclerAdapter` and is added in this extension library `smart-recycler-adapter-diffutil`.
@@ -380,6 +391,17 @@ SmartRecyclerAdapter
         // Handle parent adapter click event
     })
     .into(recyclerView)
+```
+
+# Proguard
+
+Only known rule is to keep constructor for all ViewHolders.<br/>
+This rule is auto included in the `consumer-rules.pro` for `smart-recycler-adapter` library so no manual config is needed.
+
+```proguard
+-keepclassmembers class **ViewHolder {
+    public <init>(**);
+}
 ```
 
 # More
