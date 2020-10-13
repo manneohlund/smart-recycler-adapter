@@ -43,12 +43,14 @@ import smartrecycleradapter.feature.MultiSelectItemsActivity
 import smartrecycleradapter.feature.MultiSelectSwitchItemsActivity
 import smartrecycleradapter.feature.MultipleEventsAndExtensionsActivity
 import smartrecycleradapter.feature.MultipleExpandableItemActivity
+import smartrecycleradapter.feature.MultipleExpandableItemHeaderActivity
 import smartrecycleradapter.feature.MultipleViewTypesResolverActivity
 import smartrecycleradapter.feature.NestedSmartRecyclerAdaptersActivity
 import smartrecycleradapter.feature.SimpleItemActivity
 import smartrecycleradapter.feature.SimpleItemOnClickOnLongClickActivity
 import smartrecycleradapter.feature.SingleExpandableItemActivity
 import smartrecycleradapter.feature.SingleSelectRadioButtonItemActivity
+import smartrecycleradapter.feature.StickyHeaderActivity
 import smartrecycleradapter.feature.SwipeRemoveItemActivity
 import smartrecycleradapter.models.CopyrightModel
 import smartrecycleradapter.models.MovieCategory
@@ -293,6 +295,10 @@ class DemoActivity : AppCompatActivity() {
                 "Simple Item"
             ),
             SampleFabViewHolder.SimpleFabItem(
+                R.drawable.ic_baseline_format_align_left_24,
+                "Simple sticky header"
+            ),
+            SampleFabViewHolder.SimpleFabItem(
                 R.drawable.ic_sample_touch_app_black_24dp,
                 "Smart onClick/onLongClick"
             ),
@@ -345,6 +351,10 @@ class DemoActivity : AppCompatActivity() {
                 "Multiple Expandable item"
             ),
             SampleFabViewHolder.SimpleFabItem(
+                R.drawable.ic_baseline_expand_more_24,
+                "Multi Expand item + header"
+            ),
+            SampleFabViewHolder.SimpleFabItem(
                 R.drawable.ic_expand_less_black_24dp,
                 "Single Expandable item"
             ),
@@ -374,6 +384,8 @@ class DemoActivity : AppCompatActivity() {
                 when (sfi.icon) {
                     R.drawable.ic_sample_list_black_24dp ->
                         startActivity(SimpleItemActivity::class)
+                    R.drawable.ic_baseline_format_align_left_24 ->
+                        startActivity(StickyHeaderActivity::class)
                     R.drawable.ic_sample_touch_app_black_24dp ->
                         startActivity(SimpleItemOnClickOnLongClickActivity::class)
                     R.drawable.ic_sample_edit_black_24dp ->
@@ -400,6 +412,8 @@ class DemoActivity : AppCompatActivity() {
                         startActivity(MultiSelectSwitchItemsActivity::class)
                     R.drawable.ic_expand_more_black_24dp ->
                         startActivity(MultipleExpandableItemActivity::class)
+                    R.drawable.ic_baseline_expand_more_24 ->
+                        startActivity(MultipleExpandableItemHeaderActivity::class)
                     R.drawable.ic_expand_less_black_24dp ->
                         startActivity(SingleExpandableItemActivity::class)
                     R.drawable.ic_sample_nested_scroll_layers_black_24dp ->

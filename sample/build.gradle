@@ -107,8 +107,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 
     // Project
-    //implementation 'io.github.manneohlund:smart-recycler-adapter:5.0.0-beta04'
-    //implementation 'io.github.manneohlund:smart-recycler-adapter-viewevent:1.0.0-beta01'
+    //implementation 'io.github.manneohlund:smart-recycler-adapter:5.0.0-beta05'
+    //implementation 'io.github.manneohlund:smart-recycler-adapter-viewevent:1.0.0-beta02'
     //implementation 'io.github.manneohlund:smart-recycler-adapter-diffutil:1.0.0-alpha01'
     //implementation 'io.github.manneohlund:smart-recycler-adapter-nestedadapter:1.0.0-alpha01'
 
@@ -116,6 +116,7 @@ dependencies {
     implementation project(path: ':extensions:diffutil')
     implementation project(path: ':extensions:viewevent')
     implementation project(path: ':extensions:nestedadapter')
+    implementation project(path: ':extensions:stickyheader')
 
     // Androidx
     implementation "androidx.annotation:annotation:$annotation_version"
