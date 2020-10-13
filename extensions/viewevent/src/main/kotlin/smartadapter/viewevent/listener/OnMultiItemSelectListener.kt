@@ -24,14 +24,19 @@ import smartadapter.viewevent.viewholder.OnItemSelectedEventListener
 import smartadapter.viewevent.viewmodel.ViewEventViewModel
 import smartadapter.viewholder.SmartViewHolder
 import java.util.TreeSet
+import kotlin.reflect.KClass
 
 /**
  * Extends [OnMultiItemSelectListener] and contains the logic for the single check states for recycler adapter positions.
  */
 open class OnSingleItemCheckListener(
     override val viewHolderType: SmartViewHolderType = SmartViewHolder::class,
+    selectableItemType: KClass<*> = Any::class,
     @IdRes viewId: ViewId = R.id.undefined
-) : OnMultiItemCheckListener(viewId = viewId) {
+) : OnMultiItemCheckListener(
+    viewId = viewId,
+    selectableItemType = selectableItemType
+) {
 
     /**
      * Adds the position to the data set and [.disable]s any old positions.
@@ -60,9 +65,11 @@ open class OnSingleItemCheckListener(
  */
 open class OnSingleItemSelectListener(
     override val viewHolderType: SmartViewHolderType = SmartViewHolder::class,
+    selectableItemType: KClass<*> = Any::class,
     @IdRes viewId: ViewId = R.id.undefined
 ) : OnMultiItemSelectListener(
     enableOnLongClick = false,
+    selectableItemType = selectableItemType,
     viewId = viewId
 ) {
 
@@ -93,9 +100,11 @@ open class OnSingleItemSelectListener(
  */
 open class OnMultiItemCheckListener(
     override val viewHolderType: SmartViewHolderType = SmartViewHolder::class,
+    selectableItemType: KClass<*> = Any::class,
     @IdRes viewId: ViewId = R.id.undefined
 ) : OnMultiItemSelectListener(
     enableOnLongClick = false,
+    selectableItemType = selectableItemType,
     viewId = viewId
 ) {
 
@@ -143,6 +152,7 @@ open class OnMultiItemCheckListener(
 open class OnMultiItemSelectListener(
     val enableOnLongClick: Boolean = true,
     override val viewHolderType: SmartViewHolderType = SmartViewHolder::class,
+    internal val selectableItemType: KClass<*> = Any::class,
     @IdRes val viewId: ViewId = R.id.undefined,
     override var eventListener: (ViewEvent) -> Unit = {}
 ) : OnViewEventListener<ViewEvent>,
@@ -171,8 +181,24 @@ open class OnMultiItemSelectListener(
         selectedItems.add(position)
     }
 
+    override fun enableAll() {
+        smartRecyclerAdapter.getItems().forEachIndexed { index, item ->
+            if (selectableItemType.isInstance(item)) {
+                enable(index)
+                smartRecyclerAdapter.smartNotifyItemChanged(index)
+            }
+        }
+    }
+
     override fun disable(position: Position) {
         selectedItems.remove(position)
+    }
+
+    override fun disableAll() {
+        selectedItems.toIntArray().forEach { position ->
+            disable(position)
+            smartRecyclerAdapter.smartNotifyItemChanged(position)
+        }
     }
 
     /**

@@ -25,10 +25,20 @@ interface SmartStateHolder {
     fun enable(position: Position)
 
     /**
+     * Adds the position to the data set for all target items.
+     */
+    fun enableAll()
+
+    /**
      * Removes the position from the data set.
      * @param position the adapter position
      */
     fun disable(position: Position)
+
+    /**
+     * Removes all the positions from the data set.
+     */
+    fun disableAll()
 
     /**
      * Enables or disables the position in the data set.

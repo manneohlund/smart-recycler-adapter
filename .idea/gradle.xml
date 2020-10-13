@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/extensions" />
             <option value="$PROJECT_DIR$/extensions/diffutil" />
             <option value="$PROJECT_DIR$/extensions/nestedadapter" />
+            <option value="$PROJECT_DIR$/extensions/stickyheader" />
             <option value="$PROJECT_DIR$/extensions/viewevent" />
             <option value="$PROJECT_DIR$/sample" />
             <option value="$PROJECT_DIR$/smartadapter" />

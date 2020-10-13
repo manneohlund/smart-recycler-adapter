@@ -4,11 +4,11 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'maven-publish'
 
 ext {
-    LIB_ARTIFACT_NAME = 'SmartRecyclerAdapter DiffUtil'
-    LIB_ARTIFACT_ID = 'smart-recycler-adapter-diffutil'
+    LIB_ARTIFACT_NAME = 'SmartRecyclerAdapter Sticky Header'
+    LIB_ARTIFACT_ID = 'smart-recycler-adapter-stickyheader'
     LIB_VERSION_CODE = 1
     LIB_VERSION_NAME = '1.0.0-alpha01'
-    LIB_DESCRIPTION = 'Diff util extension library for SmartRecyclerAdapter'
+    LIB_DESCRIPTION = 'Sticky header extension library for SmartRecyclerAdapter'
 }
 
 android {
@@ -68,7 +68,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     // Androidx
-    implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
 }
 

@@ -6,8 +6,8 @@ apply plugin: 'maven-publish'
 ext {
     LIB_ARTIFACT_NAME = 'SmartRecyclerAdapter ViewEvent'
     LIB_ARTIFACT_ID = 'smart-recycler-adapter-viewevent'
-    LIB_VERSION_CODE = 3
-    LIB_VERSION_NAME = '1.0.0-beta01'
+    LIB_VERSION_CODE = 4
+    LIB_VERSION_NAME = '1.0.0-beta02'
     LIB_DESCRIPTION = 'View Event listeners extension library for SmartRecyclerAdapter'
 }
 
@@ -36,6 +36,16 @@ android {
             java.srcDirs = ['src/main/kotlin']
             res.srcDirs = ['src/main/res']
         }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+        freeCompilerArgs = ['-Xjvm-default=compatibility']
     }
 
     buildTypes {

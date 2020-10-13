@@ -1,3 +1,4 @@
+include ':extensions:stickyheader'
 include ':extensions:nestedadapter'
 include ':extensions:diffutil'
 include ':extensions:viewevent'

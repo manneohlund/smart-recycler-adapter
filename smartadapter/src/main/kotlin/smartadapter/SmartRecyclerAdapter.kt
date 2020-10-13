@@ -9,8 +9,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import smartadapter.binders.SmartRecyclerAdapterExtension
 import smartadapter.internal.mapper.ViewHolderMapper
+import smartadapter.listener.OnAttachedToRecyclerViewListener
 import smartadapter.listener.OnBindViewHolderListener
 import smartadapter.listener.OnCreateViewHolderListener
+import smartadapter.listener.OnDetachedFromRecyclerViewListener
 import smartadapter.listener.OnSmartRecycleAdapterCreatedListener
 import smartadapter.listener.OnViewAttachedToWindowListener
 import smartadapter.listener.OnViewDetachedFromWindowListener
@@ -142,6 +144,20 @@ open class SmartRecyclerAdapter
         (holder as? OnViewDetachedFromWindowListener)?.onViewDetachedFromWindow(holder)
         viewHolderBinders.forEach {
             (it as? OnViewAttachedToWindowListener)?.onViewAttachedToWindow(holder)
+        }
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        smartRecyclerAdapterExtensions.forEach {
+            (it.value as? OnAttachedToRecyclerViewListener)?.onAttachedToRecyclerView(recyclerView)
+        }
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        smartRecyclerAdapterExtensions.forEach {
+            (it.value as? OnDetachedFromRecyclerViewListener)?.onDetachedFromRecyclerView(recyclerView)
         }
     }
 
