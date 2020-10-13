@@ -31,6 +31,9 @@ This library will make it easy and painless to map your data item with a target 
 * Multiple Switch select  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/v5.0.0-beta05/sample/src/main/kotlin/smartrecycleradapter/feature/MultiSelectSwitchItemsActivity.kt" target="_blank">MultiSelectSwitchItemsActivity</a></sup>
 * Multiple Expandable items  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/v5.0.0-beta05/sample/src/main/kotlin/smartrecycleradapter/feature/MultipleExpandableItemActivity.kt" target="_blank">MultipleExpandableItemActivity</a></sup>
 * Single Expandable item  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/v5.0.0-beta05/sample/src/main/kotlin/smartrecycleradapter/feature/SingleExpandableItemActivity.kt" target="_blank">SingleExpandableItemActivity</a></sup>
+###### Sticky header
+* Simple sticky header  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/v5.0.0-beta05/sample/src/main/kotlin/smartrecycleradapter/feature/StickyHeaderActivity.kt" target="_blank">StickyHeaderActivity</a></sup>
+* Multiple expandable items + sticky header  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/v5.0.0-beta05/sample/src/main/kotlin/smartrecycleradapter/feature/MultipleExpandableItemHeaderActivity.kt" target="_blank">MultipleExpandableItemHeaderActivity</a></sup>
 ###### Nested adapter
 * Nested SmartRecyclerAdapter  <sup><a href="https://github.com/manneohlund/smart-recycler-adapter/blob/v5.0.0-beta05/sample/src/main/kotlin/smartrecycleradapter/feature/NestedSmartRecyclerAdaptersActivity.kt" target="_blank">NestedSmartRecyclerAdaptersActivity</a></sup>
 ###### Pagination
@@ -305,6 +308,8 @@ SmartRecyclerAdapter
   })
   .into(recyclerView)
 ```
+
+**See sample app section:** [#Sticky header](#sticky-header)
 
 # smart-recycler-adapter-diffutil
 
