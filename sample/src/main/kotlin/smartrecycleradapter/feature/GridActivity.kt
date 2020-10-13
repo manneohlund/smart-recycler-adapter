@@ -43,8 +43,8 @@ class GridActivity : BaseSampleActivity() {
         val smartAdapter: SmartRecyclerAdapter = SmartRecyclerAdapter.empty()
             .map(String::class, HeaderViewHolder::class)
             .setViewTypeResolver { item, position ->
-                when(item) {
-                    is MovieModel -> when(item.category) {
+                when (item) {
+                    is MovieModel -> when (item.category) {
                         "coming-soon" -> ComingSoonThumbViewHolder::class
                         "action" -> ActionThumbViewHolder::class
                         "anim" -> AnimateThumbViewHolder::class
@@ -60,17 +60,17 @@ class GridActivity : BaseSampleActivity() {
             })
             .add(
                 AutoDragAndDropBinder(
-                longPressDragEnabled = true,
-                viewHolderTypes = listOf(
-                    ComingSoonThumbViewHolder::class,
-                    ActionThumbViewHolder::class,
-                    AnimateThumbViewHolder::class,
-                    SciFiThumbViewHolder::class
-                )
-            ) {
-                supportActionBar?.subtitle =
-                    "onItemMoved from ${it.viewHolder.adapterPosition} to ${it.targetViewHolder.adapterPosition}"
-            }
+                    longPressDragEnabled = true,
+                    viewHolderTypes = listOf(
+                        ComingSoonThumbViewHolder::class,
+                        ActionThumbViewHolder::class,
+                        AnimateThumbViewHolder::class,
+                        SciFiThumbViewHolder::class
+                    )
+                ) {
+                    supportActionBar?.subtitle =
+                        "onItemMoved from ${it.viewHolder.adapterPosition} to ${it.targetViewHolder.adapterPosition}"
+                }
             )
             .into(recyclerView)
 

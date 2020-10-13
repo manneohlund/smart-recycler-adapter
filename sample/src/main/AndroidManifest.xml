@@ -66,6 +66,13 @@
             android:name=".feature.MultipleExpandableItemActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".feature.MultipleExpandableItemHeaderActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".feature.StickyHeaderActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
             android:name=".feature.SingleExpandableItemActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
