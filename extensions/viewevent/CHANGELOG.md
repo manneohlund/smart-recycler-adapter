@@ -1,3 +1,9 @@
+# v1.0.0-beta02
+
+### Added
+
+* Feature enableAll & disableAll selectable items functionality. `selectableItemType` will narrow down to valid selectable target item type. 
+
 # v1.0.0-beta01
 
 Bumped to beta
