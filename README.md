@@ -70,6 +70,8 @@ dependencies {
   implementation 'io.github.manneohlund:smart-recycler-adapter-diffutil:1.0.0-alpha01'
   // Nested adapter extension library
   implementation 'io.github.manneohlund:smart-recycler-adapter-nestedadapter:1.0.0-alpha01'
+  // Sticky header extension library
+  implementation 'io.github.manneohlund:smart-recycler-adapter-stickyheader:1.0.0-alpha01'
 }
 ```
 
