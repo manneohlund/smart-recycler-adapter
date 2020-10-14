@@ -11,65 +11,7 @@ ext {
     LIB_DESCRIPTION = 'Sticky header extension library for SmartRecyclerAdapter'
 }
 
-android {
-    compileSdkVersion TARGET_SDK_VERSION
-    buildToolsVersion BUILD_TOOLS_VERSION
-
-    defaultConfig {
-        minSdkVersion MIN_SDK_VERSION
-        targetSdkVersion TARGET_SDK_VERSION
-        versionCode LIB_VERSION_CODE
-        versionName LIB_VERSION_NAME
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
-    }
-
-    sourceSets {
-        main {
-            java.srcDirs = ['src/main/kotlin']
-            res.srcDirs = ['src/main/res']
-        }
-        release {
-            java.srcDirs = ['src/main/kotlin']
-            res.srcDirs = ['src/main/res']
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = '1.8'
-        freeCompilerArgs = ['-Xjvm-default=compatibility']
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-}
-
-dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-    // Test
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-
-    // Project
-    implementation project(path: ':smartadapter')
-
-    // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-
-    // Androidx
-    implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
-}
+apply from: '../../common-library-config.gradle'
 
 if (project.rootProject.file('local.properties').exists()) {
     apply from: '../../maven-local-publish.gradle'
