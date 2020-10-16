@@ -5,7 +5,12 @@ package smartadapter.diffutil
  * Copyright (c) All rights reserved.
  */
 
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.DiffUtil
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
 
@@ -28,6 +33,7 @@ class SimpleDiffUtilExtension(
     private lateinit var diffPredicate: DiffPredicate<Any>
     private lateinit var oldList: List<Any>
     private lateinit var newList: List<Any>
+    private var diffSwapJob: Job? = null
 
     override fun getOldListSize(): Int {
         return oldList.size
@@ -64,6 +70,37 @@ class SimpleDiffUtilExtension(
             smartRecyclerAdapter.setItems(newList, false)
             smartRecyclerAdapter.updateItemCount()
         }
+    }
+
+    override fun diffSwapList(
+        lifecycleScope: LifecycleCoroutineScope,
+        newList: List<*>,
+        callback: (Result<Boolean>) -> Unit
+    ) {
+        diffSwapJob?.cancel()
+        this.oldList = smartRecyclerAdapter.getItems()
+        this.newList = newList as MutableList<Any>
+        diffSwapJob = lifecycleScope.launch(Dispatchers.IO) {
+            smartRecyclerAdapter.let { smartRecyclerAdapter ->
+                kotlin.runCatching {
+                    val diffResult = DiffUtil.calculateDiff(this@SimpleDiffUtilExtension)
+                    withContext(Dispatchers.Main) {
+                        diffResult.dispatchUpdatesTo(smartRecyclerAdapter)
+                        smartRecyclerAdapter.setItems(newList, false)
+                        smartRecyclerAdapter.updateItemCount()
+                        callback.invoke(Result.success(true))
+                    }
+                }.onFailure {
+                    withContext(Dispatchers.Main) {
+                        callback.invoke(Result.failure(it))
+                    }
+                }
+            }
+        }
+    }
+
+    override fun cancelDiffSwapJob() {
+        diffSwapJob?.cancel()
     }
 
     override fun bind(smartRecyclerAdapter: SmartRecyclerAdapter) {
