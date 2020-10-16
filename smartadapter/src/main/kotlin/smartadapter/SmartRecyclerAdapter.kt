@@ -13,7 +13,6 @@ import smartadapter.listener.OnAttachedToRecyclerViewListener
 import smartadapter.listener.OnBindViewHolderListener
 import smartadapter.listener.OnCreateViewHolderListener
 import smartadapter.listener.OnDetachedFromRecyclerViewListener
-import smartadapter.listener.OnSmartRecycleAdapterCreatedListener
 import smartadapter.listener.OnViewAttachedToWindowListener
 import smartadapter.listener.OnViewDetachedFromWindowListener
 import smartadapter.listener.OnViewRecycledListener
@@ -68,10 +67,6 @@ open class SmartRecyclerAdapter
     init {
         setItems(items, false)
         updateItemCount()
-
-        viewHolderBinders.forEach {
-            (it as? OnSmartRecycleAdapterCreatedListener)?.onSmartRecycleAdapterCreated(this)
-        }
     }
 
     override fun getItemViewType(position: Position): ViewType {
