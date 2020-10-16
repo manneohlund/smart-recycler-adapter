@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/extensions" />
             <option value="$PROJECT_DIR$/extensions/diffutil" />
+            <option value="$PROJECT_DIR$/extensions/filter" />
             <option value="$PROJECT_DIR$/extensions/nestedadapter" />
             <option value="$PROJECT_DIR$/extensions/stickyheader" />
             <option value="$PROJECT_DIR$/extensions/viewevent" />

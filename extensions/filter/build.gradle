@@ -1,0 +1,26 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'maven-publish'
+
+ext {
+    LIB_ARTIFACT_NAME = 'SmartRecyclerAdapter Filter'
+    LIB_ARTIFACT_ID = 'smart-recycler-adapter-filter'
+    LIB_VERSION_CODE = 1
+    LIB_VERSION_NAME = '1.0.0-alpha01'
+    LIB_DESCRIPTION = 'Filter extension library for SmartRecyclerAdapter'
+}
+
+apply from: '../../common-library-config.gradle'
+
+dependencies {
+    // Kotlin
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9'
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
+}
+
+if (project.rootProject.file('local.properties').exists()) {
+    apply from: '../../maven-local-publish.gradle'
+    apply from: '../../maven-release-config.gradle'
+    apply from: '../../maven-release-script.gradle'
+}
