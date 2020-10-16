@@ -1,10 +1,11 @@
 package smartadapter.nestedadapter
 
 import android.os.Parcelable
+import smartadapter.RecyclerViewBinder
 import smartadapter.SmartAdapterBuilder
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.SmartViewHolderBinder
 import smartadapter.SmartViewHolderType
+import smartadapter.extension.SmartViewHolderBinder
 import smartadapter.listener.OnBindViewHolderListener
 import smartadapter.listener.OnCreateViewHolderListener
 import smartadapter.listener.OnViewRecycledListener
@@ -20,8 +21,10 @@ import smartadapter.viewholder.SmartViewHolder
  * [SmartNestedAdapterBinder] also saves scroll states for all [nestedAdapters].
  */
 class SmartNestedAdapterBinder(
+    override val identifier: Any = SmartNestedAdapterBinder::class,
     override val viewHolderType: SmartViewHolderType,
-    val smartRecyclerAdapterBuilder: SmartAdapterBuilder
+    val smartRecyclerAdapterBuilder: SmartAdapterBuilder,
+    var recyclerViewBinder: RecyclerViewBinder? = null
 ) : SmartViewHolderBinder,
     OnCreateViewHolderListener,
     OnBindViewHolderListener,
@@ -40,6 +43,10 @@ class SmartNestedAdapterBinder(
 
         if (!nestedAdapters.contains(viewHolder)) {
             nestedAdapters[viewHolder] = smartRecyclerAdapterBuilder.create()
+        }
+
+        with((viewHolder as SmartNestedRecyclerViewHolder).recyclerView) {
+            recyclerViewBinder?.invoke(viewHolder, this)
         }
     }
 
