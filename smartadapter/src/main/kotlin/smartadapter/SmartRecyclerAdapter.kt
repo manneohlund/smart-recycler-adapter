@@ -5,9 +5,12 @@ package smartadapter
  * Copyright © 2019 All rights reserved.
  */
 
+import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import smartadapter.binders.SmartRecyclerAdapterExtension
+import smartadapter.extension.SmartExtensionIdentifier
+import smartadapter.extension.SmartRecyclerAdapterExtension
+import smartadapter.extension.SmartViewHolderBinder
 import smartadapter.internal.mapper.ViewHolderMapper
 import smartadapter.listener.OnAttachedToRecyclerViewListener
 import smartadapter.listener.OnBindViewHolderListener
@@ -61,8 +64,7 @@ open class SmartRecyclerAdapter
     override var smartItemCount: Int = 0
     override var viewHolderMapper: ViewHolderMapper = ViewHolderMapper()
     override var viewTypeResolver: ViewTypeResolver? = null
-    final override val viewHolderBinders = mutableListOf<SmartViewHolderBinder>()
-    val smartRecyclerAdapterExtensions = mutableMapOf<Any, SmartRecyclerAdapterExtension>()
+    final override val smartExtensions = mutableMapOf<Any, SmartExtensionIdentifier>()
 
     init {
         setItems(items, false)
@@ -78,11 +80,13 @@ open class SmartRecyclerAdapter
         if (smartViewHolder is SmartAdapterHolder && smartViewHolder.smartRecyclerAdapter == null) {
             smartViewHolder.smartRecyclerAdapter = this
         }
-        viewHolderBinders.forEach {
-            if ((it.viewHolderType == SmartViewHolder::class
-                        || it.viewHolderType.isInstance(smartViewHolder))
-                && it is OnCreateViewHolderListener) {
-                it.onCreateViewHolder(this, smartViewHolder)
+        smartExtensions.values.forEach { extension ->
+            if (extension is SmartViewHolderBinder
+                && (extension.viewHolderType == SmartViewHolder::class
+                        || extension.viewHolderType.isInstance(smartViewHolder))
+                && extension is OnCreateViewHolderListener
+            ) {
+                extension.onCreateViewHolder(this, smartViewHolder)
             }
         }
         return smartViewHolder
@@ -90,9 +94,13 @@ open class SmartRecyclerAdapter
 
     override fun onBindViewHolder(smartViewHolder: SmartViewHolder<Any>, position: Position) {
         smartViewHolder.bind(items[position])
-        viewHolderBinders.forEach {
-            if ((it.viewHolderType == SmartViewHolder::class || it.viewHolderType.isInstance(smartViewHolder)) && it is OnBindViewHolderListener) {
-                it.onBindViewHolder(this, smartViewHolder)
+        smartExtensions.values.forEach { extension ->
+            if (extension is SmartViewHolderBinder
+                && (extension.viewHolderType == SmartViewHolder::class
+                        || extension.viewHolderType.isInstance(smartViewHolder))
+                && extension is OnBindViewHolderListener
+            ) {
+                extension.onBindViewHolder(this, smartViewHolder)
             }
         }
     }
@@ -106,14 +114,27 @@ open class SmartRecyclerAdapter
         if (items.size != position) {
             smartViewHolder.bind(items[position], payloads)
         }
+        smartExtensions.values.forEach { extension ->
+            if (extension is SmartViewHolderBinder
+                && (extension.viewHolderType == SmartViewHolder::class
+                        || extension.viewHolderType.isInstance(smartViewHolder))
+                && extension is OnBindViewHolderListener
+            ) {
+                extension.onBindViewHolder(this, smartViewHolder, payloads)
+            }
+        }
     }
 
     override fun onViewRecycled(smartViewHolder: SmartViewHolder<Any>) {
         super.onViewRecycled(smartViewHolder)
         smartViewHolder.unbind()
-        viewHolderBinders.forEach {
-            if ((it.viewHolderType == SmartViewHolder::class || it.viewHolderType.isInstance(smartViewHolder)) && it is OnViewRecycledListener) {
-                it.onViewRecycled(this, smartViewHolder)
+        smartExtensions.values.forEach { extension ->
+            if (extension is SmartViewHolderBinder
+                && (extension.viewHolderType == SmartViewHolder::class
+                        || extension.viewHolderType.isInstance(smartViewHolder))
+                && extension is OnViewRecycledListener
+            ) {
+                extension.onViewRecycled(this, smartViewHolder)
             }
         }
     }
@@ -129,30 +150,30 @@ open class SmartRecyclerAdapter
     override fun onViewAttachedToWindow(holder: SmartViewHolder<Any>) {
         super.onViewAttachedToWindow(holder)
         (holder as? OnViewAttachedToWindowListener)?.onViewAttachedToWindow(holder)
-        viewHolderBinders.forEach {
-            (it as? OnViewAttachedToWindowListener)?.onViewAttachedToWindow(holder)
+        smartExtensions.values.forEach { extension ->
+            (extension as? OnViewAttachedToWindowListener)?.onViewAttachedToWindow(holder)
         }
     }
 
     override fun onViewDetachedFromWindow(holder: SmartViewHolder<Any>) {
         super.onViewDetachedFromWindow(holder)
         (holder as? OnViewDetachedFromWindowListener)?.onViewDetachedFromWindow(holder)
-        viewHolderBinders.forEach {
-            (it as? OnViewAttachedToWindowListener)?.onViewAttachedToWindow(holder)
+        smartExtensions.values.forEach { extension ->
+            (extension as? OnViewDetachedFromWindowListener)?.onViewDetachedFromWindow(holder)
         }
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
-        smartRecyclerAdapterExtensions.forEach {
-            (it.value as? OnAttachedToRecyclerViewListener)?.onAttachedToRecyclerView(recyclerView)
+        smartExtensions.values.forEach { extension ->
+            (extension as? OnAttachedToRecyclerViewListener)?.onAttachedToRecyclerView(recyclerView)
         }
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
-        smartRecyclerAdapterExtensions.forEach {
-            (it.value as? OnDetachedFromRecyclerViewListener)?.onDetachedFromRecyclerView(recyclerView)
+        smartExtensions.values.forEach { extension ->
+            (extension as? OnDetachedFromRecyclerViewListener)?.onDetachedFromRecyclerView(recyclerView)
         }
     }
 
@@ -163,6 +184,8 @@ open class SmartRecyclerAdapter
     }
 
     override fun getItem(index: Int): Any = items[index]
+
+    override fun <T : Any> getItemCast(index: Int): T = items[index] as T
 
     override fun getItems(): MutableList<Any> = items
 
@@ -305,13 +328,17 @@ open class SmartRecyclerAdapter
         viewHolderMapper.setDataTypeViewHolderMapper(dataTypeViewHolderMapper)
     }
 
-    override fun addBinder(viewHolderBinder: SmartViewHolderBinder) {
-        viewHolderBinders.add(viewHolderBinder)
-    }
-
-    override fun addExtension(extension: SmartRecyclerAdapterExtension) {
-        extension.bind(this)
-        smartRecyclerAdapterExtensions[extension.identifier] = extension
+    override fun add(extension: SmartExtensionIdentifier) {
+        (extension as? SmartRecyclerAdapterExtension)?.bind(this)
+        if (extension.identifier != extension::class
+            && !smartExtensions.containsKey(extension.identifier)) {
+            smartExtensions[extension.identifier] = extension
+        } else if (smartExtensions.containsKey(extension.identifier)) {
+            Log.e("SmartAdapterBuilder", "SmartAdapterBuilder already contains the key '${extension.identifier}', please consider override the identifier to be able to fetch the extension easily")
+            smartExtensions[extension.hashCode()] = extension
+        } else {
+            smartExtensions[extension.identifier] = extension
+        }
     }
 
     companion object {
@@ -328,4 +355,14 @@ open class SmartRecyclerAdapter
          */
         fun empty(): SmartAdapterBuilder = SmartAdapterBuilder()
     }
+}
+
+/**
+ * Helper method to resolve target [SmartRecyclerAdapterExtension]
+ */
+inline fun <reified T : SmartExtensionIdentifier> SmartRecyclerAdapter.get(identifier: Any? = null): T {
+    identifier?.let {
+        return smartExtensions[it] as T
+    }
+    return smartExtensions[T::class] as T
 }

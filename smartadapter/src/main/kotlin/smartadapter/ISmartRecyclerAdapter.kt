@@ -6,7 +6,7 @@ package smartadapter
  */
 
 import androidx.recyclerview.widget.RecyclerView
-import smartadapter.binders.SmartRecyclerAdapterExtension
+import smartadapter.extension.SmartExtensionIdentifier
 import smartadapter.internal.mapper.ViewHolderMapper
 import smartadapter.widget.ViewTypeResolver
 import kotlin.reflect.KClass
@@ -35,11 +35,13 @@ interface ISmartRecyclerAdapter {
     var viewTypeResolver: ViewTypeResolver?
 
     /**
-     * Holder for all view holder binders.
+     * Holder for all extensions.
      *
-     * @see smartadapter.listener
+     * @see smartadapter.extension.SmartExtensionIdentifier
+     * @see smartadapter.extension.SmartRecyclerAdapterExtension
+     * @see smartadapter.extension.SmartViewHolderBinder
      */
-    val viewHolderBinders: MutableList<SmartViewHolderBinder>
+    val smartExtensions: MutableMap<Any, SmartExtensionIdentifier>
 
     /**
      * Get item count for target class type.
@@ -56,6 +58,13 @@ interface ISmartRecyclerAdapter {
      * @return Data object for that index.
      */
     fun getItem(index: Int): Any
+
+    /**
+     * Get item at index.
+     * @param index adapter index
+     * @return Data object for that index.
+     */
+    fun <T : Any> getItemCast(index: Int): T
 
     /**
      * Get list of all data items.
@@ -244,12 +253,7 @@ interface ISmartRecyclerAdapter {
     fun map(itemType: ItemType, viewHolderType: SmartViewHolderType)
 
     /**
-     * Add binder for [smartadapter.viewholder.SmartViewHolder]
+     * Add extension for easy retention for extension libraries.
      */
-    fun addBinder(viewHolderBinder: SmartViewHolderBinder)
-
-    /**
-     * Add [SmartRecyclerAdapterExtension] for easy retention for extension libraries.
-     */
-    fun addExtension(extension: SmartRecyclerAdapterExtension)
+    fun add(extension: SmartExtensionIdentifier)
 }

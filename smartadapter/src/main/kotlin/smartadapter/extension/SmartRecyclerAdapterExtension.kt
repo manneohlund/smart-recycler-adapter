@@ -1,4 +1,4 @@
-package smartadapter.binders
+package smartadapter.extension
 
 import smartadapter.SmartRecyclerAdapter
 
@@ -6,12 +6,7 @@ import smartadapter.SmartRecyclerAdapter
  * Defining the smart extension and is the basic interface to implement in extension libraries
  * to bind with [SmartRecyclerAdapter] on adapter creation. Fetch the extension easily with the [identifier].
  */
-interface SmartRecyclerAdapterExtension {
-
-    /**
-     * Identifies the [SmartRecyclerAdapterExtension] for access in [smartadapter.SmartRecyclerAdapter.smartRecyclerAdapterExtensions].
-     */
-    val identifier: Any
+interface SmartRecyclerAdapterExtension : SmartExtensionIdentifier {
 
     /**
      * Builds and binds with supplied [SmartRecyclerAdapter]

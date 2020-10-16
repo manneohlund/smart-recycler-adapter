@@ -1,4 +1,4 @@
-package smartadapter.binders
+package smartadapter.extension
 
 import androidx.recyclerview.widget.RecyclerView
 import smartadapter.SmartRecyclerAdapter

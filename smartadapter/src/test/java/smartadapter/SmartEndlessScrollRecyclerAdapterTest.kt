@@ -15,7 +15,7 @@ class SmartEndlessScrollRecyclerAdapterTest {
 
     @Test
     fun testImplicitInstantiate() {
-        val smartRecyclerAdapter = SmartEndlessScrollRecyclerAdapter.empty().create<Any>()
+        val smartRecyclerAdapter = SmartEndlessScrollRecyclerAdapter.empty().create<SmartEndlessScrollRecyclerAdapter>()
         assertNotNull(smartRecyclerAdapter)
     }
 

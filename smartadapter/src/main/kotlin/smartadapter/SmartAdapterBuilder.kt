@@ -6,10 +6,12 @@ package smartadapter
  */
 
 import android.content.Context
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import smartadapter.binders.ItemTouchBinder
-import smartadapter.binders.SmartRecyclerAdapterExtension
+import smartadapter.extension.ItemTouchBinder
+import smartadapter.extension.SmartExtensionIdentifier
+import smartadapter.extension.SmartRecyclerAdapterExtension
 import smartadapter.internal.extension.isMutable
 import smartadapter.internal.extension.name
 import smartadapter.viewholder.SmartAdapterHolder
@@ -25,8 +27,7 @@ open class SmartAdapterBuilder {
     internal var layoutManager: RecyclerView.LayoutManager? = null
     internal var viewTypeResolver: ViewTypeResolver? = null
     internal val viewHolderMapper = HashMap<String, SmartViewHolderType>()
-    internal val viewHolderBinders = mutableListOf<SmartViewHolderBinder>()
-    internal val smartRecyclerAdapterExtensions = mutableMapOf<Any, SmartRecyclerAdapterExtension>()
+    internal val smartExtensions = mutableMapOf<Any, SmartExtensionIdentifier>()
 
     internal open fun getSmartRecyclerAdapter() = SmartRecyclerAdapter(items.let {
         (if (it.isMutable()) it else it.toMutableList())
@@ -49,7 +50,10 @@ open class SmartAdapterBuilder {
 
     private fun getLayoutManager(context: Context): RecyclerView.LayoutManager {
         if (layoutManager == null) {
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = LinearLayoutManager(context).apply {
+                isItemPrefetchEnabled = true
+                initialPrefetchItemCount = 10
+            }
         }
         return layoutManager!!
     }
@@ -60,56 +64,47 @@ open class SmartAdapterBuilder {
     }
 
     /**
-     * Adds [SmartViewHolderBinder] to the adapter.
-     *
-     * @param viewHolderBinder extension view holder binder
-     * @return SmartAdapterBuilder
-     */
-    fun addBinder(viewHolderBinder: SmartViewHolderBinder): SmartAdapterBuilder {
-        viewHolderBinders.add(viewHolderBinder)
-        return this
-    }
-
-    /**
      * Adds [SmartRecyclerAdapterExtension] to the adapter with [SmartRecyclerAdapterExtension.identifier] as key.
      *
      * @param extension extension
      * @return SmartAdapterBuilder
      */
-    fun addExtension(extension: SmartRecyclerAdapterExtension): SmartAdapterBuilder {
-        smartRecyclerAdapterExtensions[extension.identifier] = extension
+    fun add(extension: SmartExtensionIdentifier): SmartAdapterBuilder {
+        if (extension.identifier != extension::class
+            && !smartExtensions.containsKey(extension.identifier)) {
+            smartExtensions[extension.identifier] = extension
+        } else if (smartExtensions.containsKey(extension.identifier)) {
+            Log.e("SmartAdapterBuilder", "SmartAdapterBuilder already contains the key '${extension.identifier}', please consider override the identifier to be able to fetch the extension easily")
+            smartExtensions[extension.hashCode()] = extension
+        } else {
+            smartExtensions[extension.identifier] = extension
+        }
         return this
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T> into(recyclerView: RecyclerView): T {
+    fun <T : SmartRecyclerAdapter> into(recyclerView: RecyclerView): T {
         val smartRecyclerAdapter = getSmartRecyclerAdapter()
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper)
         smartRecyclerAdapter.viewTypeResolver = viewTypeResolver
         recyclerView.layoutManager = getLayoutManager(recyclerView.context)
-        viewHolderBinders.forEach {
-            smartRecyclerAdapter.addBinder(it)
+        smartExtensions.values.forEach {
+            smartRecyclerAdapter.add(it)
             (it as? SmartAdapterHolder)?.smartRecyclerAdapter = smartRecyclerAdapter
             (it as? ItemTouchBinder<*>)?.bind(smartRecyclerAdapter, recyclerView)
-        }
-        smartRecyclerAdapterExtensions.forEach {
-            smartRecyclerAdapter.addExtension(it.value)
         }
         recyclerView.adapter = smartRecyclerAdapter
         return smartRecyclerAdapter as T
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T> create(): T {
+    fun <T : SmartRecyclerAdapter> create(): T {
         val smartRecyclerAdapter = getSmartRecyclerAdapter()
         smartRecyclerAdapter.setDataTypeViewHolderMapper(viewHolderMapper)
         smartRecyclerAdapter.viewTypeResolver = viewTypeResolver
-        viewHolderBinders.forEach {
-            smartRecyclerAdapter.addBinder(it)
+        smartExtensions.values.forEach {
+            smartRecyclerAdapter.add(it)
             (it as? SmartAdapterHolder)?.smartRecyclerAdapter = smartRecyclerAdapter
-        }
-        smartRecyclerAdapterExtensions.forEach {
-            smartRecyclerAdapter.addExtension(it.value)
         }
         return smartRecyclerAdapter as T
     }
