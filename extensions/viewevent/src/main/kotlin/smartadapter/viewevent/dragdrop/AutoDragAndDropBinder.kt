@@ -9,8 +9,8 @@ import android.annotation.SuppressLint
 import android.view.MotionEvent
 import androidx.recyclerview.widget.RecyclerView
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.SmartViewHolderBinder
 import smartadapter.SmartViewHolderType
+import smartadapter.extension.SmartViewHolderBinder
 import smartadapter.listener.OnCreateViewHolderListener
 import smartadapter.viewevent.model.ViewEvent
 import smartadapter.viewholder.DraggableViewHolder
@@ -26,6 +26,7 @@ import java.util.HashSet
  * @see SmartAdapterHolder
  */
 class AutoDragAndDropBinder(
+    override val identifier: Any = AutoDragAndDropBinder::class,
     override var dragFlags: Int = 0,
     override var viewHolderTypes: List<SmartViewHolderType> = listOf(SmartViewHolder::class),
     override var longPressDragEnabled: Boolean = false,
@@ -70,7 +71,10 @@ class AutoDragAndDropBinder(
         super.setupDragAndDrop(recyclerView)
 
         if (!isLongPressDragEnabled) {
-            smartRecyclerAdapter.addBinder(object : DragDropViewHolderBinder(){
+            smartRecyclerAdapter.add(object : DragDropViewHolderBinder(){
+                override val identifier: Any
+                    get() = DragDropViewHolderBinder::class
+
                 override fun onCreateViewHolder(
                     adapter: SmartRecyclerAdapter,
                     viewHolder: SmartViewHolder<Any>

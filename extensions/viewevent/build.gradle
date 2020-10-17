@@ -6,8 +6,8 @@ apply plugin: 'maven-publish'
 ext {
     LIB_ARTIFACT_NAME = 'SmartRecyclerAdapter ViewEvent'
     LIB_ARTIFACT_ID = 'smart-recycler-adapter-viewevent'
-    LIB_VERSION_CODE = 4
-    LIB_VERSION_NAME = '1.0.0-beta02'
+    LIB_VERSION_CODE = 5
+    LIB_VERSION_NAME = '1.0.0-beta03'
     LIB_DESCRIPTION = 'View Event listeners extension library for SmartRecyclerAdapter'
 }
 
@@ -15,6 +15,7 @@ apply from: '../../common-library-config.gradle'
 
 dependencies {
     // Androidx
+    implementation "androidx.appcompat:appcompat:$appcompat_version" // For runtime resolving R.attr.selectableItemBackground
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_extensions_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_viewmodel_ktx_version"
 }

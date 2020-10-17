@@ -21,6 +21,7 @@ import kotlin.math.abs
  * @see SwipeEventBinder
  */
 open class BasicSwipeEventBinder(
+    override val identifier: Any = BasicSwipeEventBinder::class,
     override var longPressDragEnabled: Boolean = false,
     override var swipeFlags: SwipeFlags = ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT,
     override var viewHolderTypes: List<SmartViewHolderType> = listOf(SmartViewHolder::class),
