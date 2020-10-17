@@ -15,7 +15,7 @@ import org.mockito.Mockito.spy
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.robolectric.RobolectricTestRunner
-import smartadapter.extension.SmartRecyclerAdapterExtension
+import smartadapter.extension.SmartRecyclerAdapterBinder
 import smartadapter.extension.SmartViewHolderBinder
 import smartadapter.listener.OnAttachedToRecyclerViewListener
 import smartadapter.listener.OnBindViewHolderListener
@@ -52,7 +52,7 @@ class SmartRecyclerAdapterImplTest {
     @Test
     fun testGetExtension() {
         // Given
-        class TestExtension(override val identifier: Any) : SmartRecyclerAdapterExtension {
+        class TestExtension(override val identifier: Any) : SmartRecyclerAdapterBinder {
             override fun bind(smartRecyclerAdapter: SmartRecyclerAdapter) { }
         }
         val smartRecyclerAdapter = SmartRecyclerAdapter.empty().create<SmartRecyclerAdapter>()
@@ -67,7 +67,7 @@ class SmartRecyclerAdapterImplTest {
     @Test
     fun testGetMultipleExtensionsByIdentifier() {
         // Given
-        class TestExtension(override val identifier: Any = TestExtension::class) : SmartRecyclerAdapterExtension {
+        class TestExtension(override val identifier: Any = TestExtension::class) : SmartRecyclerAdapterBinder {
             override fun bind(smartRecyclerAdapter: SmartRecyclerAdapter) { }
         }
         val smartRecyclerAdapter = SmartRecyclerAdapter.empty().create<SmartRecyclerAdapter>()
@@ -86,7 +86,7 @@ class SmartRecyclerAdapterImplTest {
     @Test
     fun testSmartRecyclerAdapterStoresMultipleExtensions_withSameImplicitIdentifier() {
         // Given
-        class TestExtension(override val identifier: Any = TestExtension::class) : SmartRecyclerAdapterExtension {
+        class TestExtension(override val identifier: Any = TestExtension::class) : SmartRecyclerAdapterBinder {
             override fun bind(smartRecyclerAdapter: SmartRecyclerAdapter) { }
         }
         class TestViewHolderBinder(override val identifier: Any = TestViewHolderBinder::class) : SmartViewHolderBinder
@@ -118,7 +118,7 @@ class SmartRecyclerAdapterImplTest {
     @Test
     fun testSmartRecyclerAdapterExtension_bindingTo_smartRecyclerAdapter() {
         // Given
-        open class TestExtension(override val identifier: Any = TestExtension::class) : SmartRecyclerAdapterExtension{
+        open class TestExtension(override val identifier: Any = TestExtension::class) : SmartRecyclerAdapterBinder{
             override fun bind(smartRecyclerAdapter: SmartRecyclerAdapter) {}
         }
         val testExtension = mock(TestExtension::class.java)

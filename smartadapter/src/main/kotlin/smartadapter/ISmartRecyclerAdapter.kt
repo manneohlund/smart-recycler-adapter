@@ -38,7 +38,7 @@ interface ISmartRecyclerAdapter {
      * Holder for all extensions.
      *
      * @see smartadapter.extension.SmartExtensionIdentifier
-     * @see smartadapter.extension.SmartRecyclerAdapterExtension
+     * @see smartadapter.extension.SmartRecyclerAdapterBinder
      * @see smartadapter.extension.SmartViewHolderBinder
      */
     val smartExtensions: MutableMap<Any, SmartExtensionIdentifier>

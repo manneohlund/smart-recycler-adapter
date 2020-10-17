@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import smartadapter.extension.ItemTouchBinder
 import smartadapter.extension.SmartExtensionIdentifier
-import smartadapter.extension.SmartRecyclerAdapterExtension
+import smartadapter.extension.SmartRecyclerAdapterBinder
 import smartadapter.internal.extension.isMutable
 import smartadapter.internal.extension.name
 import smartadapter.viewholder.SmartAdapterHolder
@@ -64,7 +64,7 @@ open class SmartAdapterBuilder {
     }
 
     /**
-     * Adds [SmartRecyclerAdapterExtension] to the adapter with [SmartRecyclerAdapterExtension.identifier] as key.
+     * Adds [SmartRecyclerAdapterBinder] to the adapter with [SmartRecyclerAdapterBinder.identifier] as key.
      *
      * @param extension extension
      * @return SmartAdapterBuilder

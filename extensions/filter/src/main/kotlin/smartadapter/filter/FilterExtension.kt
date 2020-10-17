@@ -7,7 +7,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.extension.SmartRecyclerAdapterExtension
+import smartadapter.extension.SmartRecyclerAdapterBinder
 import kotlin.reflect.KClass
 
 class FilterExtension(
@@ -15,7 +15,7 @@ class FilterExtension(
     val targetFilterTypes: List<KClass<*>> = listOf(),
     val fastReset: Boolean = false,
     override val identifier: Any = FilterExtension::class
-) : SmartRecyclerAdapterExtension {
+) : SmartRecyclerAdapterBinder {
 
     private lateinit var smartRecyclerAdapter: SmartRecyclerAdapter
     private var items: MutableList<Any> = mutableListOf()

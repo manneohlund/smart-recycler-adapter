@@ -8,13 +8,13 @@ package smartadapter.diffutil
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.DiffUtil
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.extension.SmartRecyclerAdapterExtension
+import smartadapter.extension.SmartRecyclerAdapterBinder
 
 /**
  * Defines basic functionality of the DiffUtilExtension.
  */
 abstract class DiffUtilExtension : DiffUtil.Callback(),
-    SmartRecyclerAdapterExtension {
+    SmartRecyclerAdapterBinder {
 
     abstract var smartRecyclerAdapter: SmartRecyclerAdapter
 

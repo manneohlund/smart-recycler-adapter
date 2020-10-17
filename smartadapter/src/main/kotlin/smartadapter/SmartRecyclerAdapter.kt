@@ -9,7 +9,7 @@ import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import smartadapter.extension.SmartExtensionIdentifier
-import smartadapter.extension.SmartRecyclerAdapterExtension
+import smartadapter.extension.SmartRecyclerAdapterBinder
 import smartadapter.extension.SmartViewHolderBinder
 import smartadapter.internal.mapper.ViewHolderMapper
 import smartadapter.listener.OnAttachedToRecyclerViewListener
@@ -329,7 +329,7 @@ open class SmartRecyclerAdapter
     }
 
     override fun add(extension: SmartExtensionIdentifier) {
-        (extension as? SmartRecyclerAdapterExtension)?.bind(this)
+        (extension as? SmartRecyclerAdapterBinder)?.bind(this)
         if (extension.identifier != extension::class
             && !smartExtensions.containsKey(extension.identifier)) {
             smartExtensions[extension.identifier] = extension
@@ -358,7 +358,7 @@ open class SmartRecyclerAdapter
 }
 
 /**
- * Helper method to resolve target [SmartRecyclerAdapterExtension]
+ * Helper method to resolve target [SmartRecyclerAdapterBinder]
  */
 inline fun <reified T : SmartExtensionIdentifier> SmartRecyclerAdapter.get(identifier: Any? = null): T {
     identifier?.let {
