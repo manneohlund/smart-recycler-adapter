@@ -6,8 +6,8 @@ apply plugin: 'maven-publish'
 ext {
     LIB_ARTIFACT_NAME = 'SmartRecyclerAdapter Sticky Header'
     LIB_ARTIFACT_ID = 'smart-recycler-adapter-stickyheader'
-    LIB_VERSION_CODE = 1
-    LIB_VERSION_NAME = '1.0.0-alpha01'
+    LIB_VERSION_CODE = 2
+    LIB_VERSION_NAME = '1.0.0-alpha02'
     LIB_DESCRIPTION = 'Sticky header extension library for SmartRecyclerAdapter'
 }
 
