@@ -69,7 +69,7 @@ dependencies {
 ```groovy
 dependencies {
   // ViewEvent click listeners, multi select, swipe dismiss and drag & drop
-  implementation 'io.github.manneohlund:smart-recycler-adapter-viewevent:1.0.0-beta02'
+  implementation 'io.github.manneohlund:smart-recycler-adapter-viewevent:1.0.0-beta03'
   // DiffUtil extension library
   implementation 'io.github.manneohlund:smart-recycler-adapter-diffutil:1.0.0-beta01'
   // Nested adapter extension library
@@ -195,7 +195,7 @@ You can create any type of `SmartViewHolderBinder` extension and implement any n
 
 ### View Events
 
-In `io.github.manneohlund:smart-recycler-adapter-viewevent:1.0.0-beta01` comes with a range of ViewEvent listeners.<br/>
+In `io.github.manneohlund:smart-recycler-adapter-viewevent` comes with a range of ViewEvent listeners.<br/>
 Default `viewId` is `R.id.undefined` that targets root view of the ViewHolder (ViewHolder.itemView).
 
 ```kotlin
@@ -298,7 +298,7 @@ SmartRecyclerAdapter
 
 # smart-recycler-adapter-stickyheader
 
-With `smart-recycler-adapter-stickyheader` `v1.0.0-alpha01` it's super easy to add a sticky header recycler view item decoration.<br/>
+With `io.github.manneohlund:smart-recycler-adapter-stickyheader` it's super easy to add a sticky header recycler view item decoration.<br/>
 Just set the target `headerItemType` and the `StickyHeaderItemDecorationExtension` will do the rest.<br/>
 You can even add a sticky header item touch event listener.
 
