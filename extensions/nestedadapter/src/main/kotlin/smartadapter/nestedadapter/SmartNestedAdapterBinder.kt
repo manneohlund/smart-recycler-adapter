@@ -1,11 +1,13 @@
 package smartadapter.nestedadapter
 
 import android.os.Parcelable
+import androidx.recyclerview.widget.RecyclerView
 import smartadapter.RecyclerViewBinder
 import smartadapter.SmartAdapterBuilder
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.SmartViewHolderType
 import smartadapter.extension.SmartViewHolderBinder
+import smartadapter.listener.OnAttachedToRecyclerViewListener
 import smartadapter.listener.OnBindViewHolderListener
 import smartadapter.listener.OnCreateViewHolderListener
 import smartadapter.listener.OnViewRecycledListener
@@ -23,15 +25,19 @@ import smartadapter.viewholder.SmartViewHolder
 class SmartNestedAdapterBinder(
     override val identifier: Any = SmartNestedAdapterBinder::class,
     override val viewHolderType: SmartViewHolderType,
-    val smartRecyclerAdapterBuilder: SmartAdapterBuilder,
-    var recyclerViewBinder: RecyclerViewBinder? = null
+    override val smartRecyclerAdapterBuilder: SmartAdapterBuilder,
+    override var recyclerViewBinder: RecyclerViewBinder? = null,
+    var reuseParentAdapterRecycledViewPool: Boolean = false
 ) : SmartViewHolderBinder,
+    NestedAdapterBinder,
     OnCreateViewHolderListener,
     OnBindViewHolderListener,
-    OnViewRecycledListener {
+    OnViewRecycledListener,
+    OnAttachedToRecyclerViewListener {
 
     private val nestedAdapters = mutableMapOf<SmartViewHolder<Any>, SmartRecyclerAdapter>()
     private val scrollStates = mutableMapOf<Int, Parcelable?>()
+    private var recycledViewPool: RecyclerView.RecycledViewPool = RecyclerView.RecycledViewPool()
 
     override fun onCreateViewHolder(
         adapter: SmartRecyclerAdapter,
@@ -47,6 +53,7 @@ class SmartNestedAdapterBinder(
 
         with((viewHolder as SmartNestedRecyclerViewHolder).recyclerView) {
             recyclerViewBinder?.invoke(viewHolder, this)
+            setRecycledViewPool(recycledViewPool)
         }
     }
 
@@ -75,5 +82,11 @@ class SmartNestedAdapterBinder(
 
         // Save scroll state
         scrollStates[viewHolder.adapterPosition] = (viewHolder as SmartNestedRecyclerViewHolder).recyclerView.layoutManager?.onSaveInstanceState()
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        if (reuseParentAdapterRecycledViewPool) {
+            recycledViewPool = recyclerView.recycledViewPool
+        }
     }
 }
