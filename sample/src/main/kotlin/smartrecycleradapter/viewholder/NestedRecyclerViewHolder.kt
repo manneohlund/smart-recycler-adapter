@@ -7,8 +7,6 @@ package smartrecycleradapter.viewholder
 
 import android.view.View.GONE
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.nested_recycler_view.view.more
 import kotlinx.android.synthetic.main.nested_recycler_view.view.nestedRecyclerView
@@ -16,7 +14,6 @@ import kotlinx.android.synthetic.main.nested_recycler_view.view.title
 import smartadapter.nestedadapter.SmartNestedRecyclerViewHolder
 import smartadapter.viewholder.SmartViewHolder
 import smartrecycleradapter.R
-import smartrecycleradapter.extension.GridAutoLayoutManager
 import smartrecycleradapter.models.MovieCategory
 
 open class NestedRecyclerViewHolder(parentView: ViewGroup) :
@@ -24,14 +21,6 @@ open class NestedRecyclerViewHolder(parentView: ViewGroup) :
     SmartNestedRecyclerViewHolder {
 
     override val recyclerView: RecyclerView = itemView.nestedRecyclerView
-
-    init {
-        itemView.nestedRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
-            isNestedScrollingEnabled = false
-            setHasFixedSize(true)
-        }
-    }
 
     override fun bind(item: MovieCategory) {
         itemView.title.text = item.title
@@ -54,6 +43,6 @@ class RecentlyPlayedMoviesViewHolder(parentView: ViewGroup) : NestedRecyclerView
 
     init {
         itemView.more.visibility = GONE
-        itemView.nestedRecyclerView.layoutManager = GridAutoLayoutManager(recyclerView.context, 60)
+        //itemView.nestedRecyclerView.layoutManager = GridAutoLayoutManager(recyclerView.context, 60)
     }
 }

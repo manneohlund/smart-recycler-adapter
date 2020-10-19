@@ -16,12 +16,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import smartadapter.Position
 import smartadapter.SmartEndlessScrollRecyclerAdapter
 import smartadapter.SmartRecyclerAdapter
+import smartadapter.get
 import smartadapter.nestedadapter.SmartNestedAdapterBinder
-import smartadapter.viewevent.extension.add
 import smartadapter.viewevent.listener.OnClickEventListener
 import smartadapter.viewevent.listener.OnCustomViewEventListener
 import smartadapter.viewevent.listener.OnLongClickEventListener
@@ -30,13 +31,14 @@ import smartadapter.viewevent.viewholder.CustomViewEventListenerHolder
 import smartadapter.viewholder.LoadMoreViewHolder
 import smartadapter.viewholder.SmartAdapterHolder
 import smartadapter.widget.ViewTypeResolver
-import smartrecycleradapter.extension.PreCachingLinearLayoutManager
+import smartrecycleradapter.extension.GridAutoLayoutManager
 import smartrecycleradapter.feature.CustomViewEventActivity
 import smartrecycleradapter.feature.DiffUtilActivity
 import smartrecycleradapter.feature.DragAndDropHandleItemActivity
 import smartrecycleradapter.feature.DragAndDropItemActivity
 import smartrecycleradapter.feature.EndlessScrollActivity
 import smartrecycleradapter.feature.EndlessScrollLoadMoreButtonActivity
+import smartrecycleradapter.feature.FilterGridActivity
 import smartrecycleradapter.feature.GridActivity
 import smartrecycleradapter.feature.MultiSelectCheckBoxItemsActivity
 import smartrecycleradapter.feature.MultiSelectItemsActivity
@@ -46,6 +48,8 @@ import smartrecycleradapter.feature.MultipleExpandableItemActivity
 import smartrecycleradapter.feature.MultipleExpandableItemHeaderActivity
 import smartrecycleradapter.feature.MultipleViewTypesResolverActivity
 import smartrecycleradapter.feature.NestedSmartRecyclerAdaptersActivity
+import smartrecycleradapter.feature.SimpleFilterActivity
+import smartrecycleradapter.feature.SimpleFilterDiffSwapActivity
 import smartrecycleradapter.feature.SimpleItemActivity
 import smartrecycleradapter.feature.SimpleItemOnClickOnLongClickActivity
 import smartrecycleradapter.feature.SingleExpandableItemActivity
@@ -162,11 +166,15 @@ class DemoActivity : AppCompatActivity() {
             .map(SampleFabViewHolder.SimpleFabItem::class, SampleFabViewHolder::class)
             .map(CopyrightModel::class, CopyrightViewHolder::class)
 
-            .setLayoutManager(PreCachingLinearLayoutManager.getInstance(this))
+            // Test Different LayoutManagers to minimize scroll lag
+            //.setLayoutManager(PreloadLinearLayoutManager.getInstance(this))
+            //.setLayoutManager(PreCachingLinearLayoutManager.getInstance(this))
+            .setLayoutManager(LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false))
 
             .add(
                 SmartNestedAdapterBinder(
                     viewHolderType = NestedRecyclerViewHolder::class,
+                    reuseParentAdapterRecycledViewPool = true,
                     smartRecyclerAdapterBuilder = SmartRecyclerAdapter.empty()
                         .setViewTypeResolver(thumbViewHolderResolver)
                         .add(OnClickEventListener {
@@ -175,12 +183,25 @@ class DemoActivity : AppCompatActivity() {
                                 getMovieTitle(it.adapter, it.position),
                                 it.position
                             )
-                        })
+                        }),
+                    recyclerViewBinder = { viewHolder, recyclerView ->
+                        when (viewHolder) {
+                            is MyWatchListViewHolder -> recyclerView.layoutManager = GridAutoLayoutManager(this, 100)
+                            is RecentlyPlayedMoviesViewHolder -> recyclerView.layoutManager = GridAutoLayoutManager(this, 60)
+                            else -> recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false).apply {
+                                isItemPrefetchEnabled = true
+                                initialPrefetchItemCount = 20
+                            }
+                        }
+                        recyclerView.setHasFixedSize(true)
+                        recyclerView.isNestedScrollingEnabled = false
+                    }
                 )
             )
             .add(
                 SmartNestedAdapterBinder(
                     viewHolderType = ComingSoonMoviesViewHolder::class,
+                    reuseParentAdapterRecycledViewPool = true,
                     smartRecyclerAdapterBuilder = SmartEndlessScrollRecyclerAdapter.empty()
                         .setAutoLoadMoreEnabled(true)
                         .setLoadMoreLayoutResource(R.layout.custom_loadmore_view)
@@ -194,7 +215,15 @@ class DemoActivity : AppCompatActivity() {
                                 getMovieTitle(it.adapter, it.position),
                                 it.position
                             )
-                        })
+                        }),
+                    recyclerViewBinder = { viewHolder, recyclerView ->
+                        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false).apply {
+                            isItemPrefetchEnabled = true
+                            initialPrefetchItemCount = 20
+                        }
+                        recyclerView.setHasFixedSize(true)
+                        recyclerView.isNestedScrollingEnabled = false
+                    }
                 )
             )
 
@@ -230,7 +259,7 @@ class DemoActivity : AppCompatActivity() {
             .add(OnClickEventListener(ComingSoonMoviesViewHolder::class, R.id.more) {
                 startMovieCategoryDetailsActivity(MovieType.COMING_SOON)
             })
-            .add(OnClickEventListener(MyWatchListViewHolder::class, R.id.more) {
+            .add(OnClickEventListener(MyWatchListViewHolder::class, R.id.more, identifier = 123) {
                 startMovieCategoryDetailsActivity(MovieType.MY_WATCH_LIST)
             })
             .add(OnClickEventListener(ActionMoviesViewHolder::class, R.id.more) {
@@ -249,6 +278,21 @@ class DemoActivity : AppCompatActivity() {
                 moreSamplesDialog.show()
             })
             .into(recyclerView)
+
+        recyclerView.setHasFixedSize(true)
+        (recyclerView.layoutManager as? LinearLayoutManager)?.apply {
+            isItemPrefetchEnabled = true
+            initialPrefetchItemCount = 20
+        }
+        recyclerView.isNestedScrollingEnabled = true
+
+        val onMyWatchListClickListener: OnClickEventListener = mainSmartMovieAdapter.get(123)
+        /*onMyWatchListClickListener.eventListener.invoke(ViewEvent.OnClick(
+            mainSmartMovieAdapter,
+            SimpleItemViewHolder(recyclerView),
+            0,
+            SimpleItemViewHolder(recyclerView).itemView
+        ))*/
     }
 
     private fun mainLoadMoreItems(
@@ -327,6 +371,18 @@ class DemoActivity : AppCompatActivity() {
                 "Grid + Drag & Drop"
             ),
             SampleFabViewHolder.SimpleFabItem(
+                R.drawable.ic_baseline_filter_list_24,
+                "Simple Filter"
+            ),
+            SampleFabViewHolder.SimpleFabItem(
+                R.drawable.ic_baseline_filter_list_24_1,
+                "Simple Filter & Diff swap"
+            ),
+            SampleFabViewHolder.SimpleFabItem(
+                R.drawable.ic_baseline_filter_list_24_2,
+                "Filter Grid"
+            ),
+            SampleFabViewHolder.SimpleFabItem(
                 R.drawable.ic_sample_list_numbered_black_24dp,
                 "Multiple Types Resolver"
             ),
@@ -402,6 +458,12 @@ class DemoActivity : AppCompatActivity() {
                         startActivity(MultipleEventsAndExtensionsActivity::class)
                     R.drawable.ic_sample_grid_black_24dp ->
                         startActivity(GridActivity::class)
+                    R.drawable.ic_baseline_filter_list_24 ->
+                        startActivity(SimpleFilterActivity::class)
+                    R.drawable.ic_baseline_filter_list_24_1 ->
+                        startActivity(SimpleFilterDiffSwapActivity::class)
+                    R.drawable.ic_baseline_filter_list_24_2 ->
+                        startActivity(FilterGridActivity::class)
                     R.drawable.ic_sample_select_all_black_24dp ->
                         startActivity(MultiSelectItemsActivity::class)
                     R.drawable.ic_radio_button_checked_black_24dp ->

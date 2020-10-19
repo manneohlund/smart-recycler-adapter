@@ -8,7 +8,6 @@ import kotlinx.android.synthetic.main.activity_movie_category_details.recyclerVi
 import smartadapter.Position
 import smartadapter.SmartEndlessScrollRecyclerAdapter
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.viewevent.extension.add
 import smartadapter.viewevent.listener.OnClickEventListener
 import smartrecycleradapter.extension.GridAutoLayoutManager
 import smartrecycleradapter.models.MovieData

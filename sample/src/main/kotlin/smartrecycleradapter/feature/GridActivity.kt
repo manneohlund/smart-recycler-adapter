@@ -7,7 +7,6 @@ import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.viewevent.dragdrop.AutoDragAndDropBinder
-import smartadapter.viewevent.extension.add
 import smartadapter.viewevent.listener.OnClickEventListener
 import smartrecycleradapter.extension.GridAutoLayoutManager
 import smartrecycleradapter.models.MovieData
