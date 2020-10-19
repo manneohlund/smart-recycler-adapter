@@ -3,10 +3,10 @@ package smartadapter.viewevent.listener
 import androidx.annotation.IdRes
 import io.github.manneohlund.smartrecycleradapter.viewevent.R
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.SmartViewHolderBinder
 import smartadapter.SmartViewHolderType
 import smartadapter.ViewId
-import smartadapter.findView
+import smartadapter.extension.SmartViewHolderBinder
+import smartadapter.extension.findView
 import smartadapter.listener.OnCreateViewHolderListener
 import smartadapter.viewevent.model.ViewEvent
 import smartadapter.viewevent.viewholder.OnItemClickEventListener
@@ -19,6 +19,7 @@ open class OnClickEventListener(
     override val viewHolderType: SmartViewHolderType = SmartViewHolder::class,
     @IdRes
     override vararg val viewIds: ViewId = intArrayOf(R.id.undefined),
+    override val identifier: Any = OnClickEventListener::class,
     override var eventListener: (ViewEvent.OnClick) -> Unit
 ) : OnViewEventListener<ViewEvent.OnClick>,
     SmartViewHolderBinder,

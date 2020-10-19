@@ -7,7 +7,6 @@ import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.diffutil.DiffUtilExtension
 import smartadapter.diffutil.SimpleDiffUtilExtension
-import smartadapter.diffutil.extension.add
 import smartadapter.diffutil.extension.diffSwapList
 import smartrecycleradapter.R
 import smartrecycleradapter.feature.simpleitem.SimpleItemViewHolder

@@ -3,17 +3,17 @@ package smartrecycleradapter.feature
 import android.os.Bundle
 import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.nestedadapter.SmartNestedAdapterBinder
 import smartadapter.viewevent.dragdrop.AutoDragAndDropBinder
-import smartadapter.viewevent.extension.add
 import smartadapter.viewevent.listener.OnClickEventListener
 import smartadapter.viewevent.listener.OnLongClickEventListener
 import smartrecycleradapter.BuildConfig
 import smartrecycleradapter.R
-import smartrecycleradapter.extension.PreCachingLinearLayoutManager
+import smartrecycleradapter.extension.GridAutoLayoutManager
 import smartrecycleradapter.models.CopyrightModel
 import smartrecycleradapter.models.MovieCategory
 import smartrecycleradapter.models.MovieData
@@ -80,10 +80,24 @@ class NestedSmartRecyclerAdaptersActivity : BaseSampleActivity() {
                     else -> null
                 }
             }
-            .setLayoutManager(PreCachingLinearLayoutManager.getInstance(this))
+            .setLayoutManager(LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false).apply {
+                isItemPrefetchEnabled = true
+                initialPrefetchItemCount = 20
+            })
             .add(
                 SmartNestedAdapterBinder(
                     viewHolderType = NestedRecyclerViewHolder::class,
+                    recyclerViewBinder = { viewHolder, recyclerView ->
+                        when (viewHolder) {
+                            is RecentlyPlayedMoviesViewHolder -> recyclerView.layoutManager = GridAutoLayoutManager(this, 60)
+                            else -> recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false).apply {
+                                isItemPrefetchEnabled = true
+                                initialPrefetchItemCount = 20
+                            }
+                        }
+                        recyclerView.setHasFixedSize(true)
+                        recyclerView.isNestedScrollingEnabled = false
+                    },
                     smartRecyclerAdapterBuilder = SmartRecyclerAdapter.empty()
                         .map(MovieModel::class, ThumbViewHolder::class)
                         .setViewTypeResolver { item, position ->

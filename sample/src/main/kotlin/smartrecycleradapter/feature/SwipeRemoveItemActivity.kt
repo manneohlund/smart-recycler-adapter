@@ -9,8 +9,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.SmartViewHolderBinder
-import smartadapter.viewevent.extension.add
+import smartadapter.extension.SmartViewHolderBinder
 import smartadapter.viewevent.listener.OnClickEventListener
 import smartadapter.viewevent.model.ViewEvent
 import smartadapter.viewevent.swipe.BasicSwipeEventBinder

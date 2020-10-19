@@ -14,7 +14,6 @@ import androidx.activity.viewModels
 import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.SmartRecyclerAdapter
 import smartadapter.stickyheader.StickyHeaderItemDecorationExtension
-import smartadapter.viewevent.extension.add
 import smartadapter.viewevent.listener.OnMultiItemSelectListener
 import smartadapter.viewevent.model.ViewEvent
 import smartadapter.viewevent.viewmodel.ViewEventViewModel
@@ -55,7 +54,7 @@ class MultipleExpandableItemHeaderActivity : BaseSampleActivity() {
                 supportActionBar?.subtitle =
                     "${multiItemSelectViewModel.viewEventListener.selectedItemsCount} / ${items.size} expanded"
             })
-            .addExtension(StickyHeaderItemDecorationExtension(
+            .add(StickyHeaderItemDecorationExtension(
                 headerItemType = String::class
             ) { motionEvent, itemPosition ->
                 if (motionEvent.action == MotionEvent.ACTION_UP) {

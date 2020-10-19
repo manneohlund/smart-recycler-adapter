@@ -1,17 +1,30 @@
 package smartadapter
 
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Matchers.any
+import org.mockito.Mockito.`when`
 import org.mockito.Mockito.eq
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.spy
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.robolectric.RobolectricTestRunner
+import smartadapter.extension.SmartRecyclerAdapterBinder
+import smartadapter.extension.SmartViewHolderBinder
+import smartadapter.listener.OnAttachedToRecyclerViewListener
+import smartadapter.listener.OnBindViewHolderListener
+import smartadapter.listener.OnCreateViewHolderListener
+import smartadapter.listener.OnDetachedFromRecyclerViewListener
+import smartadapter.listener.OnViewAttachedToWindowListener
+import smartadapter.listener.OnViewDetachedFromWindowListener
+import smartadapter.listener.OnViewRecycledListener
+import smartadapter.viewholder.SmartViewHolder
 import smartadapter.viewholders.BindableTestViewHolder
 import smartadapter.viewholders.RecyclableTestViewHolder
 import smartadapter.viewholders.ViewAttachedToWindowTestViewHolder
@@ -27,13 +40,314 @@ class SmartRecyclerAdapterImplTest {
 
     @Test
     fun testImplicitInstantiate() {
-        SmartRecyclerAdapter.empty().create<Any>()
+        SmartRecyclerAdapter.empty().create<SmartRecyclerAdapter>()
     }
 
     @Test
     fun testExplicitInstantiate() {
         val smartRecyclerAdapter = SmartRecyclerAdapter.empty().create<SmartRecyclerAdapter>()
         assertNotNull(smartRecyclerAdapter)
+    }
+
+    @Test
+    fun testGetExtension() {
+        // Given
+        class TestExtension(override val identifier: Any) : SmartRecyclerAdapterBinder {
+            override fun bind(smartRecyclerAdapter: SmartRecyclerAdapter) { }
+        }
+        val smartRecyclerAdapter = SmartRecyclerAdapter.empty().create<SmartRecyclerAdapter>()
+
+        // When
+        smartRecyclerAdapter.add(TestExtension(identifier = 123))
+
+        // Then
+        assertNotNull(smartRecyclerAdapter.get(123))
+    }
+
+    @Test
+    fun testGetMultipleExtensionsByIdentifier() {
+        // Given
+        class TestExtension(override val identifier: Any = TestExtension::class) : SmartRecyclerAdapterBinder {
+            override fun bind(smartRecyclerAdapter: SmartRecyclerAdapter) { }
+        }
+        val smartRecyclerAdapter = SmartRecyclerAdapter.empty().create<SmartRecyclerAdapter>()
+
+        // When
+        smartRecyclerAdapter.add(TestExtension())
+        smartRecyclerAdapter.add(TestExtension(identifier = "abc"))
+        smartRecyclerAdapter.add(TestExtension(identifier = 123))
+
+        // Then
+        assertNotNull(smartRecyclerAdapter.get<TestExtension>())
+        assertNotNull(smartRecyclerAdapter.get("abc"))
+        assertNotNull(smartRecyclerAdapter.get(123))
+    }
+
+    @Test
+    fun testSmartRecyclerAdapterStoresMultipleExtensions_withSameImplicitIdentifier() {
+        // Given
+        class TestExtension(override val identifier: Any = TestExtension::class) : SmartRecyclerAdapterBinder {
+            override fun bind(smartRecyclerAdapter: SmartRecyclerAdapter) { }
+        }
+        class TestViewHolderBinder(override val identifier: Any = TestViewHolderBinder::class) : SmartViewHolderBinder
+
+        val smartRecyclerAdapter = SmartRecyclerAdapter.empty().create<SmartRecyclerAdapter>()
+        val ext1 = TestExtension()
+        val ext2 = TestViewHolderBinder()
+        val ext3 = TestExtension()
+        val ext4 = TestViewHolderBinder()
+
+        // When
+        smartRecyclerAdapter.add(ext1)
+        smartRecyclerAdapter.add(ext2)
+        smartRecyclerAdapter.add(ext3)
+        smartRecyclerAdapter.add(ext4)
+
+        // Then
+        assertEquals(4, smartRecyclerAdapter.smartExtensions.size)
+        assertNotNull(smartRecyclerAdapter.get<TestExtension>())
+        assertNotNull(smartRecyclerAdapter.get<TestViewHolderBinder>())
+        assertNotNull(smartRecyclerAdapter.get<TestExtension>(ext3.hashCode()))
+        assertNotNull(smartRecyclerAdapter.get<TestViewHolderBinder>(ext4.hashCode()))
+        assertTrue(smartRecyclerAdapter.smartExtensions.values.contains(ext1))
+        assertTrue(smartRecyclerAdapter.smartExtensions.values.contains(ext2))
+        assertTrue(smartRecyclerAdapter.smartExtensions.values.contains(ext3))
+        assertTrue(smartRecyclerAdapter.smartExtensions.values.contains(ext4))
+    }
+
+    @Test
+    fun testSmartRecyclerAdapterExtension_bindingTo_smartRecyclerAdapter() {
+        // Given
+        open class TestExtension(override val identifier: Any = TestExtension::class) : SmartRecyclerAdapterBinder{
+            override fun bind(smartRecyclerAdapter: SmartRecyclerAdapter) {}
+        }
+        val testExtension = mock(TestExtension::class.java)
+        val smartRecyclerAdapter = SmartRecyclerAdapter.empty().create<SmartRecyclerAdapter>()
+
+        // When
+        smartRecyclerAdapter.add(testExtension)
+
+        // Then
+        verify(testExtension, times(1)).bind(smartRecyclerAdapter)
+    }
+
+    @Test
+    fun testSmartViewHolderBinder_onCreateViewHolderListener() {
+        // Given
+        open class TestExtension(override val identifier: Any = TestExtension::class) :
+            SmartViewHolderBinder,
+            OnCreateViewHolderListener {
+            override fun onCreateViewHolder(adapter: SmartRecyclerAdapter, viewHolder: SmartViewHolder<Any>) {}
+        }
+        open class TestViewHolder(viewGroup: ViewGroup) : SmartViewHolder<Int>(viewGroup) {
+            override fun bind(item: Int) {}
+        }
+
+        val testExtension = mock(TestExtension::class.java)
+        `when`(testExtension.viewHolderType).thenReturn(SmartViewHolder::class)
+        val smartRecyclerAdapter = SmartRecyclerAdapter.empty().create<SmartRecyclerAdapter>()
+
+        // When
+        smartRecyclerAdapter.setItems(mutableListOf(123))
+        smartRecyclerAdapter.add(testExtension)
+        smartRecyclerAdapter.map(Int::class, TestViewHolder::class)
+        val viewHolder = smartRecyclerAdapter.onCreateViewHolder(mock(ViewGroup::class.java), smartRecyclerAdapter.getItemViewType(0))
+
+        // Then
+        verify(testExtension, times(1)).onCreateViewHolder(smartRecyclerAdapter, viewHolder)
+    }
+
+    @Test
+    fun testSmartViewHolderBinder_onBindViewHolderListener() {
+        // Given
+        open class TestExtension(override val identifier: Any = TestExtension::class) :
+            SmartViewHolderBinder,
+            OnBindViewHolderListener {
+            override fun onBindViewHolder(adapter: SmartRecyclerAdapter, viewHolder: SmartViewHolder<Any>) {}
+        }
+        open class TestViewHolder(viewGroup: ViewGroup) : SmartViewHolder<Int>(viewGroup) {
+            override fun bind(item: Int) {}
+        }
+
+        val testExtension = mock(TestExtension::class.java)
+        `when`(testExtension.viewHolderType).thenReturn(SmartViewHolder::class)
+        val smartRecyclerAdapter = SmartRecyclerAdapter.empty().create<SmartRecyclerAdapter>()
+
+        // When
+        smartRecyclerAdapter.setItems(mutableListOf(123))
+        smartRecyclerAdapter.add(testExtension)
+        smartRecyclerAdapter.map(Int::class, TestViewHolder::class)
+        val viewHolder = smartRecyclerAdapter.onCreateViewHolder(mock(ViewGroup::class.java), smartRecyclerAdapter.getItemViewType(0))
+        smartRecyclerAdapter.onBindViewHolder(viewHolder, 0)
+
+        // Then
+        verify(testExtension, times(1)).onBindViewHolder(smartRecyclerAdapter, viewHolder)
+    }
+
+    @Test
+    fun testSmartViewHolderBinder_onBindViewHolderListener2() {
+        // Given
+        open class TestExtension(override val identifier: Any = TestExtension::class) :
+            SmartViewHolderBinder,
+            OnBindViewHolderListener {
+            override fun onBindViewHolder(adapter: SmartRecyclerAdapter, viewHolder: SmartViewHolder<Any>) {}
+            override fun onBindViewHolder(adapter: SmartRecyclerAdapter, viewHolder: SmartViewHolder<Any>, payloads: MutableList<Any>) {}
+        }
+        open class TestViewHolder(viewGroup: ViewGroup) : SmartViewHolder<Int>(viewGroup) {
+            override fun bind(item: Int) {}
+        }
+
+        val testExtension = mock(TestExtension::class.java)
+        `when`(testExtension.viewHolderType).thenReturn(SmartViewHolder::class)
+        val smartRecyclerAdapter = SmartRecyclerAdapter.empty().create<SmartRecyclerAdapter>()
+
+        // When
+        smartRecyclerAdapter.setItems(mutableListOf(123))
+        smartRecyclerAdapter.add(testExtension)
+        smartRecyclerAdapter.map(Int::class, TestViewHolder::class)
+        val viewHolder = smartRecyclerAdapter.onCreateViewHolder(mock(ViewGroup::class.java), smartRecyclerAdapter.getItemViewType(0))
+        val payload = mutableListOf<Any>(123)
+        smartRecyclerAdapter.onBindViewHolder(viewHolder, 0, payload)
+
+        // Then
+        verify(testExtension, times(1)).onBindViewHolder(smartRecyclerAdapter, viewHolder, payload)
+    }
+
+    @Test
+    fun testSmartViewHolderBinder_onViewRecycledListener() {
+        // Given
+        open class TestExtension(override val identifier: Any = TestExtension::class) :
+            SmartViewHolderBinder,
+            OnViewRecycledListener {
+            override fun onViewRecycled(adapter: SmartRecyclerAdapter, viewHolder: SmartViewHolder<Any>) {}
+        }
+        open class TestViewHolder(viewGroup: ViewGroup) : SmartViewHolder<Int>(viewGroup) {
+            override fun bind(item: Int) {}
+        }
+
+        val testExtension = mock(TestExtension::class.java)
+        `when`(testExtension.viewHolderType).thenReturn(SmartViewHolder::class)
+        val smartRecyclerAdapter = SmartRecyclerAdapter.empty().create<SmartRecyclerAdapter>()
+
+        // When
+        smartRecyclerAdapter.setItems(mutableListOf(123))
+        smartRecyclerAdapter.add(testExtension)
+        smartRecyclerAdapter.map(Int::class, TestViewHolder::class)
+        val viewHolder = smartRecyclerAdapter.onCreateViewHolder(mock(ViewGroup::class.java), smartRecyclerAdapter.getItemViewType(0))
+        smartRecyclerAdapter.onViewRecycled(viewHolder)
+
+        // Then
+        verify(testExtension, times(1)).onViewRecycled(smartRecyclerAdapter, viewHolder)
+    }
+
+    @Test
+    fun testSmartViewHolderBinder_onViewAttachedToWindowListener() {
+        // Given
+        open class TestExtension(override val identifier: Any = TestExtension::class) :
+            SmartViewHolderBinder,
+            OnViewAttachedToWindowListener {
+            override fun onViewAttachedToWindow(viewHolder: RecyclerView.ViewHolder) {}
+        }
+        open class TestViewHolder(viewGroup: ViewGroup) : SmartViewHolder<Int>(viewGroup) {
+            override fun bind(item: Int) {}
+        }
+
+        val testExtension = mock(TestExtension::class.java)
+        `when`(testExtension.viewHolderType).thenReturn(SmartViewHolder::class)
+        val smartRecyclerAdapter = SmartRecyclerAdapter.empty().create<SmartRecyclerAdapter>()
+
+        // When
+        smartRecyclerAdapter.setItems(mutableListOf(123))
+        smartRecyclerAdapter.add(testExtension)
+        smartRecyclerAdapter.map(Int::class, TestViewHolder::class)
+        val viewHolder = smartRecyclerAdapter.onCreateViewHolder(mock(ViewGroup::class.java), smartRecyclerAdapter.getItemViewType(0))
+        smartRecyclerAdapter.onViewAttachedToWindow(viewHolder)
+
+        // Then
+        verify(testExtension, times(1)).onViewAttachedToWindow(viewHolder)
+    }
+
+    @Test
+    fun testSmartViewHolderBinder_onViewDetachedFromWindowListener() {
+        // Given
+        open class TestExtension(override val identifier: Any = TestExtension::class) :
+            SmartViewHolderBinder,
+            OnViewDetachedFromWindowListener {
+            override fun onViewDetachedFromWindow(viewHolder: RecyclerView.ViewHolder) {}
+        }
+        open class TestViewHolder(viewGroup: ViewGroup) : SmartViewHolder<Int>(viewGroup) {
+            override fun bind(item: Int) {}
+        }
+
+        val testExtension = mock(TestExtension::class.java)
+        `when`(testExtension.viewHolderType).thenReturn(SmartViewHolder::class)
+        val smartRecyclerAdapter = SmartRecyclerAdapter.empty().create<SmartRecyclerAdapter>()
+
+        // When
+        smartRecyclerAdapter.setItems(mutableListOf(123))
+        smartRecyclerAdapter.add(testExtension)
+        smartRecyclerAdapter.map(Int::class, TestViewHolder::class)
+        val viewHolder = smartRecyclerAdapter.onCreateViewHolder(mock(ViewGroup::class.java), smartRecyclerAdapter.getItemViewType(0))
+        smartRecyclerAdapter.onViewDetachedFromWindow(viewHolder)
+
+        // Then
+        verify(testExtension, times(1)).onViewDetachedFromWindow(viewHolder)
+    }
+
+    @Test
+    fun testSmartViewHolderBinder_onAttachedToRecyclerViewListener() {
+        // Given
+        open class TestExtension(override val identifier: Any = TestExtension::class) :
+            SmartViewHolderBinder,
+            OnAttachedToRecyclerViewListener {
+            override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {}
+        }
+        open class TestViewHolder(viewGroup: ViewGroup) : SmartViewHolder<Int>(viewGroup) {
+            override fun bind(item: Int) {}
+        }
+
+        val testExtension = mock(TestExtension::class.java)
+        `when`(testExtension.viewHolderType).thenReturn(SmartViewHolder::class)
+        val smartRecyclerAdapter = SmartRecyclerAdapter.empty().create<SmartRecyclerAdapter>()
+
+        // When
+        smartRecyclerAdapter.setItems(mutableListOf(123))
+        smartRecyclerAdapter.add(testExtension)
+        smartRecyclerAdapter.map(Int::class, TestViewHolder::class)
+        val viewHolder = smartRecyclerAdapter.onCreateViewHolder(mock(ViewGroup::class.java), smartRecyclerAdapter.getItemViewType(0))
+        val recyclerView = mock(RecyclerView::class.java)
+        smartRecyclerAdapter.onAttachedToRecyclerView(recyclerView)
+
+        // Then
+        verify(testExtension, times(1)).onAttachedToRecyclerView(recyclerView)
+    }
+
+    @Test
+    fun testSmartViewHolderBinder_onDetachedFromRecyclerViewListener() {
+        // Given
+        open class TestExtension(override val identifier: Any = TestExtension::class) :
+            SmartViewHolderBinder,
+            OnDetachedFromRecyclerViewListener {
+            override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {}
+        }
+        open class TestViewHolder(viewGroup: ViewGroup) : SmartViewHolder<Int>(viewGroup) {
+            override fun bind(item: Int) {}
+        }
+
+        val testExtension = mock(TestExtension::class.java)
+        `when`(testExtension.viewHolderType).thenReturn(SmartViewHolder::class)
+        val smartRecyclerAdapter = SmartRecyclerAdapter.empty().create<SmartRecyclerAdapter>()
+
+        // When
+        smartRecyclerAdapter.setItems(mutableListOf(123))
+        smartRecyclerAdapter.add(testExtension)
+        smartRecyclerAdapter.map(Int::class, TestViewHolder::class)
+        val viewHolder = smartRecyclerAdapter.onCreateViewHolder(mock(ViewGroup::class.java), smartRecyclerAdapter.getItemViewType(0))
+        val recyclerView = mock(RecyclerView::class.java)
+        smartRecyclerAdapter.onDetachedFromRecyclerView(recyclerView)
+
+        // Then
+        verify(testExtension, times(1)).onDetachedFromRecyclerView(recyclerView)
     }
 
     @Test

@@ -1,3 +1,9 @@
+# v1.0.0-beta01
+
+### Added
+* `RecyclerViewBinder` invocation for SmartNestedRecyclerViewHolder for easy RecyclerView configuration in SmartAdapterBuilder
+* `reuseParentAdapterRecycledViewPool` to reuse parent SmartRecyclerAdapter RecyclerView.RecycledViewPool into nested adapters.
+  Default is shared recycledViewPool for nested adapters
 
 # v1.0.0-alpha01
 

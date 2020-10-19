@@ -1,6 +1,18 @@
 # v1.0.0-beta02
 
 ### Added
+* Added identifier override
+* Added androidx.appcompat:appcompat for runtime resolving R.attr.selectableItemBackground
+
+### Removed
+* Removed SmartAdapterBuilderExt with helper methods
+
+### Moved
+* Moved binder and util packages to extensions
+
+# v1.0.0-beta02
+
+### Added
 
 * Feature enableAll & disableAll selectable items functionality. `selectableItemType` will narrow down to valid selectable target item type. 
 

@@ -33,7 +33,7 @@ class StickyHeaderActivity : BaseSampleActivity() {
             .items(items)
             .map(String::class, SimpleHeaderViewHolder::class)
             .map(Integer::class, SimpleItemViewHolder::class)
-            .addExtension(StickyHeaderItemDecorationExtension(
+            .add(StickyHeaderItemDecorationExtension(
                 headerItemType = String::class
             ) { motionEvent, itemPosition ->
                 if (motionEvent.action == MotionEvent.ACTION_UP) {

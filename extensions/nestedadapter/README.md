@@ -1,8 +1,8 @@
 
 # smart-recycler-adapter-nestedadapter
 
-Creating a complex multi nested SmartRecyclerAdapter have never been easier.
-Supports both dynamic and static adapter creation and view holder mapping.
+Creating a complex multi nested SmartRecyclerAdapter have never been easier.<br/>
+Supports both dynamic and static adapter creation and view holder mapping.<br/>
 Use `smart-recycler-adapter-nestedadapter` with minimum `smart-recycler-adapter:5.0.0`.
 
 ### Models
@@ -115,6 +115,38 @@ SmartRecyclerAdapter
 # That's it! 🚀
 
 ## Advanced
+
+### RecyclerViewBinder
+
+With RecyclerViewBinder you don't have to set RecycleView properties in your ViewHolder.<br/>
+SmartNestedAdapterBinder will handle that for you and you can specify the mapping in the SmartAdapterBuilder.
+
+```kotlin
+SmartNestedAdapterBinder(
+    viewHolderType = NestedRecyclerViewHolder::class,
+    smartRecyclerAdapterBuilder = SmartRecyclerAdapter.empty()
+        .setViewTypeResolver(thumbViewHolderResolver)
+        .add(OnClickEventListener {
+            showToast(
+                "${it.adapter::class.java.simpleName}\n%s \nindex %d",
+                getMovieTitle(it.adapter, it.position),
+                it.position
+            )
+        }),
+    recyclerViewBinder = { viewHolder, recyclerView ->
+        when (viewHolder) {
+            is MyWatchListViewHolder -> recyclerView.layoutManager = GridAutoLayoutManager(this, 100)
+            is RecentlyPlayedMoviesViewHolder -> recyclerView.layoutManager = GridAutoLayoutManager(this, 60)
+            else -> recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false).apply {
+                isItemPrefetchEnabled = true
+                initialPrefetchItemCount = 20
+            }
+        }
+        recyclerView.setHasFixedSize(true)
+        recyclerView.isNestedScrollingEnabled = false
+    }
+)
+```
 
 ### SmartNestedAdapterBinder
 

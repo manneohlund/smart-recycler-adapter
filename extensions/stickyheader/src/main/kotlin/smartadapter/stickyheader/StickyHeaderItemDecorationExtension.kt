@@ -15,7 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.binders.SmartRecyclerAdapterExtension
+import smartadapter.extension.SmartRecyclerAdapterBinder
 import smartadapter.listener.OnAttachedToRecyclerViewListener
 import smartadapter.listener.OnDetachedFromRecyclerViewListener
 import kotlin.reflect.KClass
@@ -34,7 +34,7 @@ class StickyHeaderItemDecorationExtension(
     private val headerBackground: Drawable? = null,
     private val onHeaderTouchListener: (motionEvent: MotionEvent, itemPosition: Int) -> Unit = { motionEvent, itemPosition -> }
 ) : RecyclerView.ItemDecoration(),
-    SmartRecyclerAdapterExtension,
+    SmartRecyclerAdapterBinder,
     OnAttachedToRecyclerViewListener,
     OnDetachedFromRecyclerViewListener {
 

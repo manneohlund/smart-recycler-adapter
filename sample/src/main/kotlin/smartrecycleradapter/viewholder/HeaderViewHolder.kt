@@ -10,7 +10,24 @@ import android.widget.TextView
 import smartadapter.viewholder.SmartViewHolder
 import smartrecycleradapter.R
 
-class HeaderViewHolder(parentView: ViewGroup) :
+open class SmallHeaderViewHolder(parentView: ViewGroup) :
+    SmartViewHolder<String>(parentView, R.layout.header) {
+
+    private val summary: TextView = itemView as TextView
+
+    init {
+        val params = summary.layoutParams as ViewGroup.MarginLayoutParams
+        params.setMargins(params.leftMargin, params.topMargin / 2, params.rightMargin, params.bottomMargin)
+        summary.layoutParams = params
+        summary.textSize = summary.textSize / 3
+    }
+
+    override fun bind(text: String) {
+        summary.text = text
+    }
+}
+
+open class HeaderViewHolder(parentView: ViewGroup) :
     SmartViewHolder<String>(parentView, R.layout.header) {
 
     private val summary: TextView = itemView as TextView

@@ -11,7 +11,6 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.viewevent.extension.add
 import smartadapter.viewevent.listener.OnClickEventListener
 import smartadapter.viewevent.listener.OnSingleItemCheckListener
 import smartadapter.viewevent.model.ViewEvent

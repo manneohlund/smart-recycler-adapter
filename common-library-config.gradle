@@ -5,10 +5,11 @@ android {
     defaultConfig {
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
-        versionCode PROJ_VERSION_CODE
-        versionName PROJ_VERSION_NAME
+        versionCode LIB_VERSION_CODE
+        versionName LIB_VERSION_NAME
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
         setProperty("archivesBaseName", "$LIB_ARTIFACT_ID-$LIB_VERSION_NAME")
     }
 
@@ -49,4 +50,22 @@ android {
             includeAndroidResources = true
         }
     }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+
+    // Test
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    // Project
+    implementation project(path: ':smartadapter')
+
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    // Androidx
+    implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
 }

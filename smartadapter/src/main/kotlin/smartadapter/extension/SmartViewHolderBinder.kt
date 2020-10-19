@@ -1,11 +1,13 @@
-package smartadapter
+package smartadapter.extension
 
 import android.view.View
 import androidx.annotation.IdRes
 import io.github.manneohlund.smartrecycleradapter.R
+import smartadapter.SmartViewHolderType
+import smartadapter.ViewId
 import smartadapter.viewholder.SmartViewHolder
 
-interface SmartViewHolderBinder {
+interface SmartViewHolderBinder : SmartExtensionIdentifier {
 
     /**
      * Default implementation returns [SmartViewHolder] class which

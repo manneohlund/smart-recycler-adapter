@@ -8,6 +8,7 @@ package smartrecycleradapter.feature
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_simple_item.toolbar
 import smartrecycleradapter.R
@@ -15,9 +16,11 @@ import smartrecycleradapter.R
 @SuppressLint("Registered")
 open class BaseSampleActivity : AppCompatActivity() {
 
+    @LayoutRes open val contentView: Int = R.layout.activity_simple_item
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_simple_item)
+        setContentView(contentView)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)

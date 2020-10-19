@@ -22,6 +22,7 @@ import smartadapter.viewholder.SmartViewHolder
  * @see SmartAdapterHolder
  */
 class AutoRemoveItemSwipeEventBinder(
+    override val identifier: Any = AutoRemoveItemSwipeEventBinder::class,
     override var swipeFlags: SwipeFlags = ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT,
     override var viewHolderTypes: List<SmartViewHolderType> = listOf(SmartViewHolder::class),
     override var longPressDragEnabled: Boolean = false,

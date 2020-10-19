@@ -5,15 +5,16 @@ package smartadapter.diffutil
  * Copyright (c) All rights reserved.
  */
 
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.DiffUtil
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.binders.SmartRecyclerAdapterExtension
+import smartadapter.extension.SmartRecyclerAdapterBinder
 
 /**
  * Defines basic functionality of the DiffUtilExtension.
  */
 abstract class DiffUtilExtension : DiffUtil.Callback(),
-    SmartRecyclerAdapterExtension {
+    SmartRecyclerAdapterBinder {
 
     abstract var smartRecyclerAdapter: SmartRecyclerAdapter
 
@@ -30,6 +31,17 @@ abstract class DiffUtilExtension : DiffUtil.Callback(),
      * @param newList new item list
      */
     abstract fun diffSwapList(newList: List<*>)
+
+    /**
+     * Asynchronously swaps the [smartadapter.SmartRecyclerAdapter] item list with new item list and animates the swap.
+     * @param newList new item list
+     */
+    abstract fun diffSwapList(lifecycleScope: LifecycleCoroutineScope, newList: List<*>, callback: (Result<Boolean>) -> Unit)
+
+    /**
+     * Cancels the diff swap calculation job.
+     */
+    abstract fun cancelDiffSwapJob()
 
     /**
      * Old vs new item compare, can be typed if the [smartadapter.SmartRecyclerAdapter] only contains one type of items.

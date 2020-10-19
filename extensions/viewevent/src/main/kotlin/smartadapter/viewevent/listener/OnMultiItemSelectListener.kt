@@ -11,11 +11,11 @@ import androidx.annotation.IdRes
 import io.github.manneohlund.smartrecycleradapter.viewevent.R
 import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.SmartViewHolderBinder
 import smartadapter.SmartViewHolderType
 import smartadapter.ViewId
+import smartadapter.extension.SmartViewHolderBinder
+import smartadapter.extension.findView
 import smartadapter.extension.setBackgroundAttribute
-import smartadapter.findView
 import smartadapter.listener.OnBindViewHolderListener
 import smartadapter.listener.OnCreateViewHolderListener
 import smartadapter.viewevent.model.ViewEvent
@@ -30,6 +30,7 @@ import kotlin.reflect.KClass
  * Extends [OnMultiItemSelectListener] and contains the logic for the single check states for recycler adapter positions.
  */
 open class OnSingleItemCheckListener(
+    override val identifier: Any = OnSingleItemCheckListener::class,
     override val viewHolderType: SmartViewHolderType = SmartViewHolder::class,
     selectableItemType: KClass<*> = Any::class,
     @IdRes viewId: ViewId = R.id.undefined
@@ -64,6 +65,7 @@ open class OnSingleItemCheckListener(
  * Extends [OnMultiItemSelectListener] and contains the logic for the single selection states for recycler adapter positions.
  */
 open class OnSingleItemSelectListener(
+    override val identifier: Any = OnSingleItemSelectListener::class,
     override val viewHolderType: SmartViewHolderType = SmartViewHolder::class,
     selectableItemType: KClass<*> = Any::class,
     @IdRes viewId: ViewId = R.id.undefined
@@ -99,6 +101,7 @@ open class OnSingleItemSelectListener(
  * Extends [OnMultiItemSelectListener] and contains the logic for the multi check states for recycler adapter positions.
  */
 open class OnMultiItemCheckListener(
+    override val identifier: Any = OnMultiItemCheckListener::class,
     override val viewHolderType: SmartViewHolderType = SmartViewHolder::class,
     selectableItemType: KClass<*> = Any::class,
     @IdRes viewId: ViewId = R.id.undefined
@@ -150,6 +153,7 @@ open class OnMultiItemCheckListener(
  * [eventListener] is by default noop in case of [OnMultiItemSelectListener] will be used with [ViewEventViewModel] along with live data observer.
  */
 open class OnMultiItemSelectListener(
+    override val identifier: Any = OnMultiItemSelectListener::class,
     val enableOnLongClick: Boolean = true,
     override val viewHolderType: SmartViewHolderType = SmartViewHolder::class,
     internal val selectableItemType: KClass<*> = Any::class,

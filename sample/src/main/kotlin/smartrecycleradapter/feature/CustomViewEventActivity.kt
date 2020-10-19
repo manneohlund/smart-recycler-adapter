@@ -14,7 +14,6 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_simple_item.recyclerView
 import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.viewevent.extension.add
 import smartadapter.viewevent.listener.OnCustomViewEventListener
 import smartadapter.viewevent.model.ViewEvent
 import smartadapter.viewevent.viewholder.CustomViewEventListenerHolder

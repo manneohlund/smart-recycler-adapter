@@ -22,6 +22,7 @@ import smartadapter.viewholder.SmartViewHolder
  * @see DragAndDropEventBinder
  */
 open class BasicDragAndDropBinder(
+    override val identifier: Any = BasicDragAndDropBinder::class,
     override var dragFlags: Int = 0,
     override var touchHelper: ItemTouchHelper? = null,
     override var viewHolderTypes: List<SmartViewHolderType> = listOf(SmartViewHolder::class),

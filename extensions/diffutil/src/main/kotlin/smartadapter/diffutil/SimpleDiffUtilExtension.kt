@@ -5,7 +5,12 @@ package smartadapter.diffutil
  * Copyright (c) All rights reserved.
  */
 
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.DiffUtil
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import smartadapter.Position
 import smartadapter.SmartRecyclerAdapter
 
@@ -15,7 +20,8 @@ import smartadapter.SmartRecyclerAdapter
 @Suppress("UNCHECKED_CAST")
 class SimpleDiffUtilExtension(
     private var predicate: DiffPredicate<*>? = null,
-    override val identifier: Any = SimpleDiffUtilExtension::class
+    override val identifier: Any = SimpleDiffUtilExtension::class,
+    val loadingStateListener: (isLoading: Boolean) -> Unit = {}
 ) : DiffUtilExtension() {
 
     init {
@@ -28,6 +34,7 @@ class SimpleDiffUtilExtension(
     private lateinit var diffPredicate: DiffPredicate<Any>
     private lateinit var oldList: List<Any>
     private lateinit var newList: List<Any>
+    private var diffSwapJob: Job? = null
 
     override fun getOldListSize(): Int {
         return oldList.size
@@ -64,6 +71,40 @@ class SimpleDiffUtilExtension(
             smartRecyclerAdapter.setItems(newList, false)
             smartRecyclerAdapter.updateItemCount()
         }
+    }
+
+    override fun diffSwapList(
+        lifecycleScope: LifecycleCoroutineScope,
+        newList: List<*>,
+        callback: (Result<Boolean>) -> Unit
+    ) {
+        loadingStateListener.invoke(true)
+        diffSwapJob?.cancel()
+        this.oldList = smartRecyclerAdapter.getItems()
+        this.newList = newList as MutableList<Any>
+        diffSwapJob = lifecycleScope.launch(Dispatchers.IO) {
+            smartRecyclerAdapter.let { smartRecyclerAdapter ->
+                kotlin.runCatching {
+                    val diffResult = DiffUtil.calculateDiff(this@SimpleDiffUtilExtension)
+                    withContext(Dispatchers.Main) {
+                        diffResult.dispatchUpdatesTo(smartRecyclerAdapter)
+                        smartRecyclerAdapter.setItems(newList, false)
+                        smartRecyclerAdapter.updateItemCount()
+                        callback.invoke(Result.success(true))
+                        loadingStateListener.invoke(false)
+                    }
+                }.onFailure {
+                    withContext(Dispatchers.Main) {
+                        callback.invoke(Result.failure(it))
+                        loadingStateListener.invoke(false)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun cancelDiffSwapJob() {
+        diffSwapJob?.cancel()
     }
 
     override fun bind(smartRecyclerAdapter: SmartRecyclerAdapter) {

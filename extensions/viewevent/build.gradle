@@ -6,73 +6,16 @@ apply plugin: 'maven-publish'
 ext {
     LIB_ARTIFACT_NAME = 'SmartRecyclerAdapter ViewEvent'
     LIB_ARTIFACT_ID = 'smart-recycler-adapter-viewevent'
-    LIB_VERSION_CODE = 4
-    LIB_VERSION_NAME = '1.0.0-beta02'
+    LIB_VERSION_CODE = 5
+    LIB_VERSION_NAME = '1.0.0-beta03'
     LIB_DESCRIPTION = 'View Event listeners extension library for SmartRecyclerAdapter'
 }
 
-android {
-    compileSdkVersion TARGET_SDK_VERSION
-    buildToolsVersion BUILD_TOOLS_VERSION
-
-    defaultConfig {
-        minSdkVersion MIN_SDK_VERSION
-        targetSdkVersion TARGET_SDK_VERSION
-        versionCode LIB_VERSION_CODE
-        versionName LIB_VERSION_NAME
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
-
-        setProperty("archivesBaseName", "$LIB_ARTIFACT_ID-$LIB_VERSION_NAME") // TODO Not working with com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4 as sub dependecy
-    }
-
-    sourceSets {
-        main {
-            java.srcDirs = ['src/main/kotlin']
-            res.srcDirs = ['src/main/res']
-        }
-        release {
-            java.srcDirs = ['src/main/kotlin']
-            res.srcDirs = ['src/main/res']
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = '1.8'
-        freeCompilerArgs = ['-Xjvm-default=compatibility']
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-}
+apply from: '../../common-library-config.gradle'
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-
-    // Test
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-
-    // Project
-    implementation project(path: ':smartadapter')
-
-    // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-
     // Androidx
-    implementation "androidx.appcompat:appcompat:$appcompat_version"
-    implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
+    implementation "androidx.appcompat:appcompat:$appcompat_version" // For runtime resolving R.attr.selectableItemBackground
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_extensions_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_viewmodel_ktx_version"
 }

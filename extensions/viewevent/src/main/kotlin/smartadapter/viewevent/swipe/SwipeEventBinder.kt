@@ -8,9 +8,9 @@ package smartadapter.viewevent.swipe
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.SmartViewHolderBinder
 import smartadapter.SmartViewHolderType
-import smartadapter.binders.ItemTouchBinder
+import smartadapter.extension.ItemTouchBinder
+import smartadapter.extension.SmartViewHolderBinder
 import smartadapter.viewevent.listener.OnViewEventListener
 import smartadapter.viewevent.model.ViewEvent
 

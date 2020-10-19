@@ -1,7 +1,7 @@
 package smartadapter.viewevent.listener
 
 import smartadapter.SmartRecyclerAdapter
-import smartadapter.SmartViewHolderBinder
+import smartadapter.extension.SmartViewHolderBinder
 import smartadapter.listener.OnCreateViewHolderListener
 import smartadapter.viewevent.model.ViewEvent
 import smartadapter.viewevent.viewholder.CustomViewEventListenerHolder
@@ -12,6 +12,7 @@ import smartadapter.viewholder.SmartViewHolder
  * via [CustomViewEventListenerHolder] interface to enable posting of custom [ViewEvent].
  */
 open class OnCustomViewEventListener(
+    override val identifier: Any = OnCustomViewEventListener::class,
     override var eventListener: (ViewEvent) -> Unit
 ) : OnViewEventListener<ViewEvent>,
     SmartViewHolderBinder,

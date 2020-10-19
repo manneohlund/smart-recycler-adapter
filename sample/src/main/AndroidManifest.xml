@@ -39,6 +39,15 @@
             android:name=".feature.GridActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".feature.SimpleFilterActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".feature.SimpleFilterDiffSwapActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".feature.FilterGridActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".feature.MultiSelectItemsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
