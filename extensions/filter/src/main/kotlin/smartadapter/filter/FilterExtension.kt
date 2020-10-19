@@ -11,20 +11,27 @@ import smartadapter.extension.SmartRecyclerAdapterBinder
 import kotlin.reflect.KClass
 
 class FilterExtension(
+    override val identifier: Any = FilterExtension::class,
     val filterPredicate: (item: Any, query: CharSequence) -> Boolean,
     val targetFilterTypes: List<KClass<*>> = listOf(),
     val fastReset: Boolean = false,
-    override val identifier: Any = FilterExtension::class
+    val loadingStateListener: (isLoading: Boolean) -> Unit = {}
 ) : SmartRecyclerAdapterBinder {
 
     private lateinit var smartRecyclerAdapter: SmartRecyclerAdapter
     private var items: MutableList<Any> = mutableListOf()
     private var filterJob: Job? = null
+    private val observer = object : RecyclerView.AdapterDataObserver() {
+        override fun onChanged() {
+            items = smartRecyclerAdapter.getItems()
+        }
+    }
 
     fun filter(
         lifecycleScope: LifecycleCoroutineScope,
         constraint: CharSequence?,
-        result: (Result<List<Any>>) -> Unit
+        autoSetNewItems: Boolean = false,
+        result: ((Result<List<Any>>) -> Unit)? = {}
     ) {
         cancelFilterJob()
 
@@ -34,9 +41,11 @@ class FilterExtension(
 
         if (fastReset && (constraint.isBlank())) {
             smartRecyclerAdapter.setItems(items)
-            result.invoke(Result.failure(Exception("Empty query, set initial list and returning!")))
+            result?.invoke(Result.failure(Exception("Empty query, set initial list and returning!")))
             return
         }
+
+        loadingStateListener.invoke(true)
 
         filterJob = lifecycleScope.launch(Dispatchers.IO) {
             val filterItems = items.filter {
@@ -47,8 +56,14 @@ class FilterExtension(
                 }
             }
             withContext(Dispatchers.Main) {
+                loadingStateListener.invoke(false)
                 if (filterJob?.isCancelled == false) {
-                    result.invoke(Result.success(filterItems))
+                    result?.invoke(Result.success(filterItems))
+                    if (autoSetNewItems) {
+                        smartRecyclerAdapter.unregisterAdapterDataObserver(observer)
+                        smartRecyclerAdapter.setItems(filterItems as MutableList<*>)
+                        smartRecyclerAdapter.registerAdapterDataObserver(observer)
+                    }
                 }
             }
         }
@@ -61,11 +76,6 @@ class FilterExtension(
     override fun bind(smartRecyclerAdapter: SmartRecyclerAdapter) {
         this.smartRecyclerAdapter = smartRecyclerAdapter
         items = smartRecyclerAdapter.getItems()
-        this.smartRecyclerAdapter.registerAdapterDataObserver(object :
-            RecyclerView.AdapterDataObserver() {
-            override fun onChanged() {
-                items = smartRecyclerAdapter.getItems()
-            }
-        })
+        this.smartRecyclerAdapter.registerAdapterDataObserver(observer)
     }
 }
