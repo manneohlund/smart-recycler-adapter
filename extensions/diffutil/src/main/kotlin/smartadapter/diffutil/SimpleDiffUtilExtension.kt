@@ -20,7 +20,8 @@ import smartadapter.SmartRecyclerAdapter
 @Suppress("UNCHECKED_CAST")
 class SimpleDiffUtilExtension(
     private var predicate: DiffPredicate<*>? = null,
-    override val identifier: Any = SimpleDiffUtilExtension::class
+    override val identifier: Any = SimpleDiffUtilExtension::class,
+    val loadingStateListener: (isLoading: Boolean) -> Unit = {}
 ) : DiffUtilExtension() {
 
     init {
@@ -77,6 +78,7 @@ class SimpleDiffUtilExtension(
         newList: List<*>,
         callback: (Result<Boolean>) -> Unit
     ) {
+        loadingStateListener.invoke(true)
         diffSwapJob?.cancel()
         this.oldList = smartRecyclerAdapter.getItems()
         this.newList = newList as MutableList<Any>
@@ -89,10 +91,12 @@ class SimpleDiffUtilExtension(
                         smartRecyclerAdapter.setItems(newList, false)
                         smartRecyclerAdapter.updateItemCount()
                         callback.invoke(Result.success(true))
+                        loadingStateListener.invoke(false)
                     }
                 }.onFailure {
                     withContext(Dispatchers.Main) {
                         callback.invoke(Result.failure(it))
+                        loadingStateListener.invoke(false)
                     }
                 }
             }
