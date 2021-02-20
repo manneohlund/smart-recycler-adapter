@@ -58,8 +58,8 @@ typealias Position = Int
  */
 @Suppress("UNCHECKED_CAST")
 open class SmartRecyclerAdapter
-    internal constructor(private var items: MutableList<Any>)
-        : RecyclerView.Adapter<SmartViewHolder<Any>>(), ISmartRecyclerAdapter {
+internal constructor(private var items: MutableList<Any>)
+    : RecyclerView.Adapter<SmartViewHolder<Any>>(), ISmartRecyclerAdapter {
 
     override var smartItemCount: Int = 0
     override var viewHolderMapper: ViewHolderMapper = ViewHolderMapper()
@@ -82,9 +82,9 @@ open class SmartRecyclerAdapter
         }
         smartExtensions.values.forEach { extension ->
             if (extension is SmartViewHolderBinder
-                && (extension.viewHolderType == SmartViewHolder::class
-                        || extension.viewHolderType.isInstance(smartViewHolder))
-                && extension is OnCreateViewHolderListener
+                    && (extension.viewHolderType == SmartViewHolder::class
+                            || extension.viewHolderType.isInstance(smartViewHolder))
+                    && extension is OnCreateViewHolderListener
             ) {
                 extension.onCreateViewHolder(this, smartViewHolder)
             }
@@ -96,9 +96,9 @@ open class SmartRecyclerAdapter
         smartViewHolder.bind(items[position])
         smartExtensions.values.forEach { extension ->
             if (extension is SmartViewHolderBinder
-                && (extension.viewHolderType == SmartViewHolder::class
-                        || extension.viewHolderType.isInstance(smartViewHolder))
-                && extension is OnBindViewHolderListener
+                    && (extension.viewHolderType == SmartViewHolder::class
+                            || extension.viewHolderType.isInstance(smartViewHolder))
+                    && extension is OnBindViewHolderListener
             ) {
                 extension.onBindViewHolder(this, smartViewHolder)
             }
@@ -106,9 +106,9 @@ open class SmartRecyclerAdapter
     }
 
     override fun onBindViewHolder(
-        smartViewHolder: SmartViewHolder<Any>,
-        position: Int,
-        payloads: MutableList<Any>
+            smartViewHolder: SmartViewHolder<Any>,
+            position: Int,
+            payloads: MutableList<Any>
     ) {
         super.onBindViewHolder(smartViewHolder, position, payloads)
         if (items.size != position) {
@@ -116,9 +116,9 @@ open class SmartRecyclerAdapter
         }
         smartExtensions.values.forEach { extension ->
             if (extension is SmartViewHolderBinder
-                && (extension.viewHolderType == SmartViewHolder::class
-                        || extension.viewHolderType.isInstance(smartViewHolder))
-                && extension is OnBindViewHolderListener
+                    && (extension.viewHolderType == SmartViewHolder::class
+                            || extension.viewHolderType.isInstance(smartViewHolder))
+                    && extension is OnBindViewHolderListener
             ) {
                 extension.onBindViewHolder(this, smartViewHolder, payloads)
             }
@@ -130,9 +130,9 @@ open class SmartRecyclerAdapter
         smartViewHolder.unbind()
         smartExtensions.values.forEach { extension ->
             if (extension is SmartViewHolderBinder
-                && (extension.viewHolderType == SmartViewHolder::class
-                        || extension.viewHolderType.isInstance(smartViewHolder))
-                && extension is OnViewRecycledListener
+                    && (extension.viewHolderType == SmartViewHolder::class
+                            || extension.viewHolderType.isInstance(smartViewHolder))
+                    && extension is OnViewRecycledListener
             ) {
                 extension.onViewRecycled(this, smartViewHolder)
             }
@@ -331,7 +331,7 @@ open class SmartRecyclerAdapter
     override fun add(extension: SmartExtensionIdentifier) {
         (extension as? SmartRecyclerAdapterBinder)?.bind(this)
         if (extension.identifier != extension::class
-            && !smartExtensions.containsKey(extension.identifier)) {
+                && !smartExtensions.containsKey(extension.identifier)) {
             smartExtensions[extension.identifier] = extension
         } else if (smartExtensions.containsKey(extension.identifier)) {
             Log.e("SmartAdapterBuilder", "SmartAdapterBuilder already contains the key '${extension.identifier}', please consider override the identifier to be able to fetch the extension easily")
@@ -365,4 +365,18 @@ inline fun <reified T : SmartExtensionIdentifier> SmartRecyclerAdapter.get(ident
         return smartExtensions[it] as T
     }
     return smartExtensions[T::class] as T
+}
+
+
+/**
+ * Notifies the recycler adapter by new item at position has changed.
+ * Calls [ISmartRecyclerAdapter.smartNotifyItemChanged]
+ * @param position adapter position.
+ * @param item generic type of item.
+ */
+fun <T : Any> ISmartRecyclerAdapter.smartNotifyItemChange(position: Int, item: T) {
+    getItems().apply {
+        set(position, item)
+        smartNotifyItemChanged(position)
+    }
 }
